@@ -1,0 +1,6 @@
+{
+  "name": "DILSY - A Little Box Full of Feelings",
+  "description": "Personalised handmade gift hampers for Chandigarh University and Mohali. Thoughtful surprises, made personal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
