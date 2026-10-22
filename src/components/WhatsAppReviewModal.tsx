@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Send, Copy, Check, MessageSquare, AlertCircle } from 'lucide-react';
+import { X, Send, Copy, Check, MessageSquare, AlertCircle, Heart } from 'lucide-react';
 import { buildWhatsAppLink, EXACT_DELIVERY_POLICY, WHATSAPP_PHONE_INTERNATIONAL } from '../utils/whatsapp';
 
 interface WhatsAppReviewModalProps {
@@ -27,17 +27,17 @@ export const WhatsAppReviewModal: React.FC<WhatsAppReviewModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-[#FAF7F2] rounded-2xl max-w-lg w-full border border-[#2A1E1A]/15 shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in-50 zoom-in-95">
-        {/* Header */}
-        <div className="px-6 py-4 border-b border-[#2A1E1A]/10 flex items-center justify-between bg-[#F5EFEB]">
+      <div className="bg-[#FFFCFD] rounded-2xl max-w-lg w-full border border-[#FFCCD5] shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in-50 zoom-in-95">
+        {/* Header with Love Accent */}
+        <div className="px-6 py-4 border-b border-[#FFCCD5] flex items-center justify-between bg-gradient-to-r from-[#FFF0F4] via-[#FFEBF0] to-[#FFF5F8]">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-[#8C5A4F]" />
-            <h3 className="font-serif font-bold text-lg text-[#2A1E1A]">{title}</h3>
+            <Heart className="w-5 h-5 fill-[#C73858] text-[#C73858]" />
+            <h3 className="font-serif font-bold text-lg text-[#2D1B22]">{title}</h3>
           </div>
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="p-1 rounded-md text-[#4A352F] hover:bg-[#EAE0D6] transition-colors"
+            className="p-1 rounded-md text-[#7A1E31] hover:bg-[#FFE5EC] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -45,11 +45,11 @@ export const WhatsAppReviewModal: React.FC<WhatsAppReviewModalProps> = ({
 
         {/* Content Body */}
         <div className="p-6 overflow-y-auto space-y-4">
-          <div className="p-3.5 bg-amber-50/80 border border-amber-200/80 rounded-xl text-xs text-amber-950 flex items-start gap-2.5">
-            <AlertCircle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-[#FFF0F4] border border-[#FFCCD5] rounded-xl text-xs text-[#52333D] flex items-start gap-2.5 shadow-2xs">
+            <Heart className="w-4 h-4 text-[#C73858] fill-[#FFB3C6] shrink-0 mt-0.5" />
             <div>
-              <p className="font-semibold text-amber-900">Review your order message before sending</p>
-              <p className="text-amber-800/90 mt-0.5">
+              <p className="font-semibold text-[#7A1E31]">Review your personalised order before sending</p>
+              <p className="text-[#6B424E] mt-0.5">
                 Clicking the button below opens WhatsApp with this prefilled message to <strong>{WHATSAPP_PHONE_INTERNATIONAL}</strong>. Orders are confirmed only after DILSY verifies availability and timing with you.
               </p>
             </div>

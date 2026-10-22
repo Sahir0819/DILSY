@@ -1,3 +1,15 @@
+export interface ThemeCategory {
+  id: string;
+  name: string;
+  description: string;
+  visualDirection: string;
+  accentBg: string;
+  accentBorder: string;
+  accentText: string;
+  badge: string;
+  linkedProductIds: string[];
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -5,6 +17,7 @@ export interface Product {
   price: number;
   description: string;
   categories: Array<'all' | 'for-him' | 'for-her' | 'besties'>;
+  themeIds: string[];
   idealFor: string;
   itemsOverview: string[];
   packaging: string;

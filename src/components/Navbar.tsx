@@ -18,9 +18,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navLinks = [
     { id: 'hero', label: 'Home' },
-    { id: 'shop', label: 'Shop All' },
-    { id: 'for-him', label: 'For Him' },
-    { id: 'for-her', label: 'For Her' },
+    { id: 'shop-by-theme', label: 'Shop by Theme' },
+    { id: 'shop', label: 'Launch Hampers' },
     { id: 'custom-builder', label: 'Custom Hampers' },
     { id: 'our-story', label: 'Our Story' },
     { id: 'delivery-policy', label: 'Delivery Policy' },
@@ -32,34 +31,36 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#2A1E1A]/10 transition-colors">
-      {/* Announcement Bar */}
-      <div className="bg-[#2A1E1A] text-[#FAF7F2] text-xs py-2 px-4 text-center tracking-wider font-light flex items-center justify-center gap-2">
-        <Heart className="w-3 h-3 text-[#D4A39A] fill-[#D4A39A]" />
-        <span>Thoughtful surprises, made personal. Delivering across Chandigarh University & Mohali.</span>
+    <header className="sticky top-0 z-40 bg-[#FDF9F7]/95 backdrop-blur-md border-b border-[#E8D0D6] transition-colors shadow-2xs">
+      {/* Announcement Bar with Romantic Love Colors */}
+      <div className="bg-gradient-to-r from-[#3D141C] via-[#631B29] to-[#3D141C] text-[#FFF0F3] text-xs py-2 px-4 text-center tracking-wider font-light flex items-center justify-center gap-2 border-b border-[#802235]/40 shadow-inner">
+        <Heart className="w-3.5 h-3.5 text-[#FF85A1] fill-[#FF85A1] animate-heart-pulse" />
+        <span className="font-medium text-[#FFE5EC]">Thoughtful surprises, made personal with love.</span>
+        <span className="hidden sm:inline text-[#FFB3C6]">· Delivering across Chandigarh University & Mohali</span>
+        <Heart className="w-3.5 h-3.5 text-[#FF85A1] fill-[#FF85A1] animate-heart-pulse hidden sm:inline" />
       </div>
 
       {/* Main Top Bar - 3 Zone Contract */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-8">
-        {/* Zone 1: Brand Wordmark (Single text element) */}
+        {/* Zone 1: Brand Wordmark with Love Accent */}
         <button
           onClick={() => handleLinkClick('hero')}
-          className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-[#2A1E1A] hover:text-[#B87A68] transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B87A68]"
+          className="text-2xl sm:text-3xl font-serif font-bold tracking-tight text-[#2D1B22] hover:text-[#B33951] transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B33951] group"
         >
           <span>DILSY</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-[#B87A68] inline-block mb-1" />
+          <span className="w-2 h-2 rounded-full bg-gradient-to-tr from-[#B33951] to-[#E56B85] inline-block mb-1 shadow-xs group-hover:scale-125 transition-transform" />
         </button>
 
-        {/* Zone 2: Navigation Links (Single line, text with hover underlines) */}
-        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-[#4A352F]">
+        {/* Zone 2: Navigation Links */}
+        <nav className="hidden lg:flex items-center gap-7 text-sm font-medium text-[#4D2D37]">
           {navLinks.slice(0, 6).map((link) => (
             <button
               key={link.id}
               onClick={() => handleLinkClick(link.id)}
-              className={`hover:text-[#2A1E1A] transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${
+              className={`hover:text-[#B33951] transition-colors whitespace-nowrap shrink-0 py-1 border-b-2 ${
                 activeSection === link.id
-                  ? 'border-[#B87A68] text-[#2A1E1A] font-semibold'
-                  : 'border-transparent text-[#4A352F]/80 hover:border-[#D4A39A]'
+                  ? 'border-[#B33951] text-[#7A1E31] font-semibold'
+                  : 'border-transparent text-[#5C3843]/85 hover:border-[#E89CAE]'
               }`}
             >
               {link.label}
@@ -67,16 +68,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           ))}
         </nav>
 
-        {/* Zone 3: 1 Primary Action (Bag button with count) */}
+        {/* Zone 3: 1 Primary Action (Bag button with romantic badge) */}
         <div className="flex items-center gap-3 shrink-0">
           <button
             onClick={onOpenCart}
             aria-label="View shopping bag"
-            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#F5EFEB] hover:bg-[#EAE0D6] border border-[#2A1E1A]/10 text-[#2A1E1A] transition-colors whitespace-nowrap shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B87A68]"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-lg bg-[#FAF0F3] hover:bg-[#F5E1E7] border border-[#E8C2CC] text-[#3D141C] transition-colors whitespace-nowrap shrink-0 relative focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B33951] shadow-2xs"
           >
-            <ShoppingBag className="w-4 h-4 text-[#2A1E1A]" />
-            <span className="text-xs font-semibold tracking-wide uppercase hidden sm:inline">Bag</span>
-            <span className="w-5 h-5 rounded-full bg-[#2A1E1A] text-[#FAF7F2] text-xs font-medium flex items-center justify-center tabular-nums">
+            <ShoppingBag className="w-4 h-4 text-[#8C243B]" />
+            <span className="text-xs font-semibold tracking-wide uppercase hidden sm:inline text-[#6B1B2C]">Bag</span>
+            <span className="w-5 h-5 rounded-full bg-gradient-to-r from-[#99223A] to-[#C73858] text-[#FFF0F3] text-xs font-semibold flex items-center justify-center tabular-nums shadow-xs">
               {cartCount}
             </span>
           </button>

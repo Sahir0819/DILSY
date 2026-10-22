@@ -8,11 +8,16 @@
   
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    background-color: #FAF7F2;
-    color: #2A1E1A;
+    background-color: #FDF9F7;
+    color: #2D1B22;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: #F7D0D8;
+    color: #5C1D27;
   }
 }
 
@@ -24,18 +29,32 @@
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-/* Subtle custom scrollbar */
+/* Subtle romantic custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF7F2;
+  background: #FDF9F7;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D4A39A80;
+  background: #E89CAE80;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C87D70;
+  background: #C74B64;
+}
+
+/* Romantic gentle pulse */
+@keyframes heartPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+.animate-heart-pulse {
+  animation: heartPulse 2.5s ease-in-out infinite;
 }

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ProductCard } from './components/ProductCard';
+import { ShopByThemeSection } from './components/ShopByThemeSection';
 import { CustomHamperBuilder } from './components/CustomHamperBuilder';
 import { CartDrawer } from './components/CartDrawer';
 import { WhatsAppReviewModal } from './components/WhatsAppReviewModal';
 import { OurStory, DeliveryPolicySection, FaqSection, Footer } from './components/StoryAndFaq';
 import { PRODUCTS } from './data/products';
+import { THEME_CATEGORIES } from './data/themes';
 import { CartItem, Product, ProductCustomisation } from './types';
 import { generateSingleProductWhatsAppMessage } from './utils/whatsapp';
 import { Sparkles, Heart, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -23,6 +25,8 @@ export default function App() {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<'all' | 'for-him' | 'for-her' | 'besties'>('all');
+  const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
+  const [customBuilderOccasion, setCustomBuilderOccasion] = useState<string>('Birthday Box');
   const [activeSection, setActiveSection] = useState('hero');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -114,15 +118,18 @@ export default function App() {
     setActiveSection(sectionId);
     if (sectionId === 'hero') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (sectionId === 'shop-by-theme') {
+      setSelectedThemeId(null);
+      document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
     } else if (sectionId === 'shop') {
       setActiveFilter('all');
       document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
     } else if (sectionId === 'for-him') {
-      setActiveFilter('for-him');
-      document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
+      setSelectedThemeId('i-love-you-for-him');
+      document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
     } else if (sectionId === 'for-her') {
-      setActiveFilter('for-her');
-      document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
+      setSelectedThemeId('i-love-you-for-her');
+      document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
     } else if (sectionId === 'besties') {
       setActiveFilter('besties');
       document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
@@ -142,8 +149,8 @@ export default function App() {
     <div className="min-h-screen bg-[#FAF7F2] text-[#2A1E1A] flex flex-col font-sans">
       {/* Toast Feedback */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#2A1E1A] text-[#FAF7F2] px-4 py-3 rounded-xl shadow-xl text-xs font-medium flex items-center gap-2 border border-[#FAF7F2]/20 animate-in fade-in slide-in-from-bottom-2">
-          <Heart className="w-4 h-4 text-[#D4A39A] fill-[#D4A39A]" />
+        <div className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-[#801B30] to-[#99223A] text-[#FFF0F3] px-4 py-3 rounded-xl shadow-xl text-xs font-medium flex items-center gap-2 border border-[#FFCCD5]/40 animate-in fade-in slide-in-from-bottom-2">
+          <Heart className="w-4 h-4 text-[#FF85A1] fill-[#FF85A1] animate-heart-pulse" />
           <span>{toastMessage}</span>
         </div>
       )}
@@ -160,34 +167,48 @@ export default function App() {
         {/* Hero Section */}
         <Hero
           onShopClick={() => handleNavigate('shop')}
+          onShopByThemeClick={() => handleNavigate('shop-by-theme')}
           onCustomClick={() => handleNavigate('custom-builder')}
+        />
+
+        {/* Shop by Theme Section (Final 9 Business-Approved Categories) */}
+        <ShopByThemeSection
+          products={PRODUCTS}
+          selectedThemeId={selectedThemeId}
+          onSelectTheme={(themeId) => setSelectedThemeId(themeId)}
+          onOpenCustomBuilder={(themeOccasion) => {
+            if (themeOccasion) setCustomBuilderOccasion(themeOccasion);
+            document.getElementById('custom-builder')?.scrollIntoView({ behavior: 'smooth' });
+          }}
+          onAddToCart={handleAddToCart}
+          onOrderWhatsApp={handleOrderWhatsAppSingle}
         />
 
         {/* Featured Products Collection */}
         <section id="shop" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
             <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#8C5A4F] mb-2">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Signature Curations</span>
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#A32842] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5] mb-2 shadow-2xs">
+                <Heart className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
+                <span>Handcrafted With Love</span>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#2A1E1A] tracking-tight text-balance">
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#2D1B22] tracking-tight text-balance">
                 The Launch Hampers
               </h2>
-              <p className="mt-2 text-sm sm:text-base text-[#4A352F]/90 font-light max-w-xl">
-                Three bespoke launch concepts crafted for birthdays, anniversaries, and hostel care packages. Each box is completely customizable upon WhatsApp verification.
+              <p className="mt-2 text-sm sm:text-base text-[#52333D] font-light max-w-xl">
+                Three bespoke launch concepts crafted for romantic milestones, birthdays, anniversaries, and hostel care packages. Each box is completely customizable upon WhatsApp verification.
               </p>
             </div>
 
-            {/* Filter Tabs / Segmented Controls */}
-            <div className="flex items-center gap-1.5 p-1 bg-[#F5EFEB] rounded-xl border border-[#2A1E1A]/10 overflow-x-auto self-start md:self-auto">
+            {/* Filter Tabs / Segmented Controls with Love Hues */}
+            <div className="flex items-center gap-1.5 p-1 bg-[#FAF0F3] rounded-xl border border-[#E8C2CC] overflow-x-auto self-start md:self-auto shadow-2xs">
               <button
                 type="button"
                 onClick={() => setActiveFilter('all')}
                 className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
                   activeFilter === 'all'
-                    ? 'bg-white text-[#2A1E1A] shadow-xs font-semibold'
-                    : 'text-[#4A352F] hover:text-[#2A1E1A]'
+                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                    : 'text-[#6B3241] hover:text-[#99223A]'
                 }`}
               >
                 Shop All
@@ -197,8 +218,8 @@ export default function App() {
                 onClick={() => setActiveFilter('for-him')}
                 className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
                   activeFilter === 'for-him'
-                    ? 'bg-white text-[#2A1E1A] shadow-xs font-semibold'
-                    : 'text-[#4A352F] hover:text-[#2A1E1A]'
+                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                    : 'text-[#6B3241] hover:text-[#99223A]'
                 }`}
               >
                 For Him
@@ -208,8 +229,8 @@ export default function App() {
                 onClick={() => setActiveFilter('for-her')}
                 className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
                   activeFilter === 'for-her'
-                    ? 'bg-white text-[#2A1E1A] shadow-xs font-semibold'
-                    : 'text-[#4A352F] hover:text-[#2A1E1A]'
+                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                    : 'text-[#6B3241] hover:text-[#99223A]'
                 }`}
               >
                 For Her
@@ -219,8 +240,8 @@ export default function App() {
                 onClick={() => setActiveFilter('besties')}
                 className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
                   activeFilter === 'besties'
-                    ? 'bg-white text-[#2A1E1A] shadow-xs font-semibold'
-                    : 'text-[#4A352F] hover:text-[#2A1E1A]'
+                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                    : 'text-[#6B3241] hover:text-[#99223A]'
                 }`}
               >
                 Besties
@@ -240,20 +261,20 @@ export default function App() {
             ))}
           </div>
 
-          {/* Need custom notice banner */}
-          <div className="mt-12 p-6 rounded-2xl bg-[#F5EFEB]/70 border border-[#2A1E1A]/10 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Need custom notice banner with romantic love styling */}
+          <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-[#FFEBF0] via-[#FFF0F4] to-[#FFE8EE] border border-[#FFCCD5] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm shadow-[#FFCCD5]/20">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#E8D5CE] flex items-center justify-center text-[#8C5A4F] shrink-0">
-                <Heart className="w-5 h-5" />
+              <div className="w-10 h-10 rounded-full bg-[#FFD1DC] border border-[#FFB3C6] flex items-center justify-center text-[#99223A] shrink-0 shadow-2xs">
+                <Heart className="w-5 h-5 fill-[#C73858] text-[#C73858]" />
               </div>
               <div>
-                <p className="font-serif font-bold text-base text-[#2A1E1A]">Want a custom combination or different budget?</p>
-                <p className="text-xs text-[#4A352F]/80">Mix and match goodies, polaroids, scents, and keepsakes in our studio builder.</p>
+                <p className="font-serif font-bold text-base text-[#2D1B22]">Want a custom love combination or specific budget?</p>
+                <p className="text-xs text-[#6B424E]">Mix and match goodies, polaroids, scents, and keepsakes in our studio builder.</p>
               </div>
             </div>
             <button
               onClick={() => handleNavigate('custom-builder')}
-              className="px-5 py-2.5 bg-[#2A1E1A] text-[#FAF7F2] rounded-lg text-xs font-semibold hover:bg-[#3D2C26] transition-colors whitespace-nowrap flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 shadow-xs shadow-[#99223A]/20"
             >
               <span>Build Custom Hamper</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -263,6 +284,7 @@ export default function App() {
 
         {/* Custom Hamper Builder Section */}
         <CustomHamperBuilder
+          prefilledOccasion={customBuilderOccasion}
           onOpenReviewModal={(title, message) =>
             setReviewModal({ isOpen: true, title, message })
           }

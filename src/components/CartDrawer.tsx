@@ -64,19 +64,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-xs flex justify-end">
-      <div className="w-full max-w-lg bg-[#FAF7F2] h-full shadow-2xl flex flex-col justify-between border-l border-[#2A1E1A]/10 animate-in slide-in-from-right duration-300">
-        {/* Drawer Header */}
-        <div className="px-6 py-4 bg-[#F5EFEB] border-b border-[#2A1E1A]/10 flex items-center justify-between">
+      <div className="w-full max-w-lg bg-[#FFFCFD] h-full shadow-2xl flex flex-col justify-between border-l border-[#FFCCD5] animate-in slide-in-from-right duration-300">
+        {/* Drawer Header with Romantic Accent */}
+        <div className="px-6 py-4 bg-gradient-to-r from-[#FFF0F4] via-[#FFEBF0] to-[#FFF5F8] border-b border-[#FFCCD5] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-[#8C5A4F]" />
-            <h2 className="font-serif font-bold text-xl text-[#2A1E1A]">
+            <ShoppingBag className="w-5 h-5 text-[#99223A]" />
+            <h2 className="font-serif font-bold text-xl text-[#2D1B22]">
               {checkoutStep === 'cart' ? 'Your Shopping Bag' : 'Delivery & Coordination'}
             </h2>
           </div>
           <button
             onClick={onClose}
             aria-label="Close bag drawer"
-            className="p-1 rounded-md text-[#4A352F] hover:bg-[#EAE0D6] transition-colors"
+            className="p-1 rounded-md text-[#7A1E31] hover:bg-[#FFE5EC] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -86,11 +86,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {items.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center py-16 space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#EAE0D6] flex items-center justify-center text-[#8C5A4F]">
-                <ShoppingBag className="w-8 h-8 opacity-70" />
+              <div className="w-16 h-16 rounded-full bg-[#FFE5EC] border border-[#FFCCD5] flex items-center justify-center text-[#99223A]">
+                <ShoppingBag className="w-8 h-8 opacity-80" />
               </div>
-              <h3 className="font-serif font-bold text-xl text-[#2A1E1A]">Your bag is empty</h3>
-              <p className="text-sm text-[#4A352F]/80 max-w-xs font-light">
+              <h3 className="font-serif font-bold text-xl text-[#2D1B22]">Your bag is empty</h3>
+              <p className="text-sm text-[#6B424E] max-w-xs font-light">
                 Discover our signature launch hampers or build a custom hamper for someone special.
               </p>
               <button
@@ -99,7 +99,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   onClose();
                   onBrowseProducts();
                 }}
-                className="mt-2 px-6 py-2.5 bg-[#2A1E1A] text-white rounded-lg text-xs font-semibold hover:bg-[#3D2C26] transition-colors"
+                className="mt-2 px-6 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-white rounded-lg text-xs font-semibold transition-all shadow-xs shadow-[#99223A]/20"
               >
                 Browse Launch Hampers
               </button>
@@ -107,8 +107,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           ) : checkoutStep === 'cart' ? (
             /* Items List View */
             <div className="space-y-4">
-              <div className="flex items-center justify-between text-xs text-[#4A352F] pb-2 border-b border-[#2A1E1A]/10">
-                <span>{items.reduce((acc, i) => acc + i.quantity, 0)} Items Selected</span>
+              <div className="flex items-center justify-between text-xs text-[#6B424E] pb-2 border-b border-[#FFCCD5]">
+                <span className="font-medium">{items.reduce((acc, i) => acc + i.quantity, 0)} Items Selected</span>
                 <button
                   onClick={onClearCart}
                   className="text-red-700 hover:text-red-900 transition-colors"
@@ -122,18 +122,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 return (
                   <div
                     key={item.id}
-                    className="bg-white p-4 rounded-xl border border-[#2A1E1A]/10 shadow-2xs space-y-3"
+                    className="bg-white p-4 rounded-xl border border-[#FFCCD5] shadow-2xs space-y-3"
                   >
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h4 className="font-serif font-bold text-base text-[#2A1E1A]">
+                        <h4 className="font-serif font-bold text-base text-[#2D1B22]">
                           {item.product.name}
                         </h4>
-                        <span className="text-xs text-[#8C5A4F] font-medium tabular-nums">
+                        <span className="text-xs text-[#99223A] font-medium tabular-nums">
                           ₹{item.product.price.toLocaleString('en-IN')} each
                         </span>
                       </div>
-                      <span className="text-sm font-semibold text-[#2A1E1A] tabular-nums">
+                      <span className="text-sm font-semibold text-[#99223A] tabular-nums">
                         ₹{itemTotal.toLocaleString('en-IN')}
                       </span>
                     </div>
@@ -142,19 +142,19 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     {(item.customisation.recipientName ||
                       item.customisation.personalNote ||
                       item.customisation.polaroidCaption) && (
-                      <div className="p-2.5 bg-[#FAF7F2] rounded-lg text-xs space-y-1 border border-[#2A1E1A]/5">
+                      <div className="p-2.5 bg-[#FFF0F4] rounded-lg text-xs space-y-1 border border-[#FFCCD5]">
                         {item.customisation.recipientName && (
-                          <p className="text-[#2A1E1A]">
-                            <strong className="font-medium text-[#4A352F]">For:</strong> {item.customisation.recipientName}
+                          <p className="text-[#2D1B22]">
+                            <strong className="font-medium text-[#7A1E31]">For:</strong> {item.customisation.recipientName}
                           </p>
                         )}
                         {item.customisation.personalNote && (
-                          <p className="text-[#4A352F] italic line-clamp-2">
+                          <p className="text-[#52333D] italic line-clamp-2">
                             "{item.customisation.personalNote}"
                           </p>
                         )}
                         {item.customisation.polaroidCaption && (
-                          <p className="text-[#8C5A4F]">
+                          <p className="text-[#99223A]">
                             Photo: {item.customisation.polaroidCaption}
                           </p>
                         )}
@@ -163,21 +163,21 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
                     {/* Quantity Controls & Remove */}
                     <div className="flex items-center justify-between pt-1">
-                      <div className="flex items-center gap-2 border border-[#2A1E1A]/20 rounded-lg p-0.5 bg-[#FAF7F2]">
+                      <div className="flex items-center gap-2 border border-[#FFCCD5] rounded-lg p-0.5 bg-[#FFF5F8]">
                         <button
                           onClick={() => onUpdateQuantity(item.id, -1)}
                           aria-label="Decrease quantity"
-                          className="w-7 h-7 flex items-center justify-center text-[#2A1E1A] hover:bg-[#EAE0D6] rounded"
+                          className="w-7 h-7 flex items-center justify-center text-[#7A1E31] hover:bg-[#FFE5EC] rounded"
                         >
                           <Minus className="w-3.5 h-3.5" />
                         </button>
-                        <span className="w-6 text-center text-xs font-semibold tabular-nums text-[#2A1E1A]">
+                        <span className="w-6 text-center text-xs font-semibold tabular-nums text-[#2D1B22]">
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => onUpdateQuantity(item.id, 1)}
                           aria-label="Increase quantity"
-                          className="w-7 h-7 flex items-center justify-center text-[#2A1E1A] hover:bg-[#EAE0D6] rounded"
+                          className="w-7 h-7 flex items-center justify-center text-[#7A1E31] hover:bg-[#FFE5EC] rounded"
                         >
                           <Plus className="w-3.5 h-3.5" />
                         </button>
@@ -319,23 +319,23 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
         {/* Drawer Footer with Calculations & Exact Delivery Policy */}
         {items.length > 0 && (
-          <div className="p-6 bg-[#F5EFEB] border-t border-[#2A1E1A]/10 space-y-4">
+          <div className="p-6 bg-gradient-to-t from-[#FFF0F4] to-[#FFF8FA] border-t border-[#FFCCD5] space-y-4">
             <div className="space-y-1.5 text-xs">
-              <div className="flex items-center justify-between text-[#4A352F]">
+              <div className="flex items-center justify-between text-[#52333D]">
                 <span>Items Subtotal</span>
-                <span className="font-semibold text-sm text-[#2A1E1A] tabular-nums">
+                <span className="font-semibold text-sm text-[#99223A] tabular-nums">
                   ₹{subtotal.toLocaleString('en-IN')}
                 </span>
               </div>
-              <div className="flex items-center justify-between text-[#4A352F]/70 text-[11px]">
+              <div className="flex items-center justify-between text-[#6B424E] text-[11px]">
                 <span>Delivery Charges</span>
                 <span>Calculated via WhatsApp based on exact PG/Campus spot</span>
               </div>
             </div>
 
             {/* Exact Delivery Policy Quote */}
-            <div className="p-3 bg-[#FAF7F2] border border-[#2A1E1A]/10 rounded-xl text-[10px] text-[#4A352F] leading-tight">
-              <span className="font-semibold text-[#2A1E1A] block mb-0.5">Delivery Policy:</span>
+            <div className="p-3 bg-white border border-[#FFCCD5] rounded-xl text-[10px] text-[#52333D] leading-tight shadow-2xs">
+              <span className="font-semibold text-[#99223A] block mb-0.5">Delivery Policy:</span>
               "{EXACT_DELIVERY_POLICY}"
             </div>
 
@@ -344,7 +344,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 type="button"
                 onClick={handleProceedToDelivery}
-                className="w-full py-3.5 px-4 bg-[#2A1E1A] hover:bg-[#3D2C26] text-[#FAF7F2] rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-sm"
+                className="w-full py-3.5 px-4 bg-gradient-to-r from-[#99223A] via-[#A82841] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-md shadow-[#99223A]/25"
               >
                 <span>Continue to Delivery & Details</span>
                 <ArrowRight className="w-4 h-4" />
@@ -353,7 +353,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               <button
                 type="button"
                 onClick={handleCheckoutWhatsApp}
-                className="w-full py-3.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-sm"
+                className="w-full py-3.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-md"
               >
                 <MessageCircle className="w-4 h-4" />
                 <span>Review & Order on WhatsApp (+91 8360958844)</span>

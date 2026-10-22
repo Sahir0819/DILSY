@@ -4,21 +4,21 @@ import { EXACT_DELIVERY_POLICY, WHATSAPP_PHONE_INTERNATIONAL } from '../utils/wh
 
 export const OurStory: React.FC = () => {
   return (
-    <section id="our-story" className="py-16 md:py-24 bg-[#FAF7F2] border-t border-[#2A1E1A]/10">
+    <section id="our-story" className="py-16 md:py-24 bg-gradient-to-b from-[#FDF9F7] to-[#FFF5F8] border-t border-[#E8D0D6]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Story Narrative */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#8C5A4F]">
-              <Feather className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#A32842] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5] shadow-2xs">
+              <Heart className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
               <span>Behind The Box</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#2A1E1A] tracking-tight text-balance">
-              Born from late nights, honest friendships, and unsaid words.
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#2D1B22] tracking-tight text-balance">
+              Born from late nights, honest friendships, and unsaid love.
             </h2>
 
-            <div className="space-y-4 text-sm sm:text-base text-[#4A352F]/90 font-light leading-relaxed">
+            <div className="space-y-4 text-sm sm:text-base text-[#52333D] font-light leading-relaxed">
               <p>
                 DILSY began with a simple belief right here around Chandigarh University and Mohali: gifts shouldn't be plastic wrapped junk or rushed convenience chocolates. When you love someone—whether it’s your partner, your hostel roommate who got you through exams, or your best friend miles away—the gift should feel like you stopped time just for them.
               </p>
@@ -32,35 +32,35 @@ export const OurStory: React.FC = () => {
 
             <div className="pt-2 flex items-center gap-6">
               <div>
-                <span className="block font-serif font-bold text-2xl text-[#2A1E1A]">100%</span>
-                <span className="text-xs text-[#4A352F]/80">Personalised by Hand</span>
+                <span className="block font-serif font-bold text-2xl text-[#99223A]">100%</span>
+                <span className="text-xs text-[#6B424E]">Personalised by Hand</span>
               </div>
-              <div className="w-px h-8 bg-[#2A1E1A]/15" />
+              <div className="w-px h-8 bg-[#E8D0D6]" />
               <div>
-                <span className="block font-serif font-bold text-2xl text-[#2A1E1A]">₹999–₹1,499</span>
-                <span className="text-xs text-[#4A352F]/80">Fair Student Budgets</span>
+                <span className="block font-serif font-bold text-2xl text-[#99223A]">₹999–₹1,499</span>
+                <span className="text-xs text-[#6B424E]">Fair Student Budgets</span>
               </div>
-              <div className="w-px h-8 bg-[#2A1E1A]/15" />
+              <div className="w-px h-8 bg-[#E8D0D6]" />
               <div>
-                <span className="block font-serif font-bold text-2xl text-[#2A1E1A]">Mohali & CU</span>
-                <span className="text-xs text-[#4A352F]/80">Direct Local Handover</span>
+                <span className="block font-serif font-bold text-2xl text-[#99223A]">Mohali & CU</span>
+                <span className="text-xs text-[#6B424E]">Direct Local Handover</span>
               </div>
             </div>
           </div>
 
-          {/* Visual Showcase Box */}
-          <div className="lg:col-span-5 bg-[#F5EFEB] p-8 rounded-2xl border border-[#2A1E1A]/10 relative overflow-hidden shadow-xs">
+          {/* Visual Showcase Box with Romantic Love Accent */}
+          <div className="lg:col-span-5 bg-gradient-to-br from-[#FFF0F4] via-[#FFEBF0] to-[#FFF5F8] p-8 rounded-2xl border border-[#FFCCD5] relative overflow-hidden shadow-sm shadow-[#FFCCD5]/20">
             <div className="space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[#E8D5CE] flex items-center justify-center text-[#8C5A4F] font-serif font-bold text-xl">
-                D
+              <div className="w-12 h-12 rounded-full bg-[#FFE5EC] border border-[#FFB3C6] flex items-center justify-center text-[#99223A] font-serif font-bold text-xl shadow-xs">
+                ♥
               </div>
-              <blockquote className="font-serif italic text-lg text-[#2A1E1A] leading-relaxed">
+              <blockquote className="font-serif italic text-lg text-[#2D1B22] leading-relaxed">
                 "We don't sell boxes. We preserve feelings that deserve to be felt."
               </blockquote>
-              <div className="pt-4 border-t border-[#2A1E1A]/10 text-xs text-[#4A352F] space-y-1">
-                <p className="font-semibold text-[#2A1E1A]">DILSY Studio</p>
+              <div className="pt-4 border-t border-[#FFCCD5] text-xs text-[#52333D] space-y-1">
+                <p className="font-semibold text-[#2D1B22]">DILSY Studio</p>
                 <p>Gifting for him, for her, and besties</p>
-                <p className="text-[11px] text-[#8C5A4F]">Chandigarh University & Mohali, Punjab</p>
+                <p className="text-[11px] text-[#A32842]">Chandigarh University & Mohali, Punjab</p>
               </div>
             </div>
           </div>
@@ -72,35 +72,35 @@ export const OurStory: React.FC = () => {
 
 export const DeliveryPolicySection: React.FC = () => {
   return (
-    <section id="delivery-policy" className="py-12 bg-[#FAF4ED] border-t border-[#2A1E1A]/10">
+    <section id="delivery-policy" className="py-12 bg-[#FFF8FA] border-t border-[#E8D0D6]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#FAF7F2] rounded-2xl p-6 sm:p-8 border border-[#D4A39A]/40 shadow-xs">
+        <div className="bg-[#FFFCFD] rounded-2xl p-6 sm:p-8 border border-[#FFCCD5] shadow-xs">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[#FAF4ED] border border-[#D4A39A]/50 flex items-center justify-center text-[#8C5A4F] shrink-0 mt-1">
+            <div className="w-10 h-10 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] flex items-center justify-center text-[#99223A] shrink-0 mt-1">
               <Truck className="w-5 h-5" />
             </div>
 
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <h3 className="font-serif font-bold text-xl text-[#2A1E1A]">Official Delivery Policy</h3>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-[#FAF4ED] text-[#8C5A4F] font-medium border border-[#D4A39A]/30">
+                <h3 className="font-serif font-bold text-xl text-[#2D1B22]">Official Delivery Policy</h3>
+                <span className="text-[11px] px-2 py-0.5 rounded bg-[#FFEBF0] text-[#99223A] font-medium border border-[#FFCCD5]">
                   Service Area: CU & Mohali
                 </span>
               </div>
 
-              <div className="p-4 bg-white rounded-xl border border-[#2A1E1A]/10 shadow-2xs">
-                <p className="text-sm sm:text-base text-[#2A1E1A] font-serif italic leading-relaxed">
+              <div className="p-4 bg-white rounded-xl border border-[#FFCCD5] shadow-2xs">
+                <p className="text-sm sm:text-base text-[#2D1B22] font-serif italic leading-relaxed">
                   "{EXACT_DELIVERY_POLICY}"
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#4A352F] pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#52333D] pt-1">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-[#B87A68] shrink-0" />
+                  <MapPin className="w-4 h-4 text-[#C73858] shrink-0" />
                   <span>Service area: Chandigarh University and nearby PGs around Mohali.</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#B87A68] shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-[#C73858] shrink-0" />
                   <span>Every order verified manually on WhatsApp before payment or dispatch.</span>
                 </div>
               </div>
@@ -194,29 +194,29 @@ export const FaqSection: React.FC = () => {
 
 export const Footer: React.FC<{ onNavigate: (id: string) => void }> = ({ onNavigate }) => {
   return (
-    <footer className="bg-[#2A1E1A] text-[#FAF7F2] pt-14 pb-8 border-t border-black">
+    <footer className="bg-[#260C12] text-[#FFF0F3] pt-14 pb-8 border-t border-[#4A1622]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-white/10">
           {/* Brand Info */}
           <div className="md:col-span-5 space-y-3">
             <div className="flex items-center gap-1.5">
-              <span className="font-serif font-bold text-2xl text-[#FAF7F2] tracking-tight">DILSY</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#D4A39A]" />
+              <span className="font-serif font-bold text-2xl text-[#FFF0F3] tracking-tight">DILSY</span>
+              <span className="w-2 h-2 rounded-full bg-[#E56B85]" />
             </div>
-            <p className="font-serif italic text-[#D4A39A] text-sm">
+            <p className="font-serif italic text-[#FFB3C6] text-sm">
               A Little Box Full of Feelings.
             </p>
-            <p className="text-xs text-[#FAF7F2]/70 font-light leading-relaxed max-w-sm">
-              Boutique personalised handmade gift hampers. Thoughtfully crafted in Mohali for university students, couples, best friends, and everyone who treasures meaningful surprises.
+            <p className="text-xs text-[#FFE5EC]/70 font-light leading-relaxed max-w-sm">
+              Boutique personalised handmade gift hampers. Thoughtfully crafted with love in Mohali for university students, couples, best friends, and everyone who treasures meaningful surprises.
             </p>
           </div>
 
           {/* Quick Navigation */}
           <div className="md:col-span-3 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#D4A39A]">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#FF85A1]">
               Quick Links
             </h4>
-            <ul className="space-y-2 text-xs text-[#FAF7F2]/80">
+            <ul className="space-y-2 text-xs text-[#FFE5EC]/80">
               <li>
                 <button onClick={() => onNavigate('shop')} className="hover:text-white transition-colors">
                   Shop Launch Hampers
@@ -241,8 +241,8 @@ export const Footer: React.FC<{ onNavigate: (id: string) => void }> = ({ onNavig
           </div>
 
           {/* Contact & Service Info */}
-          <div className="md:col-span-4 space-y-3 text-xs text-[#FAF7F2]/80">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#D4A39A]">
+          <div className="md:col-span-4 space-y-3 text-xs text-[#FFE5EC]/80">
+            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#FF85A1]">
               Connect & Coordinate
             </h4>
             <div className="space-y-2">
@@ -251,20 +251,22 @@ export const Footer: React.FC<{ onNavigate: (id: string) => void }> = ({ onNavig
                 <span>WhatsApp: <strong>{WHATSAPP_PHONE_INTERNATIONAL}</strong></span>
               </p>
               <p className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#D4A39A]" />
+                <MapPin className="w-4 h-4 text-[#FF85A1]" />
                 <span>Serving: Chandigarh University & Mohali PGs (Punjab)</span>
               </p>
-              <p className="text-[11px] text-[#FAF7F2]/60 pt-1">
+              <p className="text-[11px] text-[#FFE5EC]/60 pt-1">
                 Hamper Price Range: ₹999 – ₹1,499
               </p>
             </div>
           </div>
         </div>
 
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#FAF7F2]/50 gap-4">
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#FFE5EC]/50 gap-4">
           <p>© {new Date().getFullYear()} DILSY Gifting Studio. All rights reserved.</p>
-          <p className="text-[11px]">
-            Designed with care · Built for real moments
+          <p className="text-[11px] flex items-center gap-1">
+            <span>Handcrafted with</span>
+            <span className="text-[#FF85A1]">♥</span>
+            <span>for real moments</span>
           </p>
         </div>
       </div>

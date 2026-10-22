@@ -16,6 +16,7 @@ export const PRODUCTS: Product[] = [
     price: 999,
     description: 'A pocket-sized gesture made for moments that speak softer than words. Featuring cozy aromatics, custom keepsakes, and a hand-penned card.',
     categories: ['all', 'for-her', 'for-him', 'besties'],
+    themeIds: ['i-love-you-for-her', 'i-love-you-for-him', 'anniversary', 'miss-you-box'],
     idealFor: 'Birthdays, hostel room surprises, anniversary tokens, or "just because".',
     itemsOverview: [
       'Artisanal hand-poured soy scented votive candle (warm vanilla or amber cedar)',
@@ -35,6 +36,7 @@ export const PRODUCTS: Product[] = [
     price: 1249,
     description: 'A thoughtfully balanced hamper designed to delight both boys and girls. Practical keepsakes combined with sensory warmth and memorable handwritten notes.',
     categories: ['all', 'for-him', 'for-her', 'besties'],
+    themeIds: ['i-love-you-for-him', 'i-love-you-for-her', 'anniversary', 'birthday', 'valentine-box'],
     idealFor: 'Special anniversaries, boyfriend/girlfriend milestones, bestie celebrations, and PG care packages.',
     itemsOverview: [
       'Signature amber glass scented soy jar candle with wooden crackling wick',
@@ -55,6 +57,7 @@ export const PRODUCTS: Product[] = [
     price: 1499,
     description: 'Our most lavish and heartfelt hamper. Packed with bespoke keepsakes, premium sensory delights, and multiple personalized memory prints for an unforgettable celebration.',
     categories: ['all', 'for-him', 'for-her', 'besties'],
+    themeIds: ['i-love-you-for-her', 'anniversary', 'birthday', 'valentine-box'],
     idealFor: 'Big birthday bashes, graduation milestones, long-distance reunions, and luxury festive gifting.',
     itemsOverview: [
       'Premium matte double-wall insulated coffee tumbler (or artisanal ceramic pottery mug)',
