@@ -3,111 +3,200 @@ import { ThemeCategory } from '../types';
 /**
  * DILSY FINAL BUSINESS-APPROVED THEME CATEGORIES
  * 
- * NOTE FOR STORE OWNER:
- * You can easily edit names, descriptions, visual directions, and linked product IDs below.
- * When new confirmed products launch for a theme, simply add the product's ID to `linkedProductIds`.
- * Categories with empty `linkedProductIds` will automatically present a polished,
- * tasteful "Customise Your Box" studio invitation without inventing fake stock or prices.
+ * Central editable data structure for products and collections.
+ * Each collection defines its own slug, visual direction, occasion narrative,
+ * gifting tips, linked products, and related collections.
  */
 export const THEME_CATEGORIES: ThemeCategory[] = [
   {
     id: 'i-love-you-for-him',
+    slug: 'i-love-you-for-him',
     name: 'I Love You — For Him',
     description: 'A little something to remind him how much he means to you.',
-    visualDirection: 'Romantic, thoughtful, elegant gift hamper with a personalised note.',
+    visualDirection: 'Thoughtful, romantic, elegant packaging and a personalised note.',
+    heroHeadline: 'Understated romantic keepsakes crafted for him',
+    heroStory: 'Boyfriends and partners often hold feelings close to their chest. This curation blends quiet masculinity with tender intimacy—warm amber vanilla aromas, personalised vegan leather monogram keychains, and handwritten wax-sealed parchment letters he will save forever.',
+    giftingTips: [
+      'Pair with a photograph from your first road trip or campus memory',
+      'Choose warm cedar, coffee, or amber vanilla aroma notes',
+      'Have your inside joke or personal nickname handwritten on the wax-sealed card',
+    ],
     accentBg: 'from-[#FFF0F4] to-[#FCE6EC]',
     accentBorder: 'border-[#F4B6C5]',
     accentText: 'text-[#99223A]',
     badge: 'For Him',
-    linkedProductIds: ['the-dilsy-edit', 'the-little-affair'],
+    linkedProductIds: ['loved-box', 'the-little-affair'],
+    relatedThemeIds: ['anniversary', 'valentine-box', 'miss-you-box'],
   },
   {
     id: 'i-love-you-for-her',
+    slug: 'i-love-you-for-her',
     name: 'I Love You — For Her',
     description: 'Little surprises, thoughtful details, and a whole lot of love.',
-    visualDirection: 'A romantic, aesthetic hamper with beautiful packaging and a personal message.',
+    visualDirection: 'Romantic, aesthetic packaging and a personal message.',
+    heroHeadline: 'Delicate details & sweet romantic surprises for her',
+    heroStory: 'For girlfriends, fiancées, and partners who treasure meaningful gestures over generic convenience gifts. Hand-poured floral soy candles, delicate dried botanicals, keepsake polaroids, and artisan treats delivered in our signature blush and ivory presentation box.',
+    giftingTips: [
+      'Mention a quiet, sweet memory only the two of you share in the letter',
+      'Include gourmet chocolate truffles and floral aromatic notes',
+      'Pick ribbon packaging that matches her soft aesthetic',
+    ],
     accentBg: 'from-[#FFF0F4] to-[#FFEBF0]',
     accentBorder: 'border-[#FFCCD5]',
     accentText: 'text-[#A32842]',
     badge: 'For Her',
-    linkedProductIds: ['the-little-affair', 'the-dilsy-edit', 'the-everything-box'],
+    linkedProductIds: ['loved-box', 'the-little-affair', 'the-everything-box'],
+    relatedThemeIds: ['anniversary', 'birthday', 'valentine-box'],
   },
   {
     id: 'anniversary',
+    slug: 'anniversary',
     name: 'Anniversary Box',
     description: 'Celebrate your story, one little memory at a time.',
     visualDirection: 'Elegant keepsakes, personalised messages, and romantic packaging.',
+    heroHeadline: 'Honor your milestones and the memories you have built together',
+    heroStory: 'Whether celebrating one month, one year, or several years of shared memories and late-night calls around CU and Mohali, our Anniversary Box preserves your journey with custom polaroids, crackling soy candles, and romantic wax-sealed letters.',
+    giftingTips: [
+      'Add your relationship milestone date or special place coordinates',
+      'Include 3 memory prints for a romantic miniature timeline',
+      'Coordinate with our team for seamless surprise campus gate handover',
+    ],
     accentBg: 'from-[#FFF5F8] to-[#FCE8EE]',
     accentBorder: 'border-[#E8A5B5]',
     accentText: 'text-[#8C1D33]',
     badge: 'Milestone Love',
-    linkedProductIds: ['the-dilsy-edit', 'the-everything-box', 'the-little-affair'],
+    linkedProductIds: ['loved-box', 'the-everything-box'],
+    relatedThemeIds: ['i-love-you-for-her', 'i-love-you-for-him', 'valentine-box'],
   },
   {
     id: 'birthday',
+    slug: 'birthday',
     name: 'Birthday Box',
     description: 'Make their special day feel even more special.',
-    visualDirection: 'Festive packaging, colourful accents, sweet treats, and birthday cards.',
+    visualDirection: 'Festive packaging, cheerful accents, and birthday cards.',
+    heroHeadline: 'Celebrate their birthday with sweet warmth and personal flair',
+    heroStory: 'Make campus birthdays and hostel surprises unforgettable. Curated with celebratory touches, gourmet bakery treats, soy scented candles, and a heartfelt birthday message hand-penned by our studio team.',
+    giftingTips: [
+      'Schedule delivery for morning or afternoon hostel gate handover',
+      'Add a personalized birthday wish with their college nickname',
+      'Combine practical lifestyle keepsakes with sweet bakery treats',
+    ],
     accentBg: 'from-[#FFF8F0] to-[#FFEEDD]',
     accentBorder: 'border-[#F8CBB0]',
     accentText: 'text-[#A04022]',
     badge: 'Celebration',
-    linkedProductIds: ['the-dilsy-edit', 'the-everything-box'],
+    linkedProductIds: ['loved-box', 'the-everything-box'],
+    relatedThemeIds: ['anniversary', 'i-love-you-for-her', 'miss-you-box'],
   },
   {
     id: 'periods-box',
+    slug: 'periods',
     name: 'Periods Box',
     description: 'A little extra care for the days that call for it.',
-    visualDirection: 'A warm, comforting care package with thoughtful notes, snacks, and optional period-care essentials. Keep the presentation tasteful, supportive, and non-stigmatising. Clearly identify any included products and only list items whose availability has been confirmed.',
+    visualDirection: 'A supportive comfort-care package with thoughtful notes, snacks, and optional period-care essentials. Keep the presentation tasteful and non-stigmatising. Only list items whose availability has been confirmed.',
+    heroHeadline: 'Warmth, comfort, and gentle care when she needs it most',
+    heroStory: 'A supportive, non-stigmatising comfort care package crafted for painful cramps and low-energy days. Thoughtfully curated with comforting hot cocoa blends, soothing herbal teas, cozy aromatics, and a warm handwritten card that says "Take it easy today, you are cared for".',
+    giftingTips: [
+      'Request extra soothing chocolate treats or hot beverage blends',
+      'Keep the greeting card warm, supportive, and gentle',
+      'Specify hostel or PG gate delivery timing so she does not have to walk far',
+    ],
     accentBg: 'from-[#FFF5F7] to-[#F9E9ED]',
     accentBorder: 'border-[#E8B8C4]',
     accentText: 'text-[#8C283B]',
     badge: 'Comfort & Care',
-    // Kept separate: No generic pre-packaged stock invented; custom curation available upon owner verification
+    // Kept separate: No generic pre-packaged stock invented; custom studio curation available
     linkedProductIds: [],
+    relatedThemeIds: ['i-love-you-for-her', 'birthday', 'miss-you-box'],
   },
   {
     id: 'apology-box',
+    slug: 'apology',
     name: 'Apology Box',
     description: 'Sometimes, a thoughtful gesture says what words struggle to.',
-    visualDirection: 'A heartfelt message card, thoughtful keepsakes, and understated packaging. Do not promise that a gift will fix a relationship or guarantee forgiveness.',
+    visualDirection: 'Heartfelt message cards, thoughtful keepsakes, and understated packaging. Do not suggest that a gift guarantees forgiveness or fixes a relationship.',
+    heroHeadline: 'A sincere, heartfelt gesture when words fall short',
+    heroStory: 'Saying sorry requires vulnerability and quiet sincerity. Our Apology Box avoids flashy or transactional gimmicks, offering an understated ivory keepsake box, calming lavender botanicals, and a meaningful handwritten card where you can speak from the heart with genuine humility.',
+    giftingTips: [
+      'Speak honestly in your handwritten letter without excuses or demands',
+      'Choose understated, calming colors and gentle fragrance',
+      'Respect their space and let the gesture speak quietly',
+    ],
     accentBg: 'from-[#FDFBF9] to-[#F5EFE9]',
     accentBorder: 'border-[#D9C8BC]',
     accentText: 'text-[#5C453C]',
     badge: 'Heartfelt Gesture',
     linkedProductIds: [],
+    relatedThemeIds: ['miss-you-box', 'i-love-you-for-him', 'i-love-you-for-her'],
   },
   {
     id: 'miss-you-box',
+    slug: 'miss-you',
     name: 'Miss You Box',
     description: 'For the people you wish were a little closer.',
-    visualDirection: 'Personal letters, memory cards, keepsakes, and thoughtful gift packaging.',
+    visualDirection: 'Personal letters, memory cards, keepsakes, and thoughtful packaging.',
+    heroHeadline: 'Bridging miles and campus distance with tactile affection',
+    heroStory: 'Whether studying away at Chandigarh University or missing someone in another state, distance feels softer when you hold a tangible keepsake. Polaroid photos, cozy fragrances, and a wax-sealed letter bring memories right to their hands.',
+    giftingTips: [
+      'Include your favorite memory snapshot from home or your last visit',
+      'Write about the next time you will meet',
+      'Choose long-lasting scented candles they can light during evening calls',
+    ],
     accentBg: 'from-[#F7F6FB] to-[#ECE9F7]',
     accentBorder: 'border-[#CEC6EB]',
     accentText: 'text-[#4F4178]',
     badge: 'Long Distance',
     linkedProductIds: ['the-little-affair'],
+    relatedThemeIds: ['anniversary', 'birthday', 'i-love-you-for-him'],
   },
   {
     id: 'valentine-box',
+    slug: 'valentine',
     name: 'Valentine Box',
     description: 'A little romance, wrapped just for them.',
-    visualDirection: 'Romantic gift presentation with coordinated packaging and personalised messages.',
+    visualDirection: 'Romantic gift presentation, coordinated packaging, and personalised messages.',
+    heroHeadline: 'Pure romance, wrapped in ruby silk ribbons & sweet feelings',
+    heroStory: 'A celebration of love in its most classic, romantic expression. Rich velvet accents, gourmet chocolate truffles, twin keepsake prints, and amber scented soy candles designed for unforgettable romantic milestones.',
+    giftingTips: [
+      'Pair with our flagship Loved Box (Medium — ₹969)',
+      'Include a candid polaroid with a loving handwritten caption',
+      'Reserve your delivery date in advance for Valentine season',
+    ],
     accentBg: 'from-[#FFF0F3] to-[#FCD5DE]',
     accentBorder: 'border-[#F29CAE]',
     accentText: 'text-[#B31D3F]',
     badge: 'Pure Romance',
-    linkedProductIds: ['the-everything-box', 'the-dilsy-edit'],
+    linkedProductIds: ['loved-box', 'the-everything-box'],
+    relatedThemeIds: ['i-love-you-for-her', 'i-love-you-for-him', 'anniversary'],
   },
   {
     id: 'diwali-box',
+    slug: 'diwali',
     name: 'Diwali Box',
     description: 'Celebrate the festival of lights with thoughtful surprises.',
     visualDirection: 'Festive gift packaging, warm golden accents, greeting cards, and suitable sweets or keepsakes where available.',
+    heroHeadline: 'Celebrate the festival of lights with golden warmth & festive joy',
+    heroStory: 'Bring festive warmth to student hostels and family homes. Hand-poured votive lights, handcrafted greeting cards with golden borders, festive sweet treats, and artisanal touches to celebrate Diwali with warmth.',
+    giftingTips: [
+      'Include festive wishes for hostel roommates or faculty mentors',
+      'Opt for golden wax seal detailing on greeting cards',
+      'Coordinate bulk or early hostel deliveries ahead of vacation rush',
+    ],
     accentBg: 'from-[#FFFDF5] to-[#FCF4D9]',
     accentBorder: 'border-[#F0DC94]',
     accentText: 'text-[#8C6D1F]',
     badge: 'Festive Lights',
     linkedProductIds: [],
+    relatedThemeIds: ['birthday', 'anniversary', 'miss-you-box'],
   },
 ];
+
+/**
+ * Helper to find a theme by either its ID or slug
+ */
+export function getThemeBySlugOrId(identifier: string): ThemeCategory | undefined {
+  const clean = identifier.toLowerCase().replace(/^\/collections\//, '').replace(/\/$/, '');
+  return THEME_CATEGORIES.find(
+    (t) => t.slug === clean || t.id === clean || t.id.replace(/-box$/, '') === clean
+  );
+}

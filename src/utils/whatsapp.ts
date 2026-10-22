@@ -16,30 +16,37 @@ export function buildWhatsAppLink(message: string): string {
 
 /**
  * Generate WhatsApp message for a direct single product inquiry / order
+ * Consistently displays: "[Name] — [Size] — ₹[Price]" (e.g. "Loved Box — Medium — ₹969")
  */
 export function generateSingleProductWhatsAppMessage(
   product: Product,
   customisation?: ProductCustomisation,
   delivery?: Partial<DeliveryDetails>
 ): string {
+  const displayTitle = `${product.name} — ${product.size} — ₹${product.price.toLocaleString('en-IN')}`;
+
   const lines: string[] = [
     `✨ *NEW DILSY ORDER INQUIRY*`,
     `_A Little Box Full of Feelings_`,
     ``,
-    `*Selected Hamper:* ${product.name}`,
-    `*Price:* ₹${product.price.toLocaleString('en-IN')}`,
-    `*Proposed Concept Overview:*`,
+    `*Selected Hamper:* ${displayTitle}`,
+    `*Size:* ${product.size}`,
+    `*Base Selling Price:* ₹${product.price.toLocaleString('en-IN')}`,
+    `*Proposed Concept Overview (Subject to owner confirmation):*`,
     ...product.itemsOverview.map((item) => ` • ${item}`),
     ``,
   ];
 
   if (customisation) {
     lines.push(`*Personalisation Details:*`);
+    if (customisation.recipientChoice) {
+      lines.push(` • Recipient Selection: ${customisation.recipientChoice}`);
+    }
     if (customisation.recipientName) {
       lines.push(` • For: ${customisation.recipientName}`);
     }
     if (customisation.personalNote) {
-      lines.push(` • Greeting Card Note: "${customisation.personalNote}"`);
+      lines.push(` • Greeting Card / Love Note: "${customisation.personalNote}"`);
     }
     if (customisation.polaroidCaption) {
       lines.push(` • Polaroid Caption / Photo Note: ${customisation.polaroidCaption}`);
@@ -70,6 +77,7 @@ export function generateSingleProductWhatsAppMessage(
 
 /**
  * Generate WhatsApp message for full Cart order
+ * Consistently displays: "Loved Box — Medium — ₹969"
  */
 export function generateCartWhatsAppMessage(
   items: CartItem[],
@@ -85,9 +93,13 @@ export function generateCartWhatsAppMessage(
 
   items.forEach((item, idx) => {
     const itemTotal = item.product.price * item.quantity;
+    const itemTitle = `${item.product.name} — ${item.product.size} — ₹${item.product.price.toLocaleString('en-IN')}`;
     lines.push(
-      `${idx + 1}. *${item.product.name}* (Qty: ${item.quantity}) — ₹${itemTotal.toLocaleString('en-IN')}`
+      `${idx + 1}. *${itemTitle}* (Qty: ${item.quantity}) — ₹${itemTotal.toLocaleString('en-IN')}`
     );
+    if (item.customisation.recipientChoice) {
+      lines.push(`   • Recipient Selection: ${item.customisation.recipientChoice}`);
+    }
     if (item.customisation.recipientName) {
       lines.push(`   • For: ${item.customisation.recipientName}`);
     }
@@ -130,7 +142,49 @@ export function generateCartWhatsAppMessage(
 }
 
 /**
+ * Automatic Theme-Matched Packaging Guidance
+ * Maps customer chosen occasion and recipient to DILSY studio packaging styling direction.
+ * (Note: Styling guidelines, not guaranteed physical materials or inclusions.
+ * Actual packaging depends on confirmed availability.)
+ */
+export function getThemePackagingGuidance(occasion?: string, recipientType?: string): string {
+  const occ = (occasion || '').toLowerCase();
+  const rec = (recipientType || '').toLowerCase();
+
+  if (occ.includes('valentine') || occ.includes('i love you') || occ.includes('romance')) {
+    return 'Romantic packaging with suitable ribbons and thoughtful details';
+  }
+  if (occ.includes('anniversary')) {
+    return 'Elegant, premium-looking packaging';
+  }
+  if (occ.includes('birthday')) {
+    return 'Celebratory packaging';
+  }
+  if (occ.includes('period')) {
+    return 'Comforting, thoughtful presentation';
+  }
+  if (occ.includes('apology')) {
+    return 'Simple, heartfelt presentation';
+  }
+  if (occ.includes('miss you')) {
+    return 'Personal, memory-inspired presentation';
+  }
+  if (occ.includes('diwali')) {
+    return 'Festive packaging';
+  }
+  if (occ.includes('for him') || rec.includes('boyfriend') || rec.includes('for him')) {
+    return 'Packaging appropriate to the selected gift and theme';
+  }
+  if (occ.includes('for her') || rec.includes('girlfriend') || rec.includes('for her')) {
+    return 'Packaging appropriate to the selected gift and theme';
+  }
+  return 'Packaging appropriate to the selected gift and theme';
+}
+
+/**
  * Generate WhatsApp message for Custom Hamper Builder
+ * Uses official box sizes: Small Box (₹799), Medium Box (₹969), Large Box (₹1,199), or Custom Budget.
+ * Packaging is automatically matched to the selected occasion theme by DILSY.
  */
 export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): string {
   const isCustomBudget = form.budget === 'Custom Budget';
@@ -138,15 +192,18 @@ export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): str
     ? `Custom (${form.customBudgetAmount ? `₹${form.customBudgetAmount}` : 'Price to be confirmed'})`
     : form.budget;
 
+  const packagingGuidance = getThemePackagingGuidance(form.occasion, form.recipientType);
+
   const lines: string[] = [
     `✨ *CUSTOM BESPOKE HAMPER REQUEST*`,
     `_DILSY — A Little Box Full of Feelings_`,
     ``,
     `*Hamper Blueprint:*`,
     `• Recipient: ${form.recipientType || 'Special someone'}`,
-    `• Occasion: ${form.occasion || 'Celebration'}`,
-    `• Target Budget: ${displayBudget}`,
-    `• Packaging Style: ${form.packagingStyle || 'Standard Ivory Box'}`,
+    `• Selected Gift Theme & Occasion: ${form.occasion || 'Celebration'}`,
+    `• Target Box Size & Budget: ${displayBudget}`,
+    `• Automatic Theme-Matched Packaging: ${packagingGuidance}`,
+    `  _(DILSY studio styling guidance; actual packaging depends on confirmed availability)_`,
     ``,
     `*Selected Goodies & Elements:*`,
     ...(form.giftCategories.length > 0
@@ -156,7 +213,7 @@ export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): str
     `*Personal Touch:*`,
     `• Recipient Name/Nickname: ${form.recipientName || 'Not provided'}`,
     `• Greeting Card Message: "${form.personalNote || 'To be handwritten by DILSY'}"`,
-    ...(form.specialInstructions ? [`• Special Instructions: ${form.specialInstructions}`] : []),
+    ...(form.specialInstructions ? [`• Special Instructions / Dietary / Preferences: ${form.specialInstructions}`] : []),
     ``,
     `*Delivery & Contact Details:*`,
     `• Customer Name: ${form.customerName || 'Not specified'}`,
@@ -169,12 +226,12 @@ export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): str
     `*Pricing Note:*`,
     isCustomBudget
       ? `• Price status: Price to be confirmed with DILSY owner based on custom item selection.`
-      : `• Approximate base budget: ${form.budget} (final pricing to be verified by DILSY).`,
+      : `• Official base box budget: ${form.budget} (final pricing to be verified by DILSY).`,
     ``,
     `*Delivery Policy:*`,
     `"${EXACT_DELIVERY_POLICY}"`,
     ``,
-    `Hi DILSY! I built this custom hamper blueprint on your website. Could you please review the items, confirm item availability and final pricing for delivery to my location? Thank you!`,
+    `Hi DILSY! I built this custom hamper blueprint on your website for the "${form.occasion || 'Celebration'}" theme. Could you please review the items, confirm item availability and final pricing for delivery to my location? Thank you!`,
   ];
 
   return lines.join('\n');

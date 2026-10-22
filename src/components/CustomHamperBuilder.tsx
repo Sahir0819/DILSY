@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Gift, Check, Sparkles, MessageCircle, AlertCircle, Info, Calendar, Clock, MapPin, User, Heart } from 'lucide-react';
 import { CustomHamperForm } from '../types';
-import { GIFT_CATEGORY_OPTIONS, PACKAGING_STYLES, SERVICE_AREAS, TIME_WINDOWS } from '../data/products';
-import { generateCustomHamperWhatsAppMessage, EXACT_DELIVERY_POLICY } from '../utils/whatsapp';
+import { GIFT_CATEGORY_OPTIONS, SERVICE_AREAS, TIME_WINDOWS } from '../data/products';
+import { generateCustomHamperWhatsAppMessage, EXACT_DELIVERY_POLICY, getThemePackagingGuidance } from '../utils/whatsapp';
 
 interface CustomHamperBuilderProps {
   onOpenReviewModal: (title: string, message: string) => void;
@@ -16,12 +16,11 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   const [formData, setFormData] = useState<CustomHamperForm>({
     recipientType: 'Girlfriend / Partner',
     occasion: prefilledOccasion || 'Birthday Celebration',
-    budget: '₹1,249',
+    budget: 'Medium Box — ₹969',
     customBudgetAmount: '',
     giftCategories: ['Artisanal Soy Candles & Aromatics', 'Bespoke Polaroid Keepsakes & Photos'],
     recipientName: '',
     personalNote: '',
-    packagingStyle: 'Minimalist Warm Ivory Box',
     specialInstructions: '',
     deliveryArea: 'Chandigarh University (North & South Gate)',
     specificLandmark: '',
@@ -64,7 +63,12 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
     'Graduation / Farewell',
   ];
 
-  const budgetOptions = ['₹999', '₹1,249', '₹1,499', 'Custom Budget'];
+  const budgetOptions = [
+    'Small Box — ₹799',
+    'Medium Box — ₹969',
+    'Large Box — ₹1,199',
+    'Custom Budget',
+  ];
 
   const handleCategoryToggle = (label: string) => {
     setFormData((prev) => {
@@ -134,7 +138,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
             Create Your Custom DILSY Hamper
           </h2>
           <p className="mt-2 text-base text-[#52333D] font-light leading-relaxed">
-            Every connection is unique. Choose your preferred recipient, goodies, budget, and packaging. We'll handcraft your box with a personalized letter, wax seal, and deliver it directly across Chandigarh University & Mohali.
+            Every connection is unique. Choose your preferred recipient, occasion theme, goodies, and budget. DILSY will style and theme-match your packaging with a personalized handwritten letter, wax seal, and direct delivery across Chandigarh University & Mohali.
           </p>
         </div>
 
@@ -186,28 +190,34 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
               </div>
             </div>
 
-            {/* Step 2: Target Budget */}
+            {/* Step 2: Official Box Size & Target Budget */}
             <div>
               <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#E8D0D6]">
                 <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#99223A] to-[#C73858] text-white text-xs font-serif flex items-center justify-center font-bold shadow-2xs">2</span>
-                <h3 className="font-serif font-bold text-lg text-[#2D1B22]">Budget Preference</h3>
+                <h3 className="font-serif font-bold text-lg text-[#2D1B22]">Select Official Box Size & Budget Target</h3>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {budgetOptions.map((opt) => (
                   <button
                     key={opt}
                     type="button"
                     onClick={() => setFormData({ ...formData, budget: opt })}
-                    className={`py-3 px-3 rounded-xl border text-center transition-all ${
+                    className={`p-3 rounded-xl border text-center transition-all ${
                       formData.budget === opt
                         ? 'border-[#99223A] bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
                         : 'border-[#E8C2CC] bg-white text-[#3D141C] hover:bg-[#FFF5F8]'
                     }`}
                   >
-                    <span className="block text-sm tabular-nums">{opt}</span>
-                    <span className="block text-[10px] opacity-80 mt-0.5">
-                      {opt === '₹999' ? 'Starter token' : opt === '₹1,249' ? 'Signature edit' : opt === '₹1,499' ? 'Deluxe box' : 'Custom value'}
+                    <span className="block text-xs font-bold tabular-nums">{opt}</span>
+                    <span className="block text-[10px] opacity-80 mt-1">
+                      {opt === 'Small Box — ₹799'
+                        ? 'A little box, filled with details'
+                        : opt === 'Medium Box — ₹969'
+                        ? 'Our just-right box'
+                        : opt === 'Large Box — ₹1,199'
+                        ? 'More little surprises'
+                        : 'Price to be confirmed'}
                     </span>
                   </button>
                 ))}
@@ -275,9 +285,9 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
 
             {/* Step 4: The Personal Touch */}
             <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#2A1E1A]/10">
-                <span className="w-6 h-6 rounded-full bg-[#2A1E1A] text-[#FAF7F2] text-xs font-serif flex items-center justify-center font-bold">4</span>
-                <h3 className="font-serif font-bold text-lg text-[#2A1E1A]">The Personal Touch & Packaging</h3>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#E8D0D6]">
+                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#99223A] to-[#C73858] text-white text-xs font-serif flex items-center justify-center font-bold shadow-2xs">4</span>
+                <h3 className="font-serif font-bold text-lg text-[#2D1B22]">The Personal Touch</h3>
               </div>
 
               <div className="space-y-4">
@@ -313,27 +323,21 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                   )}
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Packaging Style Preference
-                  </label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {PACKAGING_STYLES.map((pkg) => (
-                      <button
-                        key={pkg.id}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, packagingStyle: pkg.name })}
-                        className={`p-3 rounded-xl border text-left transition-colors ${
-                          formData.packagingStyle === pkg.name
-                            ? 'border-[#99223A] bg-[#FFF0F4] ring-1 ring-[#99223A]'
-                            : 'border-[#E8C2CC] bg-white hover:bg-[#FFF5F8]'
-                        }`}
-                      >
-                        <span className="block text-xs font-semibold text-[#3D141C]">{pkg.name}</span>
-                        <span className="block text-[11px] text-[#6B424E] mt-0.5">{pkg.desc}</span>
-                      </button>
-                    ))}
+                {/* Automatic Theme-Matched Packaging Info Card */}
+                <div className="p-4 bg-gradient-to-r from-[#FFF0F4] via-[#FFEBF0] to-[#FFF5F8] rounded-xl border border-[#FFCCD5] text-xs space-y-1.5 shadow-2xs">
+                  <div className="flex items-center gap-1.5 text-[#99223A] font-semibold">
+                    <Sparkles className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
+                    <span>Automatic Theme-Matched Packaging</span>
                   </div>
+                  <p className="text-[#52333D] text-[11px] leading-relaxed">
+                    DILSY automatically designs and styles the packaging based on your chosen theme (<strong>{formData.occasion}</strong>).
+                  </p>
+                  <p className="text-[#7A1E31] text-[11px] italic bg-white/70 p-2 rounded-lg border border-[#FFCCD5]/60">
+                    Studio styling guidance: <em>"{getThemePackagingGuidance(formData.occasion, formData.recipientType)}"</em>
+                  </p>
+                  <p className="text-[10px] text-[#6B424E] italic pt-0.5">
+                    *Actual packaging presentation depends on confirmed studio availability.
+                  </p>
                 </div>
 
                 <div>
@@ -509,10 +513,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                   )}
                 </div>
 
-                <div>
-                  <span className="text-[#6B424E] block text-[11px]">Packaging</span>
-                  <p className="font-semibold">{formData.packagingStyle}</p>
-                </div>
+
 
                 <div>
                   <span className="text-[#6B424E] block text-[11px]">For Recipient</span>

@@ -70,8 +70,8 @@ export const Hero: React.FC<HeroProps> = ({
                 <span>Handwritten Letters & Wax Seals</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="font-semibold text-[#99223A] tabular-nums">₹999 – ₹1,499</span>
-                <span>Affordable boutique pricing</span>
+                <span className="font-semibold text-[#99223A] tabular-nums">₹799 – ₹1,199</span>
+                <span>Official boutique box pricing</span>
               </div>
             </div>
           </div>
@@ -79,16 +79,16 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Right Column: Hero Visual Anchor */}
           <div className="lg:col-span-5 relative">
             <div className="relative mx-auto max-w-md lg:max-w-none">
-              {/* Stacked tactile card presentation */}
+              {/* Stacked tactile card presentation featuring Loved Box */}
               <div className="relative p-2 bg-[#FDF9F7] rounded-2xl border border-[#E8C2CC] shadow-xl shadow-[#A82841]/10">
-                <ProductArtwork type="dilsy-edit" className="shadow-xs" />
+                <ProductArtwork type="loved-box" className="shadow-xs" />
                 <div className="p-4 bg-[#FDF9F7] border-t border-[#E8D0D6] flex items-center justify-between">
                   <div>
-                    <h3 className="font-serif font-bold text-[#2D1B22] text-lg">The DILSY Edit</h3>
-                    <p className="text-xs text-[#6B424E]">Personalised handcrafted keepsake hamper</p>
+                    <h3 className="font-serif font-bold text-[#2D1B22] text-lg">Loved Box</h3>
+                    <p className="text-xs text-[#6B424E]">Medium · A little box full of love</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-lg font-serif font-bold text-[#99223A] tabular-nums">₹1,249</span>
+                    <span className="text-lg font-serif font-bold text-[#99223A] tabular-nums">₹969</span>
                     <span className="block text-[11px] text-[#A32842] font-medium flex items-center justify-end gap-1">
                       <Heart className="w-2.5 h-2.5 fill-[#C73858] text-[#C73858]" />
                       Most loved

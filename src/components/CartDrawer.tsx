@@ -127,10 +127,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <h4 className="font-serif font-bold text-base text-[#2D1B22]">
-                          {item.product.name}
+                          {`${item.product.name} — ${item.product.size} — ₹${item.product.price.toLocaleString('en-IN')}`}
                         </h4>
                         <span className="text-xs text-[#99223A] font-medium tabular-nums">
-                          ₹{item.product.price.toLocaleString('en-IN')} each
+                          Size: {item.product.size} · ₹{item.product.price.toLocaleString('en-IN')} each
                         </span>
                       </div>
                       <span className="text-sm font-semibold text-[#99223A] tabular-nums">
@@ -139,10 +139,16 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     </div>
 
                     {/* Customisation Details */}
-                    {(item.customisation.recipientName ||
+                    {(item.customisation.recipientChoice ||
+                      item.customisation.recipientName ||
                       item.customisation.personalNote ||
                       item.customisation.polaroidCaption) && (
                       <div className="p-2.5 bg-[#FFF0F4] rounded-lg text-xs space-y-1 border border-[#FFCCD5]">
+                        {item.customisation.recipientChoice && (
+                          <p className="text-[#2D1B22]">
+                            <strong className="font-medium text-[#7A1E31]">Recipient Choice:</strong> {item.customisation.recipientChoice}
+                          </p>
+                        )}
                         {item.customisation.recipientName && (
                           <p className="text-[#2D1B22]">
                             <strong className="font-medium text-[#7A1E31]">For:</strong> {item.customisation.recipientName}

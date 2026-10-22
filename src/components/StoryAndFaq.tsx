@@ -37,8 +37,8 @@ export const OurStory: React.FC = () => {
               </div>
               <div className="w-px h-8 bg-[#E8D0D6]" />
               <div>
-                <span className="block font-serif font-bold text-2xl text-[#99223A]">₹999–₹1,499</span>
-                <span className="text-xs text-[#6B424E]">Fair Student Budgets</span>
+                <span className="block font-serif font-bold text-2xl text-[#99223A]">₹799–₹1,199</span>
+                <span className="text-xs text-[#6B424E]">Official Box Pricing</span>
               </div>
               <div className="w-px h-8 bg-[#E8D0D6]" />
               <div>
@@ -134,7 +134,7 @@ export const FaqSection: React.FC = () => {
     },
     {
       q: 'Are the items inside launch hampers customizable?',
-      a: 'Yes! The included items in our launch hampers (The Little Affair ₹999, The DILSY Edit ₹1,249, The Everything Box ₹1,499) are curated proposed concepts. You can customize fragrances, dietary preferences (e.g. eggless treats), initials on keychains, and packaging style during checkout or via our Custom Hamper Builder.',
+      a: 'Yes! The included items in our launch hampers (Small Box ₹799, Loved Box Medium ₹969, Large Box ₹1,199) are curated proposed concepts. You can customize fragrances, dietary preferences (e.g. eggless treats), initials on keychains, and packaging style during checkout or via our Custom Hamper Builder.',
     },
     {
       q: 'Are orders confirmed immediately upon clicking WhatsApp?',
@@ -255,7 +255,7 @@ export const Footer: React.FC<{ onNavigate: (id: string) => void }> = ({ onNavig
                 <span>Serving: Chandigarh University & Mohali PGs (Punjab)</span>
               </p>
               <p className="text-[11px] text-[#FFE5EC]/60 pt-1">
-                Hamper Price Range: ₹999 – ₹1,499
+                Official Box Price Range: ₹799 – ₹1,199
               </p>
             </div>
           </div>

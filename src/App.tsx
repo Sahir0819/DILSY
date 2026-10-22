@@ -3,15 +3,16 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { ProductCard } from './components/ProductCard';
 import { ShopByThemeSection } from './components/ShopByThemeSection';
+import { CollectionPage } from './components/CollectionPage';
 import { CustomHamperBuilder } from './components/CustomHamperBuilder';
 import { CartDrawer } from './components/CartDrawer';
 import { WhatsAppReviewModal } from './components/WhatsAppReviewModal';
 import { OurStory, DeliveryPolicySection, FaqSection, Footer } from './components/StoryAndFaq';
 import { PRODUCTS } from './data/products';
-import { THEME_CATEGORIES } from './data/themes';
+import { THEME_CATEGORIES, getThemeBySlugOrId } from './data/themes';
 import { CartItem, Product, ProductCustomisation } from './types';
 import { generateSingleProductWhatsAppMessage } from './utils/whatsapp';
-import { Sparkles, Heart, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Heart, ArrowRight } from 'lucide-react';
 
 export default function App() {
   const [cart, setCart] = useState<CartItem[]>(() => {
@@ -25,7 +26,20 @@ export default function App() {
 
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<'all' | 'for-him' | 'for-her' | 'besties'>('all');
-  const [selectedThemeId, setSelectedThemeId] = useState<string | null>(null);
+
+  // URL / Collection route state
+  const [currentCollectionSlug, setCurrentCollectionSlug] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname;
+      if (path.startsWith('/collections/')) {
+        const slug = path.replace('/collections/', '').replace(/\/$/, '');
+        const matched = getThemeBySlugOrId(slug);
+        return matched ? matched.slug : null;
+      }
+    }
+    return null;
+  });
+
   const [customBuilderOccasion, setCustomBuilderOccasion] = useState<string>('Birthday Box');
   const [activeSection, setActiveSection] = useState('hero');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -40,6 +54,23 @@ export default function App() {
     title: '',
     message: '',
   });
+
+  // Listen for browser Back / Forward buttons (HTML5 history)
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname;
+      if (path.startsWith('/collections/')) {
+        const slug = path.replace('/collections/', '').replace(/\/$/, '');
+        const matched = getThemeBySlugOrId(slug);
+        setCurrentCollectionSlug(matched ? matched.slug : null);
+      } else {
+        setCurrentCollectionSlug(null);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
 
   // Save cart to localStorage
   useEffect(() => {
@@ -57,11 +88,11 @@ export default function App() {
 
   const handleAddToCart = (product: Product, customisation: ProductCustomisation) => {
     setCart((prev) => {
-      // Match by product ID and same recipient customisation
       const existingIdx = prev.findIndex(
         (item) =>
           item.product.id === product.id &&
           item.customisation.recipientName === customisation.recipientName &&
+          item.customisation.recipientChoice === customisation.recipientChoice &&
           item.customisation.personalNote === customisation.personalNote
       );
 
@@ -114,28 +145,55 @@ export default function App() {
     setCart([]);
   };
 
+  // Navigate to a dedicated collection page
+  const navigateToCollection = (slugOrId: string) => {
+    const theme = getThemeBySlugOrId(slugOrId);
+    const slug = theme ? theme.slug : slugOrId;
+    window.history.pushState({}, '', `/collections/${slug}`);
+    setCurrentCollectionSlug(slug);
+    setActiveSection('shop-by-theme');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Navigate back to all themes
+  const navigateBackToThemes = () => {
+    window.history.pushState({}, '', '/');
+    setCurrentCollectionSlug(null);
+    setActiveSection('shop-by-theme');
+    setTimeout(() => {
+      document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  };
+
+  // General Navbar and link navigation
   const handleNavigate = (sectionId: string) => {
     setActiveSection(sectionId);
-    if (sectionId === 'hero') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (sectionId === 'shop-by-theme') {
-      setSelectedThemeId(null);
-      document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (sectionId === 'shop') {
-      setActiveFilter('all');
-      document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (sectionId === 'for-him') {
-      setSelectedThemeId('i-love-you-for-him');
-      document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (sectionId === 'for-her') {
-      setSelectedThemeId('i-love-you-for-her');
-      document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
-    } else if (sectionId === 'besties') {
-      setActiveFilter('besties');
-      document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+
+    // If currently on a collection page and navigating to a home section
+    if (currentCollectionSlug) {
+      window.history.pushState({}, '', '/');
+      setCurrentCollectionSlug(null);
     }
+
+    setTimeout(() => {
+      if (sectionId === 'hero') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (sectionId === 'shop-by-theme') {
+        document.getElementById('shop-by-theme')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (sectionId === 'shop') {
+        setActiveFilter('all');
+        document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (sectionId === 'for-him') {
+        navigateToCollection('i-love-you-for-him');
+      } else if (sectionId === 'for-her') {
+        navigateToCollection('i-love-you-for-her');
+      } else if (sectionId === 'besties') {
+        setActiveFilter('besties');
+        document.getElementById('shop')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 50);
   };
 
   const filteredProducts = PRODUCTS.filter((p) => {
@@ -144,6 +202,11 @@ export default function App() {
   });
 
   const cartTotalItems = cart.reduce((acc, i) => acc + i.quantity, 0);
+
+  // Active collection object if on a collection page
+  const currentCollection = currentCollectionSlug
+    ? getThemeBySlugOrId(currentCollectionSlug)
+    : null;
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#2A1E1A] flex flex-col font-sans">
@@ -159,145 +222,169 @@ export default function App() {
       <Navbar
         cartCount={cartTotalItems}
         onOpenCart={() => setIsCartOpen(true)}
-        activeSection={activeSection}
+        activeSection={currentCollection ? 'shop-by-theme' : activeSection}
         onNavigate={handleNavigate}
       />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <Hero
-          onShopClick={() => handleNavigate('shop')}
-          onShopByThemeClick={() => handleNavigate('shop-by-theme')}
-          onCustomClick={() => handleNavigate('custom-builder')}
-        />
+        {currentCollection ? (
+          /* =========================================================
+             SEPARATE OCCASION-SPECIFIC COLLECTION PAGE
+             ========================================================= */
+          <CollectionPage
+            collection={currentCollection}
+            allProducts={PRODUCTS}
+            onBackToThemes={navigateBackToThemes}
+            onNavigateToCollection={navigateToCollection}
+            onOpenCustomBuilder={(occasionTitle) => {
+              setCustomBuilderOccasion(occasionTitle);
+              window.history.pushState({}, '', '/');
+              setCurrentCollectionSlug(null);
+              setTimeout(() => {
+                document.getElementById('custom-builder')?.scrollIntoView({ behavior: 'smooth' });
+              }, 50);
+            }}
+            onAddToCart={handleAddToCart}
+            onOrderWhatsApp={handleOrderWhatsAppSingle}
+          />
+        ) : (
+          /* =========================================================
+             MAIN WEBSITE (HOMEPAGE)
+             ========================================================= */
+          <>
+            {/* Hero Section */}
+            <Hero
+              onShopClick={() => handleNavigate('shop')}
+              onShopByThemeClick={() => handleNavigate('shop-by-theme')}
+              onCustomClick={() => handleNavigate('custom-builder')}
+            />
 
-        {/* Shop by Theme Section (Final 9 Business-Approved Categories) */}
-        <ShopByThemeSection
-          products={PRODUCTS}
-          selectedThemeId={selectedThemeId}
-          onSelectTheme={(themeId) => setSelectedThemeId(themeId)}
-          onOpenCustomBuilder={(themeOccasion) => {
-            if (themeOccasion) setCustomBuilderOccasion(themeOccasion);
-            document.getElementById('custom-builder')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-          onAddToCart={handleAddToCart}
-          onOrderWhatsApp={handleOrderWhatsAppSingle}
-        />
+            {/* Shop by Theme Section (9 Category Cards with View Collection) */}
+            <ShopByThemeSection
+              products={PRODUCTS}
+              onSelectTheme={navigateToCollection}
+              onOpenCustomBuilder={(themeOccasion) => {
+                if (themeOccasion) setCustomBuilderOccasion(themeOccasion);
+                document.getElementById('custom-builder')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+            />
 
-        {/* Featured Products Collection */}
-        <section id="shop" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
-            <div>
-              <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#A32842] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5] mb-2 shadow-2xs">
-                <Heart className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
-                <span>Handcrafted With Love</span>
+            {/* Official Box Hampers & Curations */}
+            <section id="shop" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+                <div>
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#A32842] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5] mb-2 shadow-2xs">
+                    <Heart className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
+                    <span>Handcrafted With Love</span>
+                  </div>
+                  <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#2D1B22] tracking-tight text-balance">
+                    Official Box Hampers & Curations
+                  </h2>
+                  <p className="mt-2 text-sm sm:text-base text-[#52333D] font-light max-w-xl">
+                    Featuring our recommended Loved Box (Medium — ₹969) alongside our official Small Box (₹799) and Large Box (₹1,199). Every box is personal, handcrafted, and verified on WhatsApp before dispatch.
+                  </p>
+                </div>
+
+                {/* Filter Tabs / Segmented Controls with Love Hues */}
+                <div className="flex items-center gap-1.5 p-1 bg-[#FAF0F3] rounded-xl border border-[#E8C2CC] overflow-x-auto self-start md:self-auto shadow-2xs">
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('all')}
+                    className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
+                      activeFilter === 'all'
+                        ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                        : 'text-[#6B3241] hover:text-[#99223A]'
+                    }`}
+                  >
+                    Shop All
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('for-him')}
+                    className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
+                      activeFilter === 'for-him'
+                        ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                        : 'text-[#6B3241] hover:text-[#99223A]'
+                    }`}
+                  >
+                    For Him
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('for-her')}
+                    className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
+                      activeFilter === 'for-her'
+                        ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                        : 'text-[#6B3241] hover:text-[#99223A]'
+                    }`}
+                  >
+                    For Her
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveFilter('besties')}
+                    className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
+                      activeFilter === 'besties'
+                        ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
+                        : 'text-[#6B3241] hover:text-[#99223A]'
+                    }`}
+                  >
+                    Besties
+                  </button>
+                </div>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#2D1B22] tracking-tight text-balance">
-                The Launch Hampers
-              </h2>
-              <p className="mt-2 text-sm sm:text-base text-[#52333D] font-light max-w-xl">
-                Three bespoke launch concepts crafted for romantic milestones, birthdays, anniversaries, and hostel care packages. Each box is completely customizable upon WhatsApp verification.
-              </p>
-            </div>
 
-            {/* Filter Tabs / Segmented Controls with Love Hues */}
-            <div className="flex items-center gap-1.5 p-1 bg-[#FAF0F3] rounded-xl border border-[#E8C2CC] overflow-x-auto self-start md:self-auto shadow-2xs">
-              <button
-                type="button"
-                onClick={() => setActiveFilter('all')}
-                className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
-                  activeFilter === 'all'
-                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
-                    : 'text-[#6B3241] hover:text-[#99223A]'
-                }`}
-              >
-                Shop All
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveFilter('for-him')}
-                className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
-                  activeFilter === 'for-him'
-                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
-                    : 'text-[#6B3241] hover:text-[#99223A]'
-                }`}
-              >
-                For Him
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveFilter('for-her')}
-                className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
-                  activeFilter === 'for-her'
-                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
-                    : 'text-[#6B3241] hover:text-[#99223A]'
-                }`}
-              >
-                For Her
-              </button>
-              <button
-                type="button"
-                onClick={() => setActiveFilter('besties')}
-                className={`px-3.5 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap ${
-                  activeFilter === 'besties'
-                    ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs font-semibold'
-                    : 'text-[#6B3241] hover:text-[#99223A]'
-                }`}
-              >
-                Besties
-              </button>
-            </div>
-          </div>
-
-          {/* 3-Column Product Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={handleAddToCart}
-                onOrderWhatsApp={handleOrderWhatsAppSingle}
-              />
-            ))}
-          </div>
-
-          {/* Need custom notice banner with romantic love styling */}
-          <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-[#FFEBF0] via-[#FFF0F4] to-[#FFE8EE] border border-[#FFCCD5] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm shadow-[#FFCCD5]/20">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#FFD1DC] border border-[#FFB3C6] flex items-center justify-center text-[#99223A] shrink-0 shadow-2xs">
-                <Heart className="w-5 h-5 fill-[#C73858] text-[#C73858]" />
+              {/* Product Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                    onOrderWhatsApp={handleOrderWhatsAppSingle}
+                  />
+                ))}
               </div>
-              <div>
-                <p className="font-serif font-bold text-base text-[#2D1B22]">Want a custom love combination or specific budget?</p>
-                <p className="text-xs text-[#6B424E]">Mix and match goodies, polaroids, scents, and keepsakes in our studio builder.</p>
+
+              {/* Need custom notice banner with romantic love styling */}
+              <div className="mt-12 p-6 rounded-2xl bg-gradient-to-r from-[#FFEBF0] via-[#FFF0F4] to-[#FFE8EE] border border-[#FFCCD5] flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm shadow-[#FFCCD5]/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-[#FFD1DC] border border-[#FFB3C6] flex items-center justify-center text-[#99223A] shrink-0 shadow-2xs">
+                    <Heart className="w-5 h-5 fill-[#C73858] text-[#C73858]" />
+                  </div>
+                  <div>
+                    <p className="font-serif font-bold text-base text-[#2D1B22]">Want a custom love combination or specific budget?</p>
+                    <p className="text-xs text-[#6B424E]">Mix and match goodies, polaroids, scents, and keepsakes in our studio builder.</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleNavigate('custom-builder')}
+                  className="px-5 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 shadow-xs shadow-[#99223A]/20"
+                >
+                  <span>Build Custom Hamper</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
               </div>
-            </div>
-            <button
-              onClick={() => handleNavigate('custom-builder')}
-              className="px-5 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-lg text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-1.5 shadow-xs shadow-[#99223A]/20"
-            >
-              <span>Build Custom Hamper</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </section>
+            </section>
 
-        {/* Custom Hamper Builder Section */}
-        <CustomHamperBuilder
-          prefilledOccasion={customBuilderOccasion}
-          onOpenReviewModal={(title, message) =>
-            setReviewModal({ isOpen: true, title, message })
-          }
-        />
+            {/* Custom Hamper Builder Section */}
+            <CustomHamperBuilder
+              prefilledOccasion={customBuilderOccasion}
+              onOpenReviewModal={(title, message) =>
+                setReviewModal({ isOpen: true, title, message })
+              }
+            />
 
-        {/* Brand Story Section */}
-        <OurStory />
+            {/* Brand Story Section */}
+            <OurStory />
 
-        {/* Official Delivery Policy Section */}
-        <DeliveryPolicySection />
+            {/* Official Delivery Policy Section */}
+            <DeliveryPolicySection />
 
-        {/* FAQs Section */}
-        <FaqSection />
+            {/* FAQs Section */}
+            <FaqSection />
+          </>
+        )}
       </main>
 
       {/* Footer */}

@@ -1,7 +1,52 @@
 import { Product } from '../types';
 
 /**
- * DILSY Launch Products Catalog
+ * OFFICIAL DILSY BOX SIZES AND BASE PRICES
+ * 
+ * Central editable configuration for official box sizes, base prices,
+ * descriptions, and positioning.
+ * 
+ * Note: These are the official base selling prices.
+ * The exact contents of each box are proposed concepts until confirmed by the owner.
+ */
+export interface OfficialBoxSizeInfo {
+  id: string;
+  name: string;
+  size: 'Small' | 'Medium' | 'Large';
+  price: number;
+  description: string;
+  positioning: string;
+}
+
+export const OFFICIAL_BOX_SIZES: OfficialBoxSizeInfo[] = [
+  {
+    id: 'small-box',
+    name: 'Small Box',
+    size: 'Small',
+    price: 799,
+    description: 'A little box, filled with thoughtful details.',
+    positioning: 'A smaller, budget-friendly personalised gift hamper.',
+  },
+  {
+    id: 'medium-box',
+    name: 'Medium Box',
+    size: 'Medium',
+    price: 969,
+    description: 'Our just-right box for a little extra love.',
+    positioning: 'A balanced, thoughtfully curated gift hamper.',
+  },
+  {
+    id: 'large-box',
+    name: 'Large Box',
+    size: 'Large',
+    price: 1199,
+    description: 'More little surprises, more reasons to smile.',
+    positioning: 'A larger hamper with room for additional gift items.',
+  },
+];
+
+/**
+ * DILSY Products Catalog
  * 
  * NOTE FOR STORE OWNER:
  * You can easily edit prices, descriptions, and included items below.
@@ -11,10 +56,12 @@ import { Product } from '../types';
 export const PRODUCTS: Product[] = [
   {
     id: 'the-little-affair',
-    name: 'The Little Affair',
-    tagline: 'Delicate, intimate, and wrapped with quiet tenderness.',
-    price: 999,
-    description: 'A pocket-sized gesture made for moments that speak softer than words. Featuring cozy aromatics, custom keepsakes, and a hand-penned card.',
+    name: 'Small Box',
+    size: 'Small',
+    price: 799,
+    tagline: 'The Little Affair · A little box, filled with thoughtful details.',
+    description: '“A little box, filled with thoughtful details.” A smaller, budget-friendly personalised gift hamper with cozy aromatics, custom keepsakes, and a hand-penned card.',
+    positioning: 'A smaller, budget-friendly personalised gift hamper.',
     categories: ['all', 'for-her', 'for-him', 'besties'],
     themeIds: ['i-love-you-for-her', 'i-love-you-for-him', 'anniversary', 'miss-you-box'],
     idealFor: 'Birthdays, hostel room surprises, anniversary tokens, or "just because".',
@@ -30,32 +77,37 @@ export const PRODUCTS: Product[] = [
     illustrationType: 'little-affair',
   },
   {
-    id: 'the-dilsy-edit',
-    name: 'The DILSY Edit',
-    tagline: 'Our signature signature curation for the ones who deserve thoughtful elegance.',
-    price: 1249,
-    description: 'A thoughtfully balanced hamper designed to delight both boys and girls. Practical keepsakes combined with sensory warmth and memorable handwritten notes.',
+    id: 'loved-box',
+    name: 'Loved Box',
+    size: 'Medium',
+    price: 969,
+    tagline: 'A little box full of love, thoughtful surprises, and personal touches.',
+    description: '“A little box full of love, thoughtful surprises, and personal touches.”',
+    positioning: 'Our flagship romantic gift hamper for boyfriends, girlfriends, partners, and anniversaries.',
+    badge: '❤️ RECOMMENDED',
     categories: ['all', 'for-him', 'for-her', 'besties'],
     themeIds: ['i-love-you-for-him', 'i-love-you-for-her', 'anniversary', 'birthday', 'valentine-box'],
-    idealFor: 'Special anniversaries, boyfriend/girlfriend milestones, bestie celebrations, and PG care packages.',
+    idealFor: 'Girlfriend or boyfriend surprises, romantic milestones, anniversaries, birthdays, and saying "I Love You".',
+    allowRecipientChoice: true,
     itemsOverview: [
-      'Signature amber glass scented soy jar candle with wooden crackling wick',
-      'Custom handcrafted vegan leather keychain with metallic foil initials',
-      'Gourmet artisanal Belgian chocolate chip cookies or salted caramel bites',
-      'Vintage style mini floral arrangement in kraft sleeve',
-      'Folded parchment letter sealed with custom burgundy wax stamp',
-      'Custom velvet drawstring keepsake pouch',
+      'Artisanal hand-poured soy scented jar candle (warm vanilla or floral rosewood)',
+      'Handcrafted keepsake keychain with bespoke personalized initials',
+      'Custom Polaroid memory print with your photo & handwritten caption',
+      'Artisan gourmet chocolate truffles / heart-shaped confections',
+      'Hand-penned wax-sealed personalized greeting card with wax stamp',
     ],
-    packaging: 'Crafted warm ecru presentation box with warm espresso band and metallic foil DILSY emblem.',
-    accentColor: '#B87A68',
-    illustrationType: 'dilsy-edit',
+    packaging: 'Signature warm ivory & blush presentation box tied with luxury grosgrain ribbon.',
+    accentColor: '#C73858',
+    illustrationType: 'loved-box',
   },
   {
     id: 'the-everything-box',
-    name: 'The Everything Box',
-    tagline: 'When words fall short, send the full constellation of memories.',
-    price: 1499,
-    description: 'Our most lavish and heartfelt hamper. Packed with bespoke keepsakes, premium sensory delights, and multiple personalized memory prints for an unforgettable celebration.',
+    name: 'Large Box',
+    size: 'Large',
+    price: 1199,
+    tagline: 'The Everything Box · More little surprises, more reasons to smile.',
+    description: '“More little surprises, more reasons to smile.” A larger hamper with room for additional gift items, keepsake memory prints, and premium sensory treats.',
+    positioning: 'A larger hamper with room for additional gift items.',
     categories: ['all', 'for-him', 'for-her', 'besties'],
     themeIds: ['i-love-you-for-her', 'anniversary', 'birthday', 'valentine-box'],
     idealFor: 'Big birthday bashes, graduation milestones, long-distance reunions, and luxury festive gifting.',
