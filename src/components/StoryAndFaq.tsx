@@ -134,7 +134,7 @@ export const FaqSection: React.FC = () => {
     },
     {
       q: 'Are the items inside launch hampers customizable?',
-      a: 'Yes! The included items in our launch hampers (Small Box ₹799, Loved Box Medium ₹969, Large Box ₹1,199) are curated proposed concepts. You can customize fragrances, dietary preferences (e.g. eggless treats), initials on keychains, and packaging style during checkout or via our Custom Hamper Builder.',
+      a: 'Yes! The included items in our launch hampers (Small Box ₹799, Loved Box Medium ₹969, Large Box ₹1,199) are curated proposed concepts. You can customize fragrances, dietary preferences (e.g. eggless treats), initials on keychains, and add optional extras (roses, chocolates, keepsakes) during checkout or via our Custom Hamper Builder.',
     },
     {
       q: 'Are orders confirmed immediately upon clicking WhatsApp?',

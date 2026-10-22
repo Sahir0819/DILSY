@@ -182,9 +182,22 @@ export function getThemePackagingGuidance(occasion?: string, recipientType?: str
 }
 
 /**
+ * Helper to get numeric base price of selected box size
+ */
+export function getBaseHamperPrice(budget: string, customAmount?: string): number | null {
+  if (budget.includes('799') || budget.toLowerCase().includes('small')) return 799;
+  if (budget.includes('969') || budget.toLowerCase().includes('medium')) return 969;
+  if (budget.includes('1,199') || budget.includes('1199') || budget.toLowerCase().includes('large')) return 1199;
+  if (budget === 'Custom Budget' && customAmount && !isNaN(Number(customAmount)) && Number(customAmount) > 0) {
+    return Number(customAmount);
+  }
+  return null;
+}
+
+/**
  * Generate WhatsApp message for Custom Hamper Builder
  * Uses official box sizes: Small Box (₹799), Medium Box (₹969), Large Box (₹1,199), or Custom Budget.
- * Packaging is automatically matched to the selected occasion theme by DILSY.
+ * Includes optional add-ons with quantities, individual prices, add-on subtotal, and combined estimated total.
  */
 export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): string {
   const isCustomBudget = form.budget === 'Custom Budget';
@@ -193,6 +206,11 @@ export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): str
     : form.budget;
 
   const packagingGuidance = getThemePackagingGuidance(form.occasion, form.recipientType);
+  const selectedAddOns = form.selectedAddOns || [];
+  const addOnsSubtotal = selectedAddOns.reduce((acc, a) => acc + a.price * a.quantity, 0);
+  const basePrice = getBaseHamperPrice(form.budget, form.customBudgetAmount);
+  const estimatedTotal = basePrice !== null ? basePrice + addOnsSubtotal : null;
+  const totalAddOnQuantity = selectedAddOns.reduce((acc, a) => acc + a.quantity, 0);
 
   const lines: string[] = [
     `✨ *CUSTOM BESPOKE HAMPER REQUEST*`,
@@ -201,14 +219,27 @@ export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): str
     `*Hamper Blueprint:*`,
     `• Recipient: ${form.recipientType || 'Special someone'}`,
     `• Selected Gift Theme & Occasion: ${form.occasion || 'Celebration'}`,
-    `• Target Box Size & Budget: ${displayBudget}`,
+    `• Target Box Size & Base Budget: ${displayBudget}`,
     `• Automatic Theme-Matched Packaging: ${packagingGuidance}`,
     `  _(DILSY studio styling guidance; actual packaging depends on confirmed availability)_`,
     ``,
-    `*Selected Goodies & Elements:*`,
-    ...(form.giftCategories.length > 0
-      ? form.giftCategories.map((cat) => ` • ${cat}`)
-      : [' • Surprises curated by DILSY']),
+    `*Selected Add-ons (${totalAddOnQuantity} item${totalAddOnQuantity === 1 ? '' : 's'}):*`,
+    ...(selectedAddOns.length > 0
+      ? selectedAddOns.map(
+          (addon) =>
+            ` • ${addon.name} (Qty: ${addon.quantity}) — ₹${(addon.price * addon.quantity).toLocaleString('en-IN')} [₹${addon.price} each]`
+        )
+      : [' • No optional add-ons selected (Base hamper only)']),
+    ``,
+    `*Pricing Breakdown:*`,
+    `• Base Box Price: ${basePrice !== null ? `₹${basePrice.toLocaleString('en-IN')}` : displayBudget}`,
+    `• Add-ons Subtotal: ₹${addOnsSubtotal.toLocaleString('en-IN')}`,
+    `• Combined Estimated Total: ${
+      estimatedTotal !== null
+        ? `₹${estimatedTotal.toLocaleString('en-IN')}*`
+        : 'Custom target (To be confirmed with DILSY)'
+    }`,
+    `  _(*Estimated total; subject to confirmed availability and delivery location)_`,
     ``,
     `*Personal Touch:*`,
     `• Recipient Name/Nickname: ${form.recipientName || 'Not provided'}`,
@@ -222,11 +253,6 @@ export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): str
     ...(form.specificLandmark ? [`• PG / Landmark: ${form.specificLandmark}`] : []),
     `• Preferred Date: ${form.deliveryDate || 'To be discussed'}`,
     `• Preferred Time Window: ${form.timeWindow || 'To be coordinated'}`,
-    ``,
-    `*Pricing Note:*`,
-    isCustomBudget
-      ? `• Price status: Price to be confirmed with DILSY owner based on custom item selection.`
-      : `• Official base box budget: ${form.budget} (final pricing to be verified by DILSY).`,
     ``,
     `*Delivery Policy:*`,
     `"${EXACT_DELIVERY_POLICY}"`,
