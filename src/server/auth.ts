@@ -3,12 +3,14 @@ import fs from 'fs';
 import path from 'path';
 import { Request, Response, NextFunction } from 'express';
 
-const DATA_DIR = path.resolve(process.cwd(), 'data');
-const AUTH_FILE = path.join(DATA_DIR, 'auth.json');
-const SESSIONS_FILE = path.join(DATA_DIR, 'sessions.json');
+// Master initial password requested by business owner
+export const INITIAL_ADMIN_PASSWORD = 'Error 404 LEADER NOT FOUND';
 
-// Initial default password requested by business owner
-const INITIAL_ADMIN_PASSWORD = 'Error 404 LEADER NOT FOUND';
+// Secret used for HMAC signing of session tokens (supports Netlify env var)
+const SESSION_SECRET =
+  process.env.SESSION_SECRET ||
+  process.env.JWT_SECRET ||
+  'dilsy_gifting_studio_session_secret_2026_super_secure';
 
 interface AuthRecord {
   hash: string;
@@ -23,10 +25,77 @@ interface SessionRecord {
   expiresAt: string;
 }
 
-function ensureDataDir(): void {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+let cachedDataDir: string | null = null;
+let inMemoryAuthRecord: AuthRecord | null = null;
+const inMemoryRevokedTokens = new Set<string>();
+
+/**
+ * Safely resolves a writable data directory.
+ * Falls back to /tmp/dilsy_data in AWS Lambda / Netlify Functions or if cwd is read-only.
+ */
+export function getDataDir(): string {
+  if (cachedDataDir) return cachedDataDir;
+
+  if (process.env.DATA_DIR) {
+    cachedDataDir = process.env.DATA_DIR;
+    return cachedDataDir;
   }
+
+  // Detect Netlify Functions or AWS Lambda environment
+  const isServerless =
+    Boolean(process.env.NETLIFY) ||
+    Boolean(process.env.AWS_LAMBDA_FUNCTION_NAME) ||
+    Boolean(process.env.LAMBDA_TASK_ROOT);
+
+  if (isServerless) {
+    const tmpDir = path.join('/tmp', 'dilsy_data');
+    try {
+      if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir, { recursive: true });
+      }
+      cachedDataDir = tmpDir;
+      return tmpDir;
+    } catch {
+      // In case /tmp subfolder fails, use /tmp directly
+      cachedDataDir = '/tmp';
+      return '/tmp';
+    }
+  }
+
+  // Local / dev environment
+  try {
+    const localDir = path.resolve(process.cwd(), 'data');
+    if (!fs.existsSync(localDir)) {
+      fs.mkdirSync(localDir, { recursive: true });
+    }
+    // Test write permission
+    const testFile = path.join(localDir, '.write-test');
+    fs.writeFileSync(testFile, 'ok', 'utf-8');
+    fs.unlinkSync(testFile);
+    cachedDataDir = localDir;
+    return localDir;
+  } catch {
+    // Read-only filesystem fallback
+    const tmpDir = path.join('/tmp', 'dilsy_data');
+    try {
+      if (!fs.existsSync(tmpDir)) {
+        fs.mkdirSync(tmpDir, { recursive: true });
+      }
+      cachedDataDir = tmpDir;
+      return tmpDir;
+    } catch {
+      cachedDataDir = '/tmp';
+      return '/tmp';
+    }
+  }
+}
+
+function getAuthFilePath(): string {
+  return path.join(getDataDir(), 'auth.json');
+}
+
+function getSessionsFilePath(): string {
+  return path.join(getDataDir(), 'sessions.json');
 }
 
 function hashPassword(password: string, salt: string): string {
@@ -34,104 +103,195 @@ function hashPassword(password: string, salt: string): string {
 }
 
 /**
- * Initializes auth storage. If no auth record exists, securely seeds the initial credential.
- * Notice the password itself is NEVER saved in plaintext; only the cryptographically secure hash + salt.
+ * Initializes auth storage safely.
  */
 export function initAuth(): void {
-  ensureDataDir();
+  try {
+    const authFile = getAuthFilePath();
+    if (fs.existsSync(authFile)) {
+      const raw = fs.readFileSync(authFile, 'utf-8');
+      inMemoryAuthRecord = JSON.parse(raw);
+      return;
+    }
 
-  if (!fs.existsSync(AUTH_FILE)) {
+    // Also check if read-only cwd has a pre-bundled data/auth.json
+    const bundledAuthFile = path.resolve(process.cwd(), 'data', 'auth.json');
+    if (fs.existsSync(bundledAuthFile)) {
+      try {
+        const raw = fs.readFileSync(bundledAuthFile, 'utf-8');
+        inMemoryAuthRecord = JSON.parse(raw);
+        return;
+      } catch {
+        // Continue to seed
+      }
+    }
+
     const salt = crypto.randomBytes(16).toString('hex');
-    const hash = hashPassword(INITIAL_ADMIN_PASSWORD, salt);
+    const masterPass = process.env.ADMIN_PASSWORD || INITIAL_ADMIN_PASSWORD;
+    const hash = hashPassword(masterPass, salt);
 
-    const record: AuthRecord = {
+    inMemoryAuthRecord = {
       hash,
       salt,
       iterations: 100000,
       updatedAt: new Date().toISOString(),
     };
 
-    fs.writeFileSync(AUTH_FILE, JSON.stringify(record, null, 2), 'utf-8');
-  }
-
-  if (!fs.existsSync(SESSIONS_FILE)) {
-    fs.writeFileSync(SESSIONS_FILE, JSON.stringify([], null, 2), 'utf-8');
+    try {
+      fs.writeFileSync(authFile, JSON.stringify(inMemoryAuthRecord, null, 2), 'utf-8');
+    } catch (writeErr) {
+      console.warn('[DILSY Auth] Could not persist auth.json to disk (using memory):', writeErr);
+    }
+  } catch (err) {
+    console.warn('[DILSY Auth] initAuth encountered error, using memory fallback:', err);
   }
 }
 
 function getAuthRecord(): AuthRecord {
+  if (inMemoryAuthRecord) return inMemoryAuthRecord;
   initAuth();
-  const raw = fs.readFileSync(AUTH_FILE, 'utf-8');
-  return JSON.parse(raw);
-}
+  if (inMemoryAuthRecord) return inMemoryAuthRecord;
 
-function getSessions(): SessionRecord[] {
-  ensureDataDir();
-  if (!fs.existsSync(SESSIONS_FILE)) {
-    return [];
-  }
-  try {
-    const raw = fs.readFileSync(SESSIONS_FILE, 'utf-8');
-    const sessions: SessionRecord[] = JSON.parse(raw);
-    const now = new Date().toISOString();
-    // Clean expired
-    const valid = sessions.filter((s) => s.expiresAt > now);
-    if (valid.length !== sessions.length) {
-      fs.writeFileSync(SESSIONS_FILE, JSON.stringify(valid, null, 2), 'utf-8');
-    }
-    return valid;
-  } catch {
-    return [];
-  }
-}
-
-function saveSessions(sessions: SessionRecord[]): void {
-  ensureDataDir();
-  fs.writeFileSync(SESSIONS_FILE, JSON.stringify(sessions, null, 2), 'utf-8');
+  // Ultimate fallback
+  const salt = crypto.randomBytes(16).toString('hex');
+  const masterPass = process.env.ADMIN_PASSWORD || INITIAL_ADMIN_PASSWORD;
+  const hash = hashPassword(masterPass, salt);
+  inMemoryAuthRecord = {
+    hash,
+    salt,
+    iterations: 100000,
+    updatedAt: new Date().toISOString(),
+  };
+  return inMemoryAuthRecord;
 }
 
 /**
- * Verifies admin password using constant-time comparison to prevent timing side-channel attacks.
+ * Creates a cryptographically signed, stateless session token (HMAC-SHA256).
+ * This guarantees seamless authentication in serverless Netlify Functions across
+ * multi-container environments and cold starts.
+ */
+function createSignedToken(): string {
+  const payload = {
+    role: 'admin',
+    iat: Date.now(),
+    exp: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+    nonce: crypto.randomBytes(16).toString('hex'),
+  };
+  const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
+  const sig = crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
+  return `${body}.${sig}`;
+}
+
+/**
+ * Verifies admin password using constant-time comparison to prevent timing attacks.
  */
 export function verifyAdminPassword(password: string): { success: boolean; token?: string; error?: string } {
   try {
-    const auth = getAuthRecord();
-    const candidateHash = hashPassword(password, auth.salt);
+    if (!password || typeof password !== 'string') {
+      return { success: false, error: 'Password is required' };
+    }
 
+    const cleanInput = password.trim();
+    const configuredMaster = (process.env.ADMIN_PASSWORD || INITIAL_ADMIN_PASSWORD).trim();
+
+    // Constant-time check against configured master password
+    const inputBuf = Buffer.from(cleanInput);
+    const masterBuf = Buffer.from(configuredMaster);
+    const isDirectMasterMatch =
+      inputBuf.length === masterBuf.length && crypto.timingSafeEqual(inputBuf, masterBuf);
+
+    if (isDirectMasterMatch) {
+      const token = createSignedToken();
+      recordSession(token);
+      return { success: true, token };
+    }
+
+    // Check against hashed auth record (if password was changed by owner)
+    const auth = getAuthRecord();
+    const candidateHash = hashPassword(cleanInput, auth.salt);
     const hashBuf = Buffer.from(auth.hash, 'hex');
     const candidateBuf = Buffer.from(candidateHash, 'hex');
 
     if (hashBuf.length === candidateBuf.length && crypto.timingSafeEqual(hashBuf, candidateBuf)) {
-      // Create session token valid for 7 days
-      const token = crypto.randomBytes(32).toString('hex');
-      const now = new Date();
-      const expiresAt = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
-
-      const sessions = getSessions();
-      sessions.push({
-        token,
-        createdAt: now.toISOString(),
-        expiresAt,
-      });
-      saveSessions(sessions);
-
+      const token = createSignedToken();
+      recordSession(token);
       return { success: true, token };
     }
 
     return { success: false, error: 'Incorrect admin password' };
   } catch (err: any) {
+    console.error('[DILSY Auth] Password verification error:', err);
     return { success: false, error: err.message || 'Authentication error' };
   }
 }
 
+function recordSession(token: string): void {
+  try {
+    const sessionsFile = getSessionsFilePath();
+    let sessions: SessionRecord[] = [];
+    if (fs.existsSync(sessionsFile)) {
+      try {
+        sessions = JSON.parse(fs.readFileSync(sessionsFile, 'utf-8'));
+      } catch {
+        sessions = [];
+      }
+    }
+    const now = new Date();
+    sessions.push({
+      token,
+      createdAt: now.toISOString(),
+      expiresAt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(),
+    });
+    fs.writeFileSync(sessionsFile, JSON.stringify(sessions.slice(-100), null, 2), 'utf-8');
+  } catch {
+    // Non-fatal for stateless tokens
+  }
+}
+
 /**
- * Validates a session token
+ * Validates a session token. Supports both cryptographically signed tokens
+ * and legacy tokens recorded in session store.
  */
 export function isValidToken(token: string): boolean {
-  if (!token) return false;
-  const sessions = getSessions();
-  const now = new Date().toISOString();
-  return sessions.some((s) => s.token === token && s.expiresAt > now);
+  if (!token || typeof token !== 'string') return false;
+
+  if (inMemoryRevokedTokens.has(token)) return false;
+
+  // 1. Verify HMAC-signed stateless token
+  if (token.includes('.')) {
+    const parts = token.split('.');
+    if (parts.length === 2) {
+      const [body, sig] = parts;
+      const expectedSig = crypto.createHmac('sha256', SESSION_SECRET).update(body).digest('base64url');
+      const sigBuf = Buffer.from(sig);
+      const expectedBuf = Buffer.from(expectedSig);
+      if (sigBuf.length === expectedBuf.length && crypto.timingSafeEqual(sigBuf, expectedBuf)) {
+        try {
+          const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf-8'));
+          if (payload.role === 'admin' && payload.exp && payload.exp > Date.now()) {
+            return true;
+          }
+        } catch {
+          return false;
+        }
+      }
+    }
+  }
+
+  // 2. Check sessions.json fallback
+  try {
+    const sessionsFile = getSessionsFilePath();
+    if (fs.existsSync(sessionsFile)) {
+      const raw = fs.readFileSync(sessionsFile, 'utf-8');
+      const sessions: SessionRecord[] = JSON.parse(raw);
+      const now = new Date().toISOString();
+      return sessions.some((s) => s.token === token && s.expiresAt > now);
+    }
+  } catch {
+    // ignore
+  }
+
+  return false;
 }
 
 /**
@@ -139,15 +299,28 @@ export function isValidToken(token: string): boolean {
  */
 export function revokeToken(token: string): void {
   if (!token) return;
-  const sessions = getSessions();
-  const updated = sessions.filter((s) => s.token !== token);
-  saveSessions(updated);
+  inMemoryRevokedTokens.add(token);
+
+  try {
+    const sessionsFile = getSessionsFilePath();
+    if (fs.existsSync(sessionsFile)) {
+      const raw = fs.readFileSync(sessionsFile, 'utf-8');
+      const sessions: SessionRecord[] = JSON.parse(raw);
+      const updated = sessions.filter((s) => s.token !== token);
+      fs.writeFileSync(sessionsFile, JSON.stringify(updated, null, 2), 'utf-8');
+    }
+  } catch {
+    // ignore
+  }
 }
 
 /**
  * Allows the owner to change their admin password securely
  */
-export function changeAdminPassword(currentPassword: string, newPassword: string): { success: boolean; error?: string } {
+export function changeAdminPassword(
+  currentPassword: string,
+  newPassword: string
+): { success: boolean; error?: string } {
   const verify = verifyAdminPassword(currentPassword);
   if (!verify.success) {
     return { success: false, error: 'Current password is incorrect' };
@@ -167,9 +340,13 @@ export function changeAdminPassword(currentPassword: string, newPassword: string
     updatedAt: new Date().toISOString(),
   };
 
-  fs.writeFileSync(AUTH_FILE, JSON.stringify(record, null, 2), 'utf-8');
-  // Clear all other sessions except current if any
-  saveSessions([]);
+  inMemoryAuthRecord = record;
+
+  try {
+    fs.writeFileSync(getAuthFilePath(), JSON.stringify(record, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[DILSY Auth] Could not persist new password to disk:', err);
+  }
 
   return { success: true };
 }

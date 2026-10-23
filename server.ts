@@ -3,7 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { apiRouter } from './src/server/routes';
 import { initAuth } from './src/server/auth';
-import { getDb } from './src/server/db';
+import { getDb, getUploadsDirPath } from './src/server/db';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -21,7 +21,7 @@ async function startServer() {
   app.use(express.urlencoded({ extended: true, limit: '25mb' }));
 
   // Static directory for uploaded product/addon assets
-  const uploadsDir = path.resolve(__dirname, 'data', 'uploads');
+  const uploadsDir = getUploadsDirPath();
   app.use('/api/uploads', express.static(uploadsDir));
 
   // Mount API Router

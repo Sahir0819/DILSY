@@ -28,8 +28,96 @@ function authHeaders(): HeadersInit {
   const token = getAdminToken();
   return {
     'Content-Type': 'application/json',
+    Accept: 'application/json',
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
+}
+
+/**
+ * Robust JSON fetch wrapper that never crashes on empty or non-JSON responses.
+ * Diagnoses response status, content type, and body, providing clear error details.
+ */
+export async function safeFetchJson<T = any>(
+  url: string,
+  init?: RequestInit
+): Promise<T> {
+  const method = init?.method || 'GET';
+  let res: Response;
+
+  try {
+    res = await fetch(url, {
+      ...init,
+      headers: {
+        Accept: 'application/json',
+        ...(init?.headers || {}),
+      },
+    });
+  } catch (networkErr: any) {
+    console.error(`[DILSY API Network Failure] ${method} ${url}:`, networkErr);
+    throw new Error(
+      `Unable to connect to DILSY server. Please verify your internet connection or deployment status.`
+    );
+  }
+
+  // Safely read response text first to prevent uncaught "Unexpected end of JSON input" errors
+  const rawText = await res.text();
+  const contentType = (res.headers.get('content-type') || '').toLowerCase();
+  let parsedJson: any = null;
+  let isJsonValid = false;
+
+  if (rawText && rawText.trim().length > 0) {
+    try {
+      parsedJson = JSON.parse(rawText);
+      isJsonValid = true;
+    } catch {
+      isJsonValid = false;
+    }
+  }
+
+  // Log diagnostic info for non-production or errors
+  if (!res.ok || !isJsonValid) {
+    console.log(
+      `[DILSY API Diagnostic] ${method} ${url} -> Status: ${res.status} ${res.statusText}, Content-Type: "${contentType}", Body length: ${rawText.length}`
+    );
+    if (!isJsonValid && rawText.length > 0) {
+      console.warn(`[DILSY API Diagnostic] Raw response preview:`, rawText.slice(0, 300));
+    }
+  }
+
+  // Handle HTTP error statuses (4xx, 5xx)
+  if (!res.ok) {
+    let errorMessage = parsedJson?.error || parsedJson?.message;
+
+    if (!errorMessage) {
+      if (!rawText || rawText.trim().length === 0) {
+        errorMessage = `The server returned an empty response (${res.status} ${res.statusText}). If running on Netlify, please ensure Netlify Functions are deployed and /api/* redirects are active.`;
+      } else if (rawText.includes('<!DOCTYPE') || rawText.includes('<html')) {
+        errorMessage = `The server returned an HTML page (${res.status} ${res.statusText}) instead of API JSON. The endpoint may not be routed to Netlify Functions.`;
+      } else {
+        errorMessage = `Server error ${res.status} (${res.statusText}): ${rawText.slice(0, 150)}`;
+      }
+    }
+
+    throw new Error(errorMessage);
+  }
+
+  // Handle 2xx responses with missing or invalid JSON
+  if (!isJsonValid) {
+    if (!rawText || rawText.trim().length === 0) {
+      // For empty 204 or 200 without body
+      return {} as T;
+    }
+    if (rawText.includes('<!DOCTYPE') || rawText.includes('<html')) {
+      throw new Error(
+        `Received HTML document instead of JSON data (${res.status} ${res.statusText}). The request may have been redirected to the index page.`
+      );
+    }
+    throw new Error(
+      `Received non-JSON response from ${url} (${res.status} ${res.statusText}): ${rawText.slice(0, 100)}`
+    );
+  }
+
+  return parsedJson as T;
 }
 
 // ================= PUBLIC API CALLS =================
@@ -44,37 +132,37 @@ export interface BootstrapResponse {
 }
 
 export async function fetchPublicStoreData(): Promise<BootstrapResponse> {
-  const res = await fetch('/api/public/bootstrap');
-  if (!res.ok) {
-    throw new Error('Failed to load store catalog');
-  }
-  return res.json();
+  return safeFetchJson<BootstrapResponse>('/api/public/bootstrap');
 }
 
-export async function submitPublicOrderInquiry(orderData: Partial<OrderRequest>): Promise<{ orderId: string }> {
-  const res = await fetch('/api/public/orders', {
+export async function submitPublicOrderInquiry(
+  orderData: Partial<OrderRequest>
+): Promise<{ orderId: string }> {
+  return safeFetchJson<{ orderId: string }>('/api/public/orders', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(orderData),
   });
-  if (!res.ok) {
-    throw new Error('Failed to register order request');
-  }
-  return res.json();
 }
 
 // ================= ADMIN AUTH CALLS =================
 
-export async function adminLoginApi(password: string): Promise<{ success: boolean; token: string }> {
-  const res = await fetch('/api/admin/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ password }),
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.error || 'Invalid credentials');
+export async function adminLoginApi(
+  password: string
+): Promise<{ success: boolean; token: string }> {
+  const data = await safeFetchJson<{ success: boolean; token: string; message?: string }>(
+    '/api/admin/login',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password }),
+    }
+  );
+
+  if (!data.token) {
+    throw new Error('Authentication succeeded but server returned no session token.');
   }
+
   setAdminToken(data.token);
   return data;
 }
@@ -82,39 +170,40 @@ export async function adminLoginApi(password: string): Promise<{ success: boolea
 export async function adminVerifySessionApi(): Promise<boolean> {
   const token = getAdminToken();
   if (!token) return false;
+
   try {
-    const res = await fetch('/api/admin/verify', {
+    const data = await safeFetchJson<{ valid: boolean }>('/api/admin/verify', {
       headers: authHeaders(),
     });
-    if (!res.ok) return false;
-    const data = await res.json();
     return !!data.valid;
-  } catch {
+  } catch (err) {
+    console.warn('[DILSY Admin] Session verification failed:', err);
     return false;
   }
 }
 
 export async function adminLogoutApi(): Promise<void> {
   try {
-    await fetch('/api/admin/logout', {
+    await safeFetchJson('/api/admin/logout', {
       method: 'POST',
       headers: authHeaders(),
     });
+  } catch {
+    // Non-fatal
   } finally {
     removeAdminToken();
   }
 }
 
-export async function adminChangePasswordApi(currentPassword: string, newPassword: string): Promise<void> {
-  const res = await fetch('/api/admin/change-password', {
+export async function adminChangePasswordApi(
+  currentPassword: string,
+  newPassword: string
+): Promise<void> {
+  await safeFetchJson('/api/admin/change-password', {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({ currentPassword, newPassword }),
   });
-  const data = await res.json();
-  if (!res.ok) {
-    throw new Error(data.error || 'Failed to update password');
-  }
 }
 
 // ================= ADMIN DATA CALLS =================
@@ -133,160 +222,174 @@ export async function fetchAdminDashboard(): Promise<{
   stats: DashboardStats;
   recentOrders: OrderRequest[];
 }> {
-  const res = await fetch('/api/admin/dashboard', { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to load dashboard metrics');
-  return res.json();
+  return safeFetchJson<{ stats: DashboardStats; recentOrders: OrderRequest[] }>(
+    '/api/admin/dashboard',
+    {
+      headers: authHeaders(),
+    }
+  );
 }
 
 // Products
 export async function fetchAdminProducts(): Promise<Product[]> {
-  const res = await fetch('/api/admin/products', { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to load products');
-  const data = await res.json();
+  const data = await safeFetchJson<{ products: Product[] }>('/api/admin/products', {
+    headers: authHeaders(),
+  });
   return data.products;
 }
 
 export async function createAdminProduct(product: Partial<Product>): Promise<Product> {
-  const res = await fetch('/api/admin/products', {
+  const data = await safeFetchJson<{ product: Product }>('/api/admin/products', {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify(product),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to create product');
   return data.product;
 }
 
-export async function updateAdminProduct(id: string, product: Partial<Product>): Promise<Product> {
-  const res = await fetch(`/api/admin/products/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify(product),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to update product');
+export async function updateAdminProduct(
+  id: string,
+  product: Partial<Product>
+): Promise<Product> {
+  const data = await safeFetchJson<{ product: Product }>(
+    `/api/admin/products/${encodeURIComponent(id)}`,
+    {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(product),
+    }
+  );
   return data.product;
 }
 
-export async function updateAdminProductStock(id: string, stockStatus: StockStatus): Promise<Product> {
-  const res = await fetch(`/api/admin/products/${encodeURIComponent(id)}/stock`, {
-    method: 'PATCH',
-    headers: authHeaders(),
-    body: JSON.stringify({ stockStatus }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to update stock status');
+export async function updateAdminProductStock(
+  id: string,
+  stockStatus: StockStatus
+): Promise<Product> {
+  const data = await safeFetchJson<{ product: Product }>(
+    `/api/admin/products/${encodeURIComponent(id)}/stock`,
+    {
+      method: 'PATCH',
+      headers: authHeaders(),
+      body: JSON.stringify({ stockStatus }),
+    }
+  );
   return data.product;
 }
 
 export async function deleteAdminProduct(id: string): Promise<void> {
-  const res = await fetch(`/api/admin/products/${encodeURIComponent(id)}`, {
+  await safeFetchJson(`/api/admin/products/${encodeURIComponent(id)}`, {
     method: 'DELETE',
     headers: authHeaders(),
   });
-  if (!res.ok) throw new Error('Failed to delete product');
 }
 
 // Themes
 export async function fetchAdminThemes(): Promise<ThemeCategory[]> {
-  const res = await fetch('/api/admin/themes', { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to load themes');
-  const data = await res.json();
+  const data = await safeFetchJson<{ themes: ThemeCategory[] }>('/api/admin/themes', {
+    headers: authHeaders(),
+  });
   return data.themes;
 }
 
-export async function updateAdminTheme(id: string, theme: Partial<ThemeCategory>): Promise<ThemeCategory> {
-  const res = await fetch(`/api/admin/themes/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify(theme),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to update theme');
+export async function updateAdminTheme(
+  id: string,
+  theme: Partial<ThemeCategory>
+): Promise<ThemeCategory> {
+  const data = await safeFetchJson<{ theme: ThemeCategory }>(
+    `/api/admin/themes/${encodeURIComponent(id)}`,
+    {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(theme),
+    }
+  );
   return data.theme;
 }
 
 // Addons
 export async function fetchAdminAddons(): Promise<AddOnItem[]> {
-  const res = await fetch('/api/admin/addons', { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to load add-ons');
-  const data = await res.json();
+  const data = await safeFetchJson<{ addons: AddOnItem[] }>('/api/admin/addons', {
+    headers: authHeaders(),
+  });
   return data.addons;
 }
 
 export async function createAdminAddon(addon: Partial<AddOnItem>): Promise<AddOnItem> {
-  const res = await fetch('/api/admin/addons', {
+  const data = await safeFetchJson<{ addon: AddOnItem }>('/api/admin/addons', {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify(addon),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to create add-on');
   return data.addon;
 }
 
-export async function updateAdminAddon(id: string, addon: Partial<AddOnItem>): Promise<AddOnItem> {
-  const res = await fetch(`/api/admin/addons/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify(addon),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to update add-on');
+export async function updateAdminAddon(
+  id: string,
+  addon: Partial<AddOnItem>
+): Promise<AddOnItem> {
+  const data = await safeFetchJson<{ addon: AddOnItem }>(
+    `/api/admin/addons/${encodeURIComponent(id)}`,
+    {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(addon),
+    }
+  );
   return data.addon;
 }
 
 export async function deleteAdminAddon(id: string): Promise<void> {
-  const res = await fetch(`/api/admin/addons/${encodeURIComponent(id)}`, {
+  await safeFetchJson(`/api/admin/addons/${encodeURIComponent(id)}`, {
     method: 'DELETE',
     headers: authHeaders(),
   });
-  if (!res.ok) throw new Error('Failed to delete add-on');
 }
 
 // Offers
 export async function fetchAdminOffers(): Promise<Offer[]> {
-  const res = await fetch('/api/admin/offers', { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to load offers');
-  const data = await res.json();
+  const data = await safeFetchJson<{ offers: Offer[] }>('/api/admin/offers', {
+    headers: authHeaders(),
+  });
   return data.offers;
 }
 
 export async function createAdminOffer(offer: Partial<Offer>): Promise<Offer> {
-  const res = await fetch('/api/admin/offers', {
+  const data = await safeFetchJson<{ offer: Offer }>('/api/admin/offers', {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify(offer),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to create offer');
   return data.offer;
 }
 
-export async function updateAdminOffer(id: string, offer: Partial<Offer>): Promise<Offer> {
-  const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
-    method: 'PUT',
-    headers: authHeaders(),
-    body: JSON.stringify(offer),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to update offer');
+export async function updateAdminOffer(
+  id: string,
+  offer: Partial<Offer>
+): Promise<Offer> {
+  const data = await safeFetchJson<{ offer: Offer }>(
+    `/api/admin/offers/${encodeURIComponent(id)}`,
+    {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(offer),
+    }
+  );
   return data.offer;
 }
 
 export async function deleteAdminOffer(id: string): Promise<void> {
-  const res = await fetch(`/api/admin/offers/${encodeURIComponent(id)}`, {
+  await safeFetchJson(`/api/admin/offers/${encodeURIComponent(id)}`, {
     method: 'DELETE',
     headers: authHeaders(),
   });
-  if (!res.ok) throw new Error('Failed to delete offer');
 }
 
 // Orders
 export async function fetchAdminOrders(): Promise<OrderRequest[]> {
-  const res = await fetch('/api/admin/orders', { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to load order inquiries');
-  const data = await res.json();
+  const data = await safeFetchJson<{ orders: OrderRequest[] }>('/api/admin/orders', {
+    headers: authHeaders(),
+  });
   return data.orders;
 }
 
@@ -295,43 +398,42 @@ export async function updateAdminOrderStatus(
   status: OrderStatus,
   adminNotes?: string
 ): Promise<OrderRequest> {
-  const res = await fetch(`/api/admin/orders/${encodeURIComponent(id)}`, {
-    method: 'PATCH',
-    headers: authHeaders(),
-    body: JSON.stringify({ status, adminNotes }),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to update order status');
+  const data = await safeFetchJson<{ order: OrderRequest }>(
+    `/api/admin/orders/${encodeURIComponent(id)}`,
+    {
+      method: 'PATCH',
+      headers: authHeaders(),
+      body: JSON.stringify({ status, adminNotes }),
+    }
+  );
   return data.order;
 }
 
 // Settings
 export async function fetchAdminSettings(): Promise<StoreSettings> {
-  const res = await fetch('/api/admin/settings', { headers: authHeaders() });
-  if (!res.ok) throw new Error('Failed to load store settings');
-  const data = await res.json();
+  const data = await safeFetchJson<{ settings: StoreSettings }>('/api/admin/settings', {
+    headers: authHeaders(),
+  });
   return data.settings;
 }
 
-export async function updateAdminSettings(settings: Partial<StoreSettings>): Promise<StoreSettings> {
-  const res = await fetch('/api/admin/settings', {
+export async function updateAdminSettings(
+  settings: Partial<StoreSettings>
+): Promise<StoreSettings> {
+  const data = await safeFetchJson<{ settings: StoreSettings }>('/api/admin/settings', {
     method: 'PUT',
     headers: authHeaders(),
     body: JSON.stringify(settings),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Failed to update store settings');
   return data.settings;
 }
 
 // Upload Image
 export async function uploadAdminImage(base64: string, filename?: string): Promise<string> {
-  const res = await fetch('/api/admin/upload-image', {
+  const data = await safeFetchJson<{ url: string }>('/api/admin/upload-image', {
     method: 'POST',
     headers: authHeaders(),
     body: JSON.stringify({ base64, filename }),
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || 'Image upload failed');
   return data.url;
 }

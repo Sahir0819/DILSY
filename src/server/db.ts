@@ -15,9 +15,7 @@ import { THEME_CATEGORIES } from '../data/themes';
 import { ADD_ONS } from '../data/addons';
 import { EXACT_DELIVERY_POLICY, WHATSAPP_PHONE_RAW, WHATSAPP_PHONE_INTERNATIONAL } from '../utils/whatsapp';
 
-const DATA_DIR = path.resolve(process.cwd(), 'data');
-const DB_FILE = path.join(DATA_DIR, 'db.json');
-const UPLOADS_DIR = path.join(DATA_DIR, 'uploads');
+import { getDataDir } from './auth';
 
 export interface DatabaseSchema {
   products: Product[];
@@ -28,12 +26,36 @@ export interface DatabaseSchema {
   orders: OrderRequest[];
 }
 
-function ensureDirectories(): void {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+let cachedDb: DatabaseSchema | null = null;
+
+function getDbFilePath(): string {
+  return path.join(getDataDir(), 'db.json');
+}
+
+export function getUploadsDirPath(): string {
+  const dir = path.join(getDataDir(), 'uploads');
+  try {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  } catch {
+    // ignore
   }
-  if (!fs.existsSync(UPLOADS_DIR)) {
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+  return dir;
+}
+
+function ensureDirectories(): void {
+  try {
+    const dataDir = getDataDir();
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    const uploads = path.join(dataDir, 'uploads');
+    if (!fs.existsSync(uploads)) {
+      fs.mkdirSync(uploads, { recursive: true });
+    }
+  } catch (err) {
+    // Non-fatal
   }
 }
 
@@ -112,33 +134,56 @@ function createInitialDatabase(): DatabaseSchema {
  * Initializes and reads the persistent database
  */
 export function getDb(): DatabaseSchema {
+  if (cachedDb) return cachedDb;
   ensureDirectories();
-  if (!fs.existsSync(DB_FILE)) {
-    const initial = createInitialDatabase();
-    fs.writeFileSync(DB_FILE, JSON.stringify(initial, null, 2), 'utf-8');
-    return initial;
+
+  const dbFile = getDbFilePath();
+  if (fs.existsSync(dbFile)) {
+    try {
+      const raw = fs.readFileSync(dbFile, 'utf-8');
+      cachedDb = JSON.parse(raw);
+      return cachedDb!;
+    } catch (err) {
+      console.warn('[DILSY DB] Error reading DB file, recreating:', err);
+    }
   }
 
-  try {
-    const raw = fs.readFileSync(DB_FILE, 'utf-8');
-    const parsed = JSON.parse(raw);
-    return parsed;
-  } catch (err) {
-    console.error('Error reading DB file, recreating fallback:', err);
-    const initial = createInitialDatabase();
-    fs.writeFileSync(DB_FILE, JSON.stringify(initial, null, 2), 'utf-8');
-    return initial;
+  // Also check if read-only cwd has bundled data/db.json
+  const bundledDb = path.resolve(process.cwd(), 'data', 'db.json');
+  if (fs.existsSync(bundledDb)) {
+    try {
+      const raw = fs.readFileSync(bundledDb, 'utf-8');
+      cachedDb = JSON.parse(raw);
+      return cachedDb!;
+    } catch {
+      // Continue to seed
+    }
   }
+
+  const initial = createInitialDatabase();
+  cachedDb = initial;
+  try {
+    fs.writeFileSync(dbFile, JSON.stringify(initial, null, 2), 'utf-8');
+  } catch (err) {
+    console.warn('[DILSY DB] Could not write initial db to disk (in-memory active):', err);
+  }
+  return initial;
 }
 
 /**
  * Atomically writes data back to disk
  */
 export function saveDb(db: DatabaseSchema): void {
+  cachedDb = db;
   ensureDirectories();
-  const tempPath = `${DB_FILE}.tmp.${Date.now()}`;
-  fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf-8');
-  fs.renameSync(tempPath, DB_FILE);
+  const dbFile = getDbFilePath();
+  try {
+    const tempPath = `${dbFile}.tmp.${Date.now()}`;
+    fs.writeFileSync(tempPath, JSON.stringify(db, null, 2), 'utf-8');
+    fs.renameSync(tempPath, dbFile);
+  } catch (err) {
+    console.warn('[DILSY DB] Could not persist db to disk (in-memory updated):', err);
+  }
 }
 
 // ================= PRODUCT REPOSITORY =================
@@ -458,9 +503,18 @@ export function saveUploadedImage(base64Data: string, originalFilename?: string)
     if (ext) extension = ext;
   }
 
+  const uploadsDir = getUploadsDirPath();
   const filename = `img_${Date.now()}_${Math.random().toString(36).substring(2, 8)}.${extension}`;
-  const filePath = path.join(UPLOADS_DIR, filename);
+  const filePath = path.join(uploadsDir, filename);
 
-  fs.writeFileSync(filePath, Buffer.from(cleanData, 'base64'));
-  return `/api/uploads/${filename}`;
+  try {
+    fs.writeFileSync(filePath, Buffer.from(cleanData, 'base64'));
+    return `/api/uploads/${filename}`;
+  } catch (err) {
+    // In read-only serverless environments, fallback to data URI
+    if (base64Data.startsWith('data:image/')) {
+      return base64Data;
+    }
+    return `data:image/${extension};base64,${cleanData}`;
+  }
 }
