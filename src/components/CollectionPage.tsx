@@ -119,21 +119,39 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
 
               {/* Quick Actions */}
               <div className="pt-2 flex flex-wrap items-center gap-3">
-                <button
-                  type="button"
-                  onClick={() => onOpenCustomBuilder(collection.name)}
-                  className="px-5 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-[#99223A]/25 transition-all"
-                >
-                  <Gift className="w-3.5 h-3.5" />
-                  <span>Customise a {collection.name}</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={onBackToThemes}
-                  className="px-4 py-2.5 bg-white hover:bg-[#FFF5F8] text-[#7A1E31] rounded-xl text-xs font-semibold border border-[#E8C2CC] transition-colors"
-                >
-                  <span>Explore Other 8 Themes</span>
-                </button>
+                {collection.isComingSoon ? (
+                  <>
+                    <div className="px-4 py-2.5 bg-white/90 text-[#8C283B] rounded-xl text-xs font-semibold border border-[#FFCCD5] flex items-center gap-2 shadow-2xs">
+                      <span className="w-2 h-2 rounded-full bg-[#C73858] animate-pulse" />
+                      <span>Inventory in Preparation · Coming Soon</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={onBackToThemes}
+                      className="px-4 py-2.5 bg-white hover:bg-[#FFF5F8] text-[#7A1E31] rounded-xl text-xs font-semibold border border-[#E8C2CC] transition-colors"
+                    >
+                      <span>Explore Other Available Themes</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => onOpenCustomBuilder(collection.name)}
+                      className="px-5 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-md shadow-[#99223A]/25 transition-all"
+                    >
+                      <Gift className="w-3.5 h-3.5" />
+                      <span>Customise a {collection.name}</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={onBackToThemes}
+                      className="px-4 py-2.5 bg-white hover:bg-[#FFF5F8] text-[#7A1E31] rounded-xl text-xs font-semibold border border-[#E8C2CC] transition-colors"
+                    >
+                      <span>Explore Other 8 Themes</span>
+                    </button>
+                  </>
+                )}
               </div>
             </div>
 
@@ -147,9 +165,15 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
                       <p className="font-serif font-bold text-sm text-[#2D1B22]">{collection.name}</p>
                       <p className="text-[10px] text-[#6B424E]">Curated Studio Aesthetic</p>
                     </div>
-                    <span className="text-[10px] text-[#A32842] italic font-medium">
-                      Sample illustrative
-                    </span>
+                    {collection.isComingSoon ? (
+                      <span className="text-[10px] text-[#8C283B] font-bold uppercase tracking-wider bg-[#FFEBF0] px-2 py-0.5 rounded-full border border-[#FFCCD5]">
+                        Coming Soon
+                      </span>
+                    ) : (
+                      <span className="text-[10px] text-[#A32842] italic font-medium">
+                        Sample illustrative
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
@@ -159,7 +183,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
       </section>
 
       {/* Occasion Gifting Tips Strip (if available) */}
-      {collection.giftingTips && collection.giftingTips.length > 0 && (
+      {collection.giftingTips && collection.giftingTips.length > 0 && !collection.isComingSoon && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
           <div className="bg-[#FFF8FA] rounded-2xl p-5 border border-[#FFCCD5] flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
             <div className="flex items-center gap-2 shrink-0">
@@ -187,20 +211,66 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4 pb-3 border-b border-[#E8D0D6]">
           <div>
             <span className="text-xs uppercase tracking-wider font-semibold text-[#A32842] block mb-1">
-              Curated Hampers
+              {collection.isComingSoon ? 'Collection Status' : 'Curated Hampers'}
             </span>
             <h2 className="text-2xl sm:text-3xl font-serif font-bold text-[#2D1B22]">
               Hampers for {collection.name}
             </h2>
           </div>
           <div className="flex items-center gap-3 text-xs text-[#6B424E]">
-            <span className="font-semibold text-[#99223A] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5]">
-              {assignedProducts.length} {assignedProducts.length === 1 ? 'Hamper' : 'Hampers'} Assigned
-            </span>
+            {collection.isComingSoon ? (
+              <span className="font-bold text-[#8C283B] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5] uppercase tracking-wider text-[10px]">
+                Coming Soon
+              </span>
+            ) : (
+              <span className="font-semibold text-[#99223A] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5]">
+                {assignedProducts.length} {assignedProducts.length === 1 ? 'Hamper' : 'Hampers'} Assigned
+              </span>
+            )}
           </div>
         </div>
 
-        {assignedProducts.length > 0 ? (
+        {collection.isComingSoon ? (
+          /* Polished Coming Soon Message State for For Him */
+          <div className="p-8 sm:p-14 rounded-3xl bg-white border border-[#FFCCD5] text-center max-w-2xl mx-auto space-y-6 shadow-sm shadow-[#FFCCD5]/20">
+            <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#FFF0F4] to-[#FFE5EC] border border-[#FFCCD5] flex items-center justify-center text-[#99223A] mx-auto shadow-xs">
+              <Sparkles className="w-8 h-8 text-[#C73858] animate-pulse" />
+            </div>
+
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#99223A] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5]">
+                <span>COMING SOON</span>
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#2D1B22]">
+                {collection.comingSoonMessage || 'Something special for him is on its way. Stay tuned!'}
+              </h3>
+              <p className="text-sm text-[#52333D] font-light leading-relaxed max-w-md mx-auto">
+                We currently do not have the inventory ready for the “{collection.name}” collection. Our studio team is preparing custom keepsakes, masculine aromatics, and personalized details to give him an unforgettable surprise.
+              </p>
+            </div>
+
+            <div className="p-4 bg-[#FFF5F8] rounded-2xl border border-[#FFCCD5] text-xs text-[#6B424E] text-left max-w-md mx-auto space-y-1.5">
+              <div className="flex items-center gap-1.5 text-[#3D141C] font-semibold">
+                <Info className="w-3.5 h-3.5 text-[#C73858] shrink-0" />
+                <span>Inventory Status:</span>
+              </div>
+              <p className="leading-relaxed">
+                Ordering and purchase actions for this collection are temporarily paused while our studio inventory is being prepared. In the meantime, explore our other loved collections!
+              </p>
+            </div>
+
+            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={onBackToThemes}
+                className="w-full sm:w-auto px-7 py-3 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold flex items-center justify-center gap-2 shadow-md shadow-[#99223A]/25 transition-all"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" />
+                <span>Explore Other Available Themes</span>
+              </button>
+            </div>
+          </div>
+        ) : assignedProducts.length > 0 ? (
           /* Products Grid for this collection */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {assignedProducts.map((product) => (
@@ -257,31 +327,33 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
         )}
       </section>
 
-      {/* Customise Your Box CTA Banner */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-        <div className="p-8 rounded-3xl bg-gradient-to-r from-[#FFEBF0] via-[#FFF0F4] to-[#FFE8EE] border border-[#FFCCD5] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-sm shadow-[#FFCCD5]/20">
-          <div className="space-y-2 text-center lg:text-left">
-            <span className="text-xs uppercase tracking-wider font-semibold text-[#A32842] flex items-center justify-center lg:justify-start gap-1">
-              <Sparkles className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
-              Need Something Completely Unique?
-            </span>
-            <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#2D1B22]">
-              Commission a Custom {collection.name}
-            </h3>
-            <p className="text-xs sm:text-sm text-[#6B424E] max-w-xl">
-              Choose your exact budget (Small Box ₹799, Medium Box ₹969, Large Box ₹1,199, or custom target), add polaroid photos, choose signature aromatics, and compose a wax-sealed handwritten love letter.
-            </p>
+      {/* Customise Your Box CTA Banner (Only for active collections) */}
+      {!collection.isComingSoon && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+          <div className="p-8 rounded-3xl bg-gradient-to-r from-[#FFEBF0] via-[#FFF0F4] to-[#FFE8EE] border border-[#FFCCD5] flex flex-col lg:flex-row items-center justify-between gap-6 shadow-sm shadow-[#FFCCD5]/20">
+            <div className="space-y-2 text-center lg:text-left">
+              <span className="text-xs uppercase tracking-wider font-semibold text-[#A32842] flex items-center justify-center lg:justify-start gap-1">
+                <Sparkles className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
+                Need Something Completely Unique?
+              </span>
+              <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#2D1B22]">
+                Commission a Custom {collection.name}
+              </h3>
+              <p className="text-xs sm:text-sm text-[#6B424E] max-w-xl">
+                Choose your exact budget (Small Box ₹799, Medium Box ₹969, Large Box ₹1,199, or custom target), add polaroid photos, choose signature aromatics, and compose a wax-sealed handwritten love letter.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => onOpenCustomBuilder(collection.name)}
+              className="px-6 py-3.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-2 shadow-md shadow-[#99223A]/20"
+            >
+              <span>Open Custom Hamper Studio</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
-          <button
-            type="button"
-            onClick={() => onOpenCustomBuilder(collection.name)}
-            className="px-6 py-3.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold transition-all whitespace-nowrap flex items-center gap-2 shadow-md shadow-[#99223A]/20"
-          >
-            <span>Open Custom Hamper Studio</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Related Collections Section */}
       {relatedCollections.length > 0 && (

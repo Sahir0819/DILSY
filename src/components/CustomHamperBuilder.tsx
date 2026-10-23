@@ -451,7 +451,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                     rows={3}
                     value={formData.personalNote}
                     onChange={(e) => setFormData({ ...formData, personalNote: e.target.value })}
-                    placeholder="Write the message you want us to handwrite on luxury stationery. Keep it as long or short as your feelings demand..."
+                    placeholder="Write the message you'd like us to handwrite on a card. Keep it as long or short as your feelings demand..."
                     className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] focus:ring-1 focus:ring-[#C73858] outline-none resize-none"
                   />
                   {errors.personalNote && (

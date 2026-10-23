@@ -189,7 +189,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     rows={2}
                     value={personalNote}
                     onChange={(e) => setPersonalNote(e.target.value)}
-                    placeholder="Write your heartfelt message here. We handwrite this on luxury textured stationery with a wax seal..."
+                    placeholder="Write the message you'd like us to handwrite on a card. Keep it as long or short as your feelings demand..."
                     className="w-full px-3 py-1.5 bg-white border border-[#F2BDCA] rounded-lg text-xs text-[#2D1B22] focus:ring-1 focus:ring-[#C73858] focus:border-[#C73858] outline-none resize-none"
                   />
                 </div>

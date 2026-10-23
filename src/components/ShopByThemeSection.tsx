@@ -57,8 +57,8 @@ export const ShopByThemeSection: React.FC<ShopByThemeSectionProps> = ({
                 <div>
                   {/* Top Distinct Aesthetic Theme Artwork */}
                   <div
-                    onClick={() => onSelectTheme(theme.slug || theme.id)}
-                    className="relative overflow-hidden cursor-pointer"
+                    onClick={theme.isComingSoon ? undefined : () => onSelectTheme(theme.slug || theme.id)}
+                    className={`relative overflow-hidden ${theme.isComingSoon ? 'cursor-default' : 'cursor-pointer'}`}
                   >
                     <ThemeArtwork themeId={theme.id} />
                     <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-xs px-2.5 py-1 rounded-full border border-black/5 shadow-xs">
@@ -66,7 +66,11 @@ export const ShopByThemeSection: React.FC<ShopByThemeSectionProps> = ({
                         {theme.badge}
                       </span>
                     </div>
-                    {productCount > 0 ? (
+                    {theme.isComingSoon ? (
+                      <div className="absolute top-3 right-3 bg-gradient-to-r from-[#8C283B] to-[#591020] text-[#FFF0F3] text-[10px] font-bold tracking-wider px-2.5 py-0.5 rounded-full shadow-xs uppercase border border-[#FFCCD5]/50 flex items-center gap-1">
+                        <span>COMING SOON</span>
+                      </div>
+                    ) : productCount > 0 ? (
                       <div className="absolute top-3 right-3 bg-[#99223A]/90 text-white text-[10px] font-semibold px-2 py-0.5 rounded-full shadow-xs">
                         {productCount} {productCount === 1 ? 'Hamper' : 'Hampers'}
                       </div>
@@ -80,8 +84,10 @@ export const ShopByThemeSection: React.FC<ShopByThemeSectionProps> = ({
                   {/* Card Content */}
                   <div className="p-6">
                     <h3
-                      onClick={() => onSelectTheme(theme.slug || theme.id)}
-                      className="text-xl font-serif font-bold text-[#2D1B22] group-hover:text-[#99223A] transition-colors cursor-pointer"
+                      onClick={theme.isComingSoon ? undefined : () => onSelectTheme(theme.slug || theme.id)}
+                      className={`text-xl font-serif font-bold text-[#2D1B22] transition-colors ${
+                        theme.isComingSoon ? 'cursor-default' : 'group-hover:text-[#99223A] cursor-pointer'
+                      }`}
                     >
                       {theme.name}
                     </h3>
@@ -91,7 +97,11 @@ export const ShopByThemeSection: React.FC<ShopByThemeSectionProps> = ({
 
                     <div className="mt-4 pt-3 border-t border-[#E8D0D6]/60 flex items-center justify-between text-xs">
                       <span className="text-[#6B424E] text-[11px] italic">
-                        {productCount > 0 ? 'Confirmed launch hampers' : 'Customise via Studio'}
+                        {theme.isComingSoon
+                          ? 'Inventory in preparation'
+                          : productCount > 0
+                          ? 'Confirmed launch hampers'
+                          : 'Customise via Studio'}
                       </span>
                       <span className="text-[11px] font-mono text-[#A32842] bg-[#FFF0F4] px-1.5 py-0.5 rounded">
                         /collections/{theme.slug}
@@ -100,24 +110,33 @@ export const ShopByThemeSection: React.FC<ShopByThemeSectionProps> = ({
                   </div>
                 </div>
 
-                {/* Bottom Working Action Buttons */}
+                {/* Bottom Action Buttons / Coming Soon State */}
                 <div className="px-6 pb-6 pt-0 flex flex-col sm:flex-row items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => onSelectTheme(theme.slug || theme.id)}
-                    className="w-full sm:flex-1 py-2.5 px-3 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold text-center transition-all shadow-xs shadow-[#99223A]/20 flex items-center justify-center gap-1.5"
-                  >
-                    <span>View Collection</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => onOpenCustomBuilder(theme.name)}
-                    className="w-full sm:w-auto py-2.5 px-3 bg-[#FFF5F8] hover:bg-[#FFEBF0] text-[#7A1E31] border border-[#FFCCD5] rounded-xl text-xs font-semibold text-center transition-colors flex items-center justify-center gap-1 whitespace-nowrap"
-                  >
-                    <Gift className="w-3.5 h-3.5 text-[#C73858]" />
-                    <span>Customise</span>
-                  </button>
+                  {theme.isComingSoon ? (
+                    <div className="w-full py-2.5 px-3 bg-[#FFF5F8] text-[#8C283B] rounded-xl text-xs font-semibold text-center border border-[#FFCCD5] flex items-center justify-center gap-2 cursor-not-allowed select-none shadow-2xs">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C73858]" />
+                      <span>Coming Soon · Launching Soon</span>
+                    </div>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => onSelectTheme(theme.slug || theme.id)}
+                        className="w-full sm:flex-1 py-2.5 px-3 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold text-center transition-all shadow-xs shadow-[#99223A]/20 flex items-center justify-center gap-1.5"
+                      >
+                        <span>View Collection</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onOpenCustomBuilder(theme.name)}
+                        className="w-full sm:w-auto py-2.5 px-3 bg-[#FFF5F8] hover:bg-[#FFEBF0] text-[#7A1E31] border border-[#FFCCD5] rounded-xl text-xs font-semibold text-center transition-colors flex items-center justify-center gap-1 whitespace-nowrap"
+                      >
+                        <Gift className="w-3.5 h-3.5 text-[#C73858]" />
+                        <span>Customise</span>
+                      </button>
+                    </>
+                  )}
                 </div>
               </div>
             );

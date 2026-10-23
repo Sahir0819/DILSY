@@ -25,6 +25,8 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     accentBorder: 'border-[#F4B6C5]',
     accentText: 'text-[#99223A]',
     badge: 'For Him',
+    isComingSoon: true,
+    comingSoonMessage: 'Something special for him is on its way. Stay tuned!',
     linkedProductIds: ['loved-box', 'the-little-affair'],
     relatedThemeIds: ['anniversary', 'valentine-box', 'miss-you-box'],
   },

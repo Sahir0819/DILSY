@@ -13,6 +13,8 @@ export interface ThemeCategory {
   badge: string;
   linkedProductIds: string[];
   relatedThemeIds?: string[];
+  isComingSoon?: boolean;
+  comingSoonMessage?: string;
 }
 
 export type BoxSize = 'Small' | 'Medium' | 'Large';
