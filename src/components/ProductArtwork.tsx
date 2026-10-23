@@ -59,7 +59,7 @@ export const ProductArtwork: React.FC<ProductArtworkProps> = ({ type, className 
                 </div>
               </div>
 
-              {/* Envelope note with rich crimson wax seal */}
+              {/* Envelope note with heart badge */}
               <div className="w-full h-8 bg-[#FFF8FA] rounded-xs border border-[#F2BDCA] flex items-center justify-between px-2.5 shadow-xs">
                 <span className="text-[8px] font-serif tracking-widest text-[#7A1E31] uppercase font-bold">A Little Box Full of Feelings</span>
                 <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#B3243F] to-[#781226] flex items-center justify-center shadow-xs ring-1 ring-[#FFCCD5]">
@@ -141,7 +141,7 @@ export const ProductArtwork: React.FC<ProductArtworkProps> = ({ type, className 
                 </div>
               </div>
 
-              {/* Envelope note with wax seal */}
+              {/* Envelope note with heart badge */}
               <div className="w-full h-8 bg-[#FFF8FA] rounded-xs border border-[#F2BDCA] flex items-center justify-between px-2 shadow-xs">
                 <span className="text-[8px] font-serif tracking-widest text-[#7A1E31] uppercase font-medium">A Love Note For You</span>
                 <div className="w-4.5 h-4.5 rounded-full bg-gradient-to-br from-[#B3243F] to-[#781226] flex items-center justify-center shadow-xs ring-1 ring-[#FFCCD5]">

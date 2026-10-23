@@ -1,4 +1,4 @@
-import { CartItem, CustomHamperForm, DeliveryDetails, Product, ProductCustomisation } from '../types';
+import { CartItem, CustomHamperForm, DeliveryDetails, Product, ProductCustomisation, Offer } from '../types';
 
 export const WHATSAPP_PHONE_RAW = '8360958844';
 export const WHATSAPP_PHONE_INTERNATIONAL = '+91 8360958844';
@@ -8,20 +8,22 @@ export const EXACT_DELIVERY_POLICY =
   'Same-day and next-morning delivery requests depend on item availability, order cut-off times, preparation time, and delivery location. Orders are confirmed only after DILSY verifies availability, final pricing, delivery charges, and timing with the customer.';
 
 /**
- * Builds the URL-encoded WhatsApp link
+ * Builds the URL-encoded WhatsApp link, with optional custom phone number configured by admin
  */
-export function buildWhatsAppLink(message: string): string {
-  return `${WHATSAPP_BASE_URL}?text=${encodeURIComponent(message.trim())}`;
+export function buildWhatsAppLink(message: string, customPhone?: string): string {
+  const phone = (customPhone || WHATSAPP_PHONE_RAW).replace(/\D/g, '');
+  const cleanPhone = phone.startsWith('91') ? phone : `91${phone}`;
+  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message.trim())}`;
 }
 
 /**
  * Generate WhatsApp message for a direct single product inquiry / order
- * Consistently displays: "[Name] — [Size] — ₹[Price]" (e.g. "Loved Box — Medium — ₹969")
  */
 export function generateSingleProductWhatsAppMessage(
   product: Product,
   customisation?: ProductCustomisation,
-  delivery?: Partial<DeliveryDetails>
+  delivery?: Partial<DeliveryDetails>,
+  appliedDiscount?: { code: string; amount: number; finalPrice: number } | null
 ): string {
   const displayTitle = `${product.name} — ${product.size} — ₹${product.price.toLocaleString('en-IN')}`;
 
@@ -32,10 +34,15 @@ export function generateSingleProductWhatsAppMessage(
     `*Selected Hamper:* ${displayTitle}`,
     `*Size:* ${product.size}`,
     `*Base Selling Price:* ₹${product.price.toLocaleString('en-IN')}`,
-    `*Proposed Concept Overview (Subject to owner confirmation):*`,
-    ...product.itemsOverview.map((item) => ` • ${item}`),
-    ``,
   ];
+
+  if (appliedDiscount && appliedDiscount.amount > 0) {
+    lines.push(`*Promo Code Applied:* ${appliedDiscount.code} (-₹${appliedDiscount.amount})`);
+    lines.push(`*Discounted Hamper Price:* ₹${appliedDiscount.finalPrice.toLocaleString('en-IN')}`);
+  }
+
+  lines.push(`*Note:* Exact hamper contents and personal touches will be confirmed together on WhatsApp.`);
+  lines.push(``);
 
   if (customisation) {
     lines.push(`*Personalisation Details:*`);
@@ -77,12 +84,12 @@ export function generateSingleProductWhatsAppMessage(
 
 /**
  * Generate WhatsApp message for full Cart order
- * Consistently displays: "Loved Box — Medium — ₹969"
  */
 export function generateCartWhatsAppMessage(
   items: CartItem[],
   subtotal: number,
-  delivery: DeliveryDetails
+  delivery: DeliveryDetails,
+  discountInfo?: { code?: string; amount: number; total: number } | null
 ): string {
   const lines: string[] = [
     `🎁 *DILSY CART ORDER INQUIRY*`,
@@ -116,6 +123,12 @@ export function generateCartWhatsAppMessage(
 
   lines.push(``);
   lines.push(`*Subtotal:* ₹${subtotal.toLocaleString('en-IN')}`);
+
+  if (discountInfo && discountInfo.amount > 0) {
+    lines.push(`*Promotional Discount (${discountInfo.code || 'SPECIAL'}):* -₹${discountInfo.amount.toLocaleString('en-IN')}`);
+    lines.push(`*Discounted Order Total:* ₹${discountInfo.total.toLocaleString('en-IN')}`);
+  }
+
   lines.push(`*(Delivery charges to be calculated based on specific PG/Campus point)*`);
   lines.push(``);
 
@@ -143,9 +156,6 @@ export function generateCartWhatsAppMessage(
 
 /**
  * Automatic Theme-Matched Packaging Guidance
- * Maps customer chosen occasion and recipient to DILSY studio packaging styling direction.
- * (Note: Styling guidelines, not guaranteed physical materials or inclusions.
- * Actual packaging depends on confirmed availability.)
  */
 export function getThemePackagingGuidance(occasion?: string, recipientType?: string): string {
   const occ = (occasion || '').toLowerCase();
@@ -155,7 +165,7 @@ export function getThemePackagingGuidance(occasion?: string, recipientType?: str
     return 'Romantic packaging with suitable ribbons and thoughtful details';
   }
   if (occ.includes('anniversary')) {
-    return 'Elegant, premium-looking packaging';
+    return 'Elegant, thoughtful presentation';
   }
   if (occ.includes('birthday')) {
     return 'Celebratory packaging';
@@ -196,10 +206,11 @@ export function getBaseHamperPrice(budget: string, customAmount?: string): numbe
 
 /**
  * Generate WhatsApp message for Custom Hamper Builder
- * Uses official box sizes: Small Box (₹799), Medium Box (₹969), Large Box (₹1,199), or Custom Budget.
- * Includes optional add-ons with quantities, individual prices, add-on subtotal, and combined estimated total.
  */
-export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): string {
+export function generateCustomHamperWhatsAppMessage(
+  form: CustomHamperForm,
+  discountInfo?: { code?: string; amount: number; total: number } | null
+): string {
   const isCustomBudget = form.budget === 'Custom Budget';
   const displayBudget = isCustomBudget
     ? `Custom (${form.customBudgetAmount ? `₹${form.customBudgetAmount}` : 'Price to be confirmed'})`
@@ -234,31 +245,47 @@ export function generateCustomHamperWhatsAppMessage(form: CustomHamperForm): str
     `*Pricing Breakdown:*`,
     `• Base Box Price: ${basePrice !== null ? `₹${basePrice.toLocaleString('en-IN')}` : displayBudget}`,
     `• Add-ons Subtotal: ₹${addOnsSubtotal.toLocaleString('en-IN')}`,
-    `• Combined Estimated Total: ${
-      estimatedTotal !== null
-        ? `₹${estimatedTotal.toLocaleString('en-IN')}*`
-        : 'Custom target (To be confirmed with DILSY)'
-    }`,
-    `  _(*Estimated total; subject to confirmed availability and delivery location)_`,
-    ``,
-    `*Personal Touch:*`,
-    `• Recipient Name/Nickname: ${form.recipientName || 'Not provided'}`,
-    `• Greeting Card Message: "${form.personalNote || 'To be handwritten by DILSY'}"`,
-    ...(form.specialInstructions ? [`• Special Instructions / Dietary / Preferences: ${form.specialInstructions}`] : []),
-    ``,
-    `*Delivery & Contact Details:*`,
-    `• Customer Name: ${form.customerName || 'Not specified'}`,
-    `• Customer Phone: ${form.customerPhone || 'Not specified'}`,
-    `• Service Location: ${form.deliveryArea || 'Chandigarh University / Mohali'}`,
-    ...(form.specificLandmark ? [`• PG / Landmark: ${form.specificLandmark}`] : []),
-    `• Preferred Date: ${form.deliveryDate || 'To be discussed'}`,
-    `• Preferred Time Window: ${form.timeWindow || 'To be coordinated'}`,
-    ``,
-    `*Delivery Policy:*`,
-    `"${EXACT_DELIVERY_POLICY}"`,
-    ``,
-    `Hi DILSY! I built this custom hamper blueprint on your website for the "${form.occasion || 'Celebration'}" theme. Could you please review the items, confirm item availability and final pricing for delivery to my location? Thank you!`,
   ];
+
+  if (discountInfo && discountInfo.amount > 0 && estimatedTotal !== null) {
+    lines.push(`• Subtotal: ₹${estimatedTotal.toLocaleString('en-IN')}`);
+    lines.push(`• Promotional Discount (${discountInfo.code || 'PROMO'}): -₹${discountInfo.amount.toLocaleString('en-IN')}`);
+    lines.push(`• Discounted Combined Total: ₹${discountInfo.total.toLocaleString('en-IN')}*`);
+  } else {
+    lines.push(
+      `• Combined Estimated Total: ${
+        estimatedTotal !== null
+          ? `₹${estimatedTotal.toLocaleString('en-IN')}*`
+          : 'Custom target (To be confirmed with DILSY)'
+      }`
+    );
+  }
+
+  lines.push(`  _(*Estimated total; subject to confirmed availability and delivery location)_`);
+  lines.push(``);
+  lines.push(`*Personal Touch:*`);
+  lines.push(`• Recipient Name/Nickname: ${form.recipientName || 'Not provided'}`);
+  lines.push(`• Greeting Card Message: "${form.personalNote || 'To be handwritten by DILSY'}"`);
+  if (form.specialInstructions) {
+    lines.push(`• Special Instructions / Dietary / Preferences: ${form.specialInstructions}`);
+  }
+  lines.push(``);
+  lines.push(`*Delivery & Contact Details:*`);
+  lines.push(`• Customer Name: ${form.customerName || 'Not specified'}`);
+  lines.push(`• Customer Phone: ${form.customerPhone || 'Not specified'}`);
+  lines.push(`• Service Location: ${form.deliveryArea || 'Chandigarh University / Mohali'}`);
+  if (form.specificLandmark) {
+    lines.push(`• PG / Landmark: ${form.specificLandmark}`);
+  }
+  lines.push(`• Preferred Date: ${form.deliveryDate || 'To be discussed'}`);
+  lines.push(`• Preferred Time Window: ${form.timeWindow || 'To be coordinated'}`);
+  lines.push(``);
+  lines.push(`*Delivery Policy:*`);
+  lines.push(`"${EXACT_DELIVERY_POLICY}"`);
+  lines.push(``);
+  lines.push(
+    `Hi DILSY! I built this custom hamper blueprint on your website for the "${form.occasion || 'Celebration'}" theme. Could you please review the items, confirm item availability and final pricing for delivery to my location? Thank you!`
+  );
 
   return lines.join('\n');
 }

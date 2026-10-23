@@ -291,13 +291,13 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
 
             <div className="space-y-2">
               <span className="text-xs font-semibold uppercase tracking-wider text-[#A32842] block">
-                Bespoke Studio Curation
+                Personalised Hamper Studio
               </span>
               <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#2D1B22]">
                 Customise Your {collection.name}
               </h3>
               <p className="text-sm text-[#52333D] font-light leading-relaxed max-w-lg mx-auto">
-                While pre-packaged batches for this collection are hand-assembled to order, we craft custom hampers for this exact occasion via our bespoke studio! Select your budget, favorite keepsakes, chocolates, and personalized handwritten cards.
+                We assemble custom hampers for this occasion through our studio. Select your budget, optional add-ons, and a personal message, and let us help create a hamper made with care.
               </p>
             </div>
 
@@ -340,7 +340,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
                 Commission a Custom {collection.name}
               </h3>
               <p className="text-xs sm:text-sm text-[#6B424E] max-w-xl">
-                Choose your exact budget (Small Box ₹799, Medium Box ₹969, Large Box ₹1,199, or custom target), add polaroid photos, choose signature aromatics, and compose a wax-sealed handwritten love letter.
+                Choose your budget (Small Box ₹799, Loved Box / Medium ₹969, Large Box ₹1,199), select optional add-ons, and include your personal handwritten card.
               </p>
             </div>
             <button

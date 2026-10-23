@@ -1,0 +1,507 @@
+{
+  "products": [
+    {
+      "id": "the-little-affair",
+      "name": "Small Box",
+      "size": "Small",
+      "price": 799,
+      "tagline": "A little box, filled with thoughtful details.",
+      "description": "A little box, filled with thoughtful details. A sweet way to make someone feel special.",
+      "positioning": "A smaller, budget-friendly personalised gift hamper.",
+      "categories": [
+        "all",
+        "for-her",
+        "for-him",
+        "besties"
+      ],
+      "themeIds": [
+        "i-love-you-for-her",
+        "i-love-you-for-him",
+        "anniversary",
+        "miss-you-box"
+      ],
+      "idealFor": "Birthdays, hostel room surprises, anniversary tokens, or a sweet everyday gesture.",
+      "packaging": "Neatly styled gift box with ribbon and personal details.",
+      "accentColor": "#D4A39A",
+      "illustrationType": "little-affair",
+      "stockStatus": "available",
+      "isFeatured": false
+    },
+    {
+      "id": "loved-box",
+      "name": "Loved Box",
+      "size": "Medium",
+      "price": 969,
+      "tagline": "A little box full of love, thoughtful surprises, and personal touches.",
+      "description": "A little box full of love, thoughtful surprises, and personal touches. Make it theirs with a personalised message.",
+      "positioning": "A balanced, thoughtfully curated gift hamper.",
+      "badge": "❤️ RECOMMENDED",
+      "categories": [
+        "all",
+        "for-him",
+        "for-her",
+        "besties"
+      ],
+      "themeIds": [
+        "i-love-you-for-him",
+        "i-love-you-for-her",
+        "anniversary",
+        "birthday",
+        "valentine-box"
+      ],
+      "idealFor": "Girlfriend or boyfriend surprises, romantic milestones, anniversaries, birthdays, and saying \"I Love You\".",
+      "allowRecipientChoice": true,
+      "packaging": "Thoughtfully styled gift presentation with ribbon and personal touches.",
+      "accentColor": "#C73858",
+      "illustrationType": "loved-box",
+      "stockStatus": "available",
+      "isFeatured": true
+    },
+    {
+      "id": "the-everything-box",
+      "name": "Large Box",
+      "size": "Large",
+      "price": 1199,
+      "tagline": "More room for thoughtful surprises, personalised touches, and a memorable gifting experience.",
+      "description": "More room for thoughtful surprises, personalised touches, and a memorable gifting experience.",
+      "positioning": "A larger hamper with room for additional gift items.",
+      "categories": [
+        "all",
+        "for-him",
+        "for-her",
+        "besties"
+      ],
+      "themeIds": [
+        "i-love-you-for-her",
+        "anniversary",
+        "birthday",
+        "valentine-box"
+      ],
+      "idealFor": "Milestone celebrations, birthdays, reunions, and festive occasions.",
+      "packaging": "Generously sized gift presentation box styled for the occasion.",
+      "accentColor": "#8C5A4F",
+      "illustrationType": "everything-box",
+      "stockStatus": "available",
+      "isFeatured": false
+    }
+  ],
+  "themes": [
+    {
+      "id": "i-love-you-for-him",
+      "slug": "i-love-you-for-him",
+      "name": "I Love You — For Him",
+      "description": "A little something to remind him how much he means to you.",
+      "visualDirection": "Thoughtful, romantic, elegant packaging and a personalised note.",
+      "heroHeadline": "Understated, thoughtful gifts for him",
+      "heroStory": "Thoughtful gifts and personal touches to show him how much he is appreciated. Choose your budget, write your personal message, and let us help prepare a hamper made with care.",
+      "giftingTips": [
+        "Pair with a photograph from a favourite shared memory",
+        "Add your personal message or inside joke to be handwritten on the card",
+        "Coordinate with our team on WhatsApp for convenient delivery"
+      ],
+      "accentBg": "from-[#FFF0F4] to-[#FCE6EC]",
+      "accentBorder": "border-[#F4B6C5]",
+      "accentText": "text-[#99223A]",
+      "badge": "For Him",
+      "isComingSoon": true,
+      "comingSoonMessage": "Something special for him is on its way. Stay tuned!",
+      "linkedProductIds": [
+        "loved-box",
+        "the-little-affair"
+      ],
+      "relatedThemeIds": [
+        "anniversary",
+        "valentine-box",
+        "miss-you-box"
+      ]
+    },
+    {
+      "id": "i-love-you-for-her",
+      "slug": "i-love-you-for-her",
+      "name": "I Love You — For Her",
+      "description": "Little surprises, thoughtful details, and a whole lot of love.",
+      "visualDirection": "Romantic, aesthetic packaging and a personal message.",
+      "heroHeadline": "Thoughtful gifts and sweet gestures for her",
+      "heroStory": "Thoughtful gifts and personal touches for someone who means the world to you. Choose your budget, share your message, and let us help create a hamper made with care.",
+      "giftingTips": [
+        "Write a heartfelt message to be handwritten on a card",
+        "Add optional sweet treats or flowers to make it extra special",
+        "Tell us her favourite colours or details so we can match the styling"
+      ],
+      "accentBg": "from-[#FFF0F4] to-[#FFEBF0]",
+      "accentBorder": "border-[#FFCCD5]",
+      "accentText": "text-[#A32842]",
+      "badge": "For Her",
+      "linkedProductIds": [
+        "loved-box",
+        "the-little-affair",
+        "the-everything-box"
+      ],
+      "relatedThemeIds": [
+        "anniversary",
+        "birthday",
+        "valentine-box"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "anniversary",
+      "slug": "anniversary",
+      "name": "Anniversary Box",
+      "description": "Celebrate your story, one little memory at a time.",
+      "visualDirection": "Elegant keepsakes, personalised messages, and romantic packaging.",
+      "heroHeadline": "Celebrate your milestones and the memories you have built together",
+      "heroStory": "Whether celebrating months or years of shared memories around CU and Mohali, our Anniversary Box helps you mark your journey with thoughtful surprises and a heartfelt handwritten card.",
+      "giftingTips": [
+        "Mention your relationship milestone date or inside memories in your note",
+        "Add optional photo memories or sweet treats to commemorate the day",
+        "Coordinate delivery timing with our team for a seamless surprise"
+      ],
+      "accentBg": "from-[#FFF5F8] to-[#FCE8EE]",
+      "accentBorder": "border-[#E8A5B5]",
+      "accentText": "text-[#8C1D33]",
+      "badge": "Milestone Love",
+      "linkedProductIds": [
+        "loved-box",
+        "the-everything-box"
+      ],
+      "relatedThemeIds": [
+        "i-love-you-for-her",
+        "i-love-you-for-him",
+        "valentine-box"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "birthday",
+      "slug": "birthday",
+      "name": "Birthday Box",
+      "description": "Make their special day feel even more special.",
+      "visualDirection": "Festive packaging, cheerful accents, and birthday cards.",
+      "heroHeadline": "Celebrate their birthday with sweet warmth and personal flair",
+      "heroStory": "Make campus birthdays and hostel surprises memorable. Curated with celebratory touches, sweet treats, and a personal birthday message handwritten for them.",
+      "giftingTips": [
+        "Schedule delivery for morning or afternoon hostel gate handover",
+        "Add a personal birthday wish with their nickname or favourite memories",
+        "Select their favourite treats or cute add-ons"
+      ],
+      "accentBg": "from-[#FFF8F0] to-[#FFEEDD]",
+      "accentBorder": "border-[#F8CBB0]",
+      "accentText": "text-[#A04022]",
+      "badge": "Celebration",
+      "linkedProductIds": [
+        "loved-box",
+        "the-everything-box"
+      ],
+      "relatedThemeIds": [
+        "anniversary",
+        "i-love-you-for-her",
+        "miss-you-box"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "periods-box",
+      "slug": "periods",
+      "name": "Periods Box",
+      "description": "A little extra care for the days that call for it.",
+      "visualDirection": "A supportive comfort-care package with thoughtful notes, snacks, and optional period-care essentials. Keep the presentation tasteful and non-stigmatising. Only list items whose availability has been confirmed.",
+      "heroHeadline": "Warmth, comfort, and gentle care when she needs it most",
+      "heroStory": "A supportive, comforting care package for days that call for extra gentleness. Curated with comforting snacks, thoughtful touches, and a warm handwritten card to remind her she is cared for.",
+      "giftingTips": [
+        "Include soothing snacks or treats she enjoys",
+        "Keep the card message warm, supportive, and gentle",
+        "Specify hostel or PG gate delivery timing for convenience"
+      ],
+      "accentBg": "from-[#FFF5F7] to-[#F9E9ED]",
+      "accentBorder": "border-[#E8B8C4]",
+      "accentText": "text-[#8C283B]",
+      "badge": "Comfort & Care",
+      "linkedProductIds": [],
+      "relatedThemeIds": [
+        "i-love-you-for-her",
+        "birthday",
+        "miss-you-box"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "apology-box",
+      "slug": "apology",
+      "name": "Apology Box",
+      "description": "Sometimes, a thoughtful gesture says what words struggle to.",
+      "visualDirection": "Heartfelt message cards, thoughtful keepsakes, and understated packaging. Do not suggest that a gift guarantees forgiveness or fixes a relationship.",
+      "heroHeadline": "A sincere, heartfelt gesture when words fall short",
+      "heroStory": "Saying sorry takes honesty and quiet sincerity. An understated, thoughtful hamper with a personal handwritten card where you can speak from the heart.",
+      "giftingTips": [
+        "Speak honestly in your handwritten card without pressure",
+        "Keep the presentation understated and sincere",
+        "Let the quiet gesture show that you care"
+      ],
+      "accentBg": "from-[#FDFBF9] to-[#F5EFE9]",
+      "accentBorder": "border-[#D9C8BC]",
+      "accentText": "text-[#5C453C]",
+      "badge": "Heartfelt Gesture",
+      "linkedProductIds": [],
+      "relatedThemeIds": [
+        "miss-you-box",
+        "i-love-you-for-him",
+        "i-love-you-for-her"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "miss-you-box",
+      "slug": "miss-you",
+      "name": "Miss You Box",
+      "description": "For the people you wish were a little closer.",
+      "visualDirection": "Personal letters, memory cards, keepsakes, and thoughtful packaging.",
+      "heroHeadline": "Thoughtful surprises for someone you miss",
+      "heroStory": "Whether studying away at Chandigarh University or missing someone in another city, distance feels softer with a thoughtful surprise and a personal handwritten card.",
+      "giftingTips": [
+        "Include a favourite memory or photo from your last visit",
+        "Write a warm note about looking forward to meeting next",
+        "Coordinate delivery directly to their hostel or PG address"
+      ],
+      "accentBg": "from-[#F7F6FB] to-[#ECE9F7]",
+      "accentBorder": "border-[#CEC6EB]",
+      "accentText": "text-[#4F4178]",
+      "badge": "Long Distance",
+      "linkedProductIds": [
+        "the-little-affair"
+      ],
+      "relatedThemeIds": [
+        "anniversary",
+        "birthday",
+        "i-love-you-for-him"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "valentine-box",
+      "slug": "valentine",
+      "name": "Valentine Box",
+      "description": "A little romance, wrapped just for them.",
+      "visualDirection": "Romantic gift presentation, coordinated packaging, and personalised messages.",
+      "heroHeadline": "Sweet feelings and thoughtful romance, wrapped just for them",
+      "heroStory": "A classic, romantic gesture for someone special. Curated with sweet treats, romantic touches, and a heartfelt handwritten card to celebrate your feelings.",
+      "giftingTips": [
+        "Pair with our Loved Box (Medium — ₹969) for a complete romantic gesture",
+        "Add a sweet love note to be handwritten on the card",
+        "Reserve your delivery date in advance for Valentine season"
+      ],
+      "accentBg": "from-[#FFF0F3] to-[#FCD5DE]",
+      "accentBorder": "border-[#F29CAE]",
+      "accentText": "text-[#B31D3F]",
+      "badge": "Pure Romance",
+      "linkedProductIds": [
+        "loved-box",
+        "the-everything-box"
+      ],
+      "relatedThemeIds": [
+        "i-love-you-for-her",
+        "i-love-you-for-him",
+        "anniversary"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "diwali-box",
+      "slug": "diwali",
+      "name": "Diwali Box",
+      "description": "Celebrate the festival of lights with thoughtful surprises.",
+      "visualDirection": "Festive gift packaging, warm golden accents, greeting cards, and suitable sweets or keepsakes where available.",
+      "heroHeadline": "Celebrate the festival of lights with warmth and joy",
+      "heroStory": "Bring festive warmth to student hostels and family homes. Curated with festive packaging, sweet treats, and a warm festive greeting card to celebrate Diwali.",
+      "giftingTips": [
+        "Include warm festive wishes for friends, roommates, or loved ones",
+        "Add sweet treats or festive touches",
+        "Coordinate early hostel deliveries ahead of festive holidays"
+      ],
+      "accentBg": "from-[#FFFDF5] to-[#FCF4D9]",
+      "accentBorder": "border-[#F0DC94]",
+      "accentText": "text-[#8C6D1F]",
+      "badge": "Festive Lights",
+      "linkedProductIds": [],
+      "relatedThemeIds": [
+        "birthday",
+        "anniversary",
+        "miss-you-box"
+      ],
+      "isComingSoon": false
+    }
+  ],
+  "addons": [
+    {
+      "id": "single-rose",
+      "name": "Single Rose",
+      "category": "Flowers",
+      "price": 49,
+      "description": "A fresh single rose stem to add a sweet romantic touch.",
+      "isAvailable": true,
+      "illustrationType": "single-rose"
+    },
+    {
+      "id": "small-rose-bunch",
+      "name": "Small Rose Bunch",
+      "category": "Flowers",
+      "price": 149,
+      "description": "A small bunch of fresh roses wrapped nicely for gifting.",
+      "isAvailable": true,
+      "illustrationType": "small-rose-bunch"
+    },
+    {
+      "id": "chocolate-treat",
+      "name": "Chocolate Treat",
+      "category": "Chocolates & Treats",
+      "price": 49,
+      "description": "A sweet chocolate treat to brighten their day.",
+      "isAvailable": true,
+      "illustrationType": "chocolate-treat"
+    },
+    {
+      "id": "assorted-chocolate-pack",
+      "name": "Assorted Chocolate Pack",
+      "category": "Chocolates & Treats",
+      "price": 99,
+      "description": "An assortment of delicious chocolates.",
+      "isAvailable": true,
+      "illustrationType": "assorted-chocolate"
+    },
+    {
+      "id": "gourmet-snack-pack",
+      "name": "Gourmet Snack Pack",
+      "category": "Chocolates & Treats",
+      "price": 99,
+      "description": "A tasty snack pack to complement your hamper.",
+      "isAvailable": true,
+      "illustrationType": "gourmet-snack"
+    },
+    {
+      "id": "cookies-brownie-treat",
+      "name": "Cookies or Brownie Treat",
+      "category": "Chocolates & Treats",
+      "price": 99,
+      "description": "A sweet cookie or brownie treat.",
+      "isAvailable": true,
+      "illustrationType": "cookies-brownie"
+    },
+    {
+      "id": "extra-photo-print",
+      "name": "Extra Personalised Photo Print",
+      "category": "Cute Extras",
+      "price": 49,
+      "description": "An additional printed photo memory with your caption.",
+      "isAvailable": true,
+      "illustrationType": "photo-print"
+    },
+    {
+      "id": "cute-keychain",
+      "name": "Cute Keychain",
+      "category": "Cute Extras",
+      "price": 99,
+      "description": "A cute keepsake keychain to carry every day.",
+      "isAvailable": true,
+      "illustrationType": "cute-keychain"
+    },
+    {
+      "id": "extra-greeting-card",
+      "name": "Extra Greeting Card",
+      "category": "Cute Extras",
+      "price": 29,
+      "description": "An additional handwritten greeting card with your message.",
+      "isAvailable": true,
+      "illustrationType": "greeting-card"
+    },
+    {
+      "id": "mini-keepsake",
+      "name": "Mini Keepsake",
+      "category": "Cute Extras",
+      "price": 99,
+      "description": "A thoughtful little keepsake to remember the moment.",
+      "isAvailable": true,
+      "illustrationType": "mini-keepsake"
+    }
+  ],
+  "offers": [
+    {
+      "id": "offer-welcome-50",
+      "title": "First Gift Flat ₹50 Off",
+      "code": "LOVE50",
+      "description": "Get flat ₹50 off on orders above ₹799 when ordered with DILSY.",
+      "discountType": "flat",
+      "discountValue": 50,
+      "minOrderAmount": 799,
+      "isActive": true,
+      "badgeText": "₹50 OFF on ₹799+"
+    },
+    {
+      "id": "offer-love-10",
+      "title": "Romantic Season 10% Off",
+      "code": "DILSY10",
+      "description": "Enjoy 10% off on Loved Box and custom hampers.",
+      "discountType": "percent",
+      "discountValue": 10,
+      "minOrderAmount": 969,
+      "isActive": false,
+      "badgeText": "10% OFF Special"
+    }
+  ],
+  "settings": {
+    "whatsappPhone": "8360958844",
+    "whatsappPhoneInternational": "+91 8360958844",
+    "supportEmail": "contact@dilsy.shop",
+    "instagramHandle": "@dilsygifts",
+    "deliveryPolicy": "Same-day and next-morning delivery requests depend on item availability, order cut-off times, preparation time, and delivery location. Orders are confirmed only after DILSY verifies availability, final pricing, delivery charges, and timing with the customer.",
+    "deliveryAreas": [
+      "Chandigarh University (North & South Gate)",
+      "Gharuan Village & Student PGs",
+      "Kharar (Sunny Enclave, Chajju Majra & PGs)",
+      "Landran & CEC College Hub",
+      "Mohali Phase 1 to 5",
+      "Mohali Phase 6 to 11 / Sector 70–82",
+      "Other nearby Mohali / CU Landmark (specify in notes)"
+    ],
+    "timeWindows": [
+      "Morning (9:00 AM – 12:00 PM)",
+      "Afternoon (12:00 PM – 4:00 PM)",
+      "Evening (4:00 PM – 8:00 PM)",
+      "Night / Midnight Celebration Request (subject to advance confirmation)"
+    ],
+    "announcement": {
+      "enabled": true,
+      "text": "Thoughtful surprises, made personal with love.",
+      "secondaryText": "· Delivering across Chandigarh University & Mohali"
+    },
+    "tagline": "A Little Box Full of Feelings"
+  },
+  "orders": [
+    {
+      "id": "DILSY-704943",
+      "createdAt": "2026-10-23T17:15:04.943Z",
+      "source": "cart",
+      "customerName": "Priya Sharma",
+      "customerPhone": "9876543210",
+      "deliveryArea": "Chandigarh University (North & South Gate)",
+      "specificLandmark": "NC4 Hostel",
+      "deliveryDate": "2026-02-14",
+      "timeWindow": "Afternoon (12:00 PM – 4:00 PM)",
+      "items": [
+        {
+          "title": "Loved Box (Medium)",
+          "quantity": 1,
+          "price": 969
+        }
+      ],
+      "addOns": [],
+      "appliedOffer": null,
+      "subtotal": 969,
+      "discountAmount": 50,
+      "total": 919,
+      "specialInstructions": "",
+      "status": "Pending",
+      "adminNotes": "",
+      "rawWhatsappMessage": ""
+    }
+  ]
+}

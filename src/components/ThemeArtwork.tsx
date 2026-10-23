@@ -213,7 +213,7 @@ export const ThemeArtwork: React.FC<ThemeArtworkProps> = ({ themeId, className =
             </div>
             <span className="text-[5px] text-rose-200 font-serif uppercase tracking-widest mt-1">Velvet</span>
           </div>
-          {/* Romantic envelope with dual wax hearts */}
+          {/* Romantic envelope with sweet hearts */}
           <div className="flex flex-col items-end gap-1.5">
             <div className="w-22 h-10 bg-[#FFF5F7] rounded p-1.5 flex flex-col justify-between text-[#801026] shadow-xs">
               <span className="text-[7px] font-serif font-bold uppercase tracking-wider">Be My Valentine</span>

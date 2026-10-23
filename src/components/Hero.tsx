@@ -37,7 +37,7 @@ export const Hero: React.FC<HeroProps> = ({
 
             {/* Supporting Prose */}
             <p className="text-base sm:text-lg text-[#52333D] font-light leading-relaxed max-w-2xl">
-              Thoughtfully curated, handcrafted gift hampers designed to celebrate love, birthdays, anniversaries, and comfort. Made personal with hand-penned wax-sealed notes, memory polaroids, and handpicked keepsakes.
+              Thoughtful, personalised gift hampers designed to celebrate love, birthdays, anniversaries, and care. Made personal with your handwritten message, optional photo memories, and sweet surprises.
             </p>
 
             {/* Primary Action Buttons with Love Palette */}
@@ -67,11 +67,11 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
               <div className="flex items-center gap-2">
                 <Feather className="w-4 h-4 text-[#B33951] shrink-0" />
-                <span>Handwritten Letters & Wax Seals</span>
+                <span>Personal Handwritten Cards</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="font-semibold text-[#99223A] tabular-nums">₹799 – ₹1,199</span>
-                <span>Official boutique box pricing</span>
+                <span>Official box pricing</span>
               </div>
             </div>
           </div>

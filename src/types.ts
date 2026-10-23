@@ -15,9 +15,12 @@ export interface ThemeCategory {
   relatedThemeIds?: string[];
   isComingSoon?: boolean;
   comingSoonMessage?: string;
+  coverImage?: string;
 }
 
 export type BoxSize = 'Small' | 'Medium' | 'Large';
+
+export type StockStatus = 'available' | 'out_of_stock' | 'coming_soon' | 'unpublished';
 
 export interface Product {
   id: string;
@@ -25,17 +28,21 @@ export interface Product {
   size: BoxSize;
   tagline: string;
   price: number;
+  originalPrice?: number;
   description: string;
   positioning?: string;
   badge?: string;
   categories: Array<'all' | 'for-him' | 'for-her' | 'besties'>;
   themeIds: string[];
   idealFor: string;
-  itemsOverview: string[];
+  itemsOverview?: string[];
   packaging: string;
   accentColor: string;
   illustrationType: 'loved-box' | 'little-affair' | 'dilsy-edit' | 'everything-box';
+  customImage?: string;
   allowRecipientChoice?: boolean;
+  stockStatus?: StockStatus;
+  isFeatured?: boolean;
 }
 
 export interface ProductCustomisation {
@@ -83,6 +90,7 @@ export interface AddOnItem {
     | 'cute-keychain'
     | 'greeting-card'
     | 'mini-keepsake';
+  customImage?: string;
 }
 
 export interface SelectedAddOn {
@@ -111,3 +119,71 @@ export interface CustomHamperForm {
   customerPhone: string;
 }
 
+export interface Offer {
+  id: string;
+  title: string;
+  code: string;
+  description: string;
+  discountType: 'percent' | 'flat';
+  discountValue: number;
+  minOrderAmount: number;
+  startDate?: string;
+  endDate?: string;
+  isActive: boolean;
+  badgeText?: string;
+}
+
+export interface StoreSettings {
+  whatsappPhone: string;
+  whatsappPhoneInternational: string;
+  supportEmail: string;
+  instagramHandle: string;
+  deliveryPolicy: string;
+  deliveryAreas: string[];
+  timeWindows: string[];
+  announcement: {
+    enabled: boolean;
+    text: string;
+    secondaryText: string;
+  };
+  tagline: string;
+}
+
+export type OrderStatus =
+  | 'Pending'
+  | 'Confirmed on WhatsApp'
+  | 'In Preparation'
+  | 'Dispatched'
+  | 'Delivered'
+  | 'Cancelled';
+
+export interface OrderRequest {
+  id: string;
+  createdAt: string;
+  source: 'cart' | 'single_product' | 'custom_builder';
+  customerName: string;
+  customerPhone: string;
+  deliveryArea: string;
+  specificLandmark: string;
+  deliveryDate: string;
+  timeWindow: string;
+  items: Array<{
+    title: string;
+    quantity: number;
+    price: number;
+    customisation?: Record<string, any>;
+  }>;
+  addOns?: SelectedAddOn[];
+  appliedOffer?: {
+    code: string;
+    title: string;
+    discountAmount: number;
+  } | null;
+  subtotal: number;
+  discountAmount: number;
+  total: number;
+  specialInstructions?: string;
+  status: OrderStatus;
+  adminNotes?: string;
+  rawWhatsappMessage?: string;
+}

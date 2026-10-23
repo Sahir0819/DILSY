@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, Truck, ShieldCheck, ChevronDown, ChevronUp, MessageCircle, MapPin, Feather, Sparkles } from 'lucide-react';
+import { Heart, Truck, ShieldCheck, ChevronDown, ChevronUp, MessageCircle, MapPin, Feather, Sparkles, Lock } from 'lucide-react';
 import { EXACT_DELIVERY_POLICY, WHATSAPP_PHONE_INTERNATIONAL } from '../utils/whatsapp';
 
 export const OurStory: React.FC = () => {
@@ -23,7 +23,7 @@ export const OurStory: React.FC = () => {
                 DILSY began with a simple belief right here around Chandigarh University and Mohali: gifts shouldn't be plastic wrapped junk or rushed convenience chocolates. When you love someone—whether it’s your partner, your hostel roommate who got you through exams, or your best friend miles away—the gift should feel like you stopped time just for them.
               </p>
               <p>
-                We handcraft each hamper from scratch in our local studio: hand-pouring soy candles with warm crackling wicks, printing your favorite polaroid memory, and hand-penning your words onto heavy-stock stationery with a warm wax seal.
+                We assemble each hamper with care in our local studio: preparing your selected gifts, personalising your photo memories, and hand-writing your words onto a card to make someone feel truly special.
               </p>
               <p>
                 No automated robots, no cookie-cutter templates. Just <em>A Little Box Full of Feelings</em>, delivered straight to campus gates, hostel desks, and local PGs.
@@ -122,7 +122,7 @@ export const FaqSection: React.FC = () => {
     },
     {
       q: 'Can I personalise the greeting card note and include photos?',
-      a: 'Yes, absolutely! Every DILSY hamper includes a bespoke handwritten greeting card penned on premium textured stationery with an authentic wax seal. For hampers featuring polaroid prints (like The Little Affair or The Everything Box), you can share your photo with us on WhatsApp right after submitting your inquiry.',
+      a: 'Yes, absolutely! Every DILSY hamper includes a personal greeting card hand-written with your message. You can also share your photo with us on WhatsApp right after submitting your inquiry to include it with your hamper.',
     },
     {
       q: 'Can I request same-day or next-morning delivery?',
@@ -134,7 +134,7 @@ export const FaqSection: React.FC = () => {
     },
     {
       q: 'Are the items inside launch hampers customizable?',
-      a: 'Yes! The included items in our launch hampers (Small Box ₹799, Loved Box Medium ₹969, Large Box ₹1,199) are curated proposed concepts. You can customize fragrances, dietary preferences (e.g. eggless treats), initials on keychains, and add optional extras (roses, chocolates, keepsakes) during checkout or via our Custom Hamper Builder.',
+      a: 'Yes! We discuss and confirm the exact hamper contents, dietary preferences (such as eggless treats), personal notes, and any optional add-ons (roses, chocolates, cards) with you directly on WhatsApp before your order is finalised.',
     },
     {
       q: 'Are orders confirmed immediately upon clicking WhatsApp?',
@@ -192,7 +192,17 @@ export const FaqSection: React.FC = () => {
   );
 };
 
-export const Footer: React.FC<{ onNavigate: (id: string) => void }> = ({ onNavigate }) => {
+export const Footer: React.FC<{ onNavigate: (id: string) => void; onNavigateToAdmin?: () => void }> = ({ onNavigate, onNavigateToAdmin }) => {
+  const handleAdminClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onNavigateToAdmin) {
+      onNavigateToAdmin();
+    } else {
+      window.history.pushState({}, '', '/admin');
+      window.dispatchEvent(new PopStateEvent('popstate'));
+    }
+  };
+
   return (
     <footer className="bg-[#260C12] text-[#FFF0F3] pt-14 pb-8 border-t border-[#4A1622]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -237,6 +247,15 @@ export const Footer: React.FC<{ onNavigate: (id: string) => void }> = ({ onNavig
                   Delivery Policy
                 </button>
               </li>
+              <li className="pt-1">
+                <button
+                  onClick={handleAdminClick}
+                  className="hover:text-white text-[#FFB3C6] font-medium transition-colors inline-flex items-center gap-1.5 group"
+                >
+                  <Lock className="w-3 h-3 text-[#FF85A1] group-hover:scale-110 transition-transform" />
+                  <span>Admin Studio Login</span>
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -262,9 +281,20 @@ export const Footer: React.FC<{ onNavigate: (id: string) => void }> = ({ onNavig
         </div>
 
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#FFE5EC]/50 gap-4">
-          <p>© {new Date().getFullYear()} DILSY Gifting Studio. All rights reserved.</p>
+          <div className="flex flex-wrap items-center gap-3">
+            <p>© {new Date().getFullYear()} DILSY Gifting Studio. All rights reserved.</p>
+            <span className="hidden sm:inline text-[#FFE5EC]/20">·</span>
+            <button
+              onClick={handleAdminClick}
+              className="text-[11px] text-[#FFE5EC]/60 hover:text-[#FF85A1] transition-colors inline-flex items-center gap-1"
+              title="Restricted Business Owner Portal"
+            >
+              <Lock className="w-3 h-3 text-[#FF85A1]/70" />
+              <span>Admin Studio (/admin)</span>
+            </button>
+          </div>
           <p className="text-[11px] flex items-center gap-1">
-            <span>Handcrafted with</span>
+            <span>Made with</span>
             <span className="text-[#FF85A1]">♥</span>
             <span>for real moments</span>
           </p>

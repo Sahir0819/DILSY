@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { ShoppingBag, Menu, X, Heart } from 'lucide-react';
+import { ShoppingBag, Menu, X, Heart, Lock } from 'lucide-react';
 
 interface NavbarProps {
   cartCount: number;
   onOpenCart: () => void;
   activeSection: string;
   onNavigate: (sectionId: string) => void;
+  onNavigateToAdmin?: () => void;
+  announcement?: {
+    enabled: boolean;
+    text: string;
+    secondaryText: string;
+  };
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -13,6 +19,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenCart,
   activeSection,
   onNavigate,
+  onNavigateToAdmin,
+  announcement,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -33,12 +41,18 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-[#FDF9F7]/95 backdrop-blur-md border-b border-[#E8D0D6] transition-colors shadow-2xs">
       {/* Announcement Bar with Romantic Love Colors */}
-      <div className="bg-gradient-to-r from-[#3D141C] via-[#631B29] to-[#3D141C] text-[#FFF0F3] text-xs py-2 px-4 text-center tracking-wider font-light flex items-center justify-center gap-2 border-b border-[#802235]/40 shadow-inner">
-        <Heart className="w-3.5 h-3.5 text-[#FF85A1] fill-[#FF85A1] animate-heart-pulse" />
-        <span className="font-medium text-[#FFE5EC]">Thoughtful surprises, made personal with love.</span>
-        <span className="hidden sm:inline text-[#FFB3C6]">· Delivering across Chandigarh University & Mohali</span>
-        <Heart className="w-3.5 h-3.5 text-[#FF85A1] fill-[#FF85A1] animate-heart-pulse hidden sm:inline" />
-      </div>
+      {announcement?.enabled !== false && (
+        <div className="bg-gradient-to-r from-[#3D141C] via-[#631B29] to-[#3D141C] text-[#FFF0F3] text-xs py-2 px-4 text-center tracking-wider font-light flex items-center justify-center gap-2 border-b border-[#802235]/40 shadow-inner">
+          <Heart className="w-3.5 h-3.5 text-[#FF85A1] fill-[#FF85A1] animate-heart-pulse" />
+          <span className="font-medium text-[#FFE5EC]">
+            {announcement?.text || 'Thoughtful surprises, made personal with love.'}
+          </span>
+          <span className="hidden sm:inline text-[#FFB3C6]">
+            {announcement?.secondaryText || '· Delivering across Chandigarh University & Mohali'}
+          </span>
+          <Heart className="w-3.5 h-3.5 text-[#FF85A1] fill-[#FF85A1] animate-heart-pulse hidden sm:inline" />
+        </div>
+      )}
 
       {/* Main Top Bar - 3 Zone Contract */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-8">
@@ -68,8 +82,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           ))}
         </nav>
 
-        {/* Zone 3: 1 Primary Action (Bag button with romantic badge) */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Zone 3: Actions (Admin Portal link + Bag button) */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {onNavigateToAdmin && (
+            <button
+              onClick={onNavigateToAdmin}
+              aria-label="Admin Studio Portal"
+              title="Admin Studio Login (/admin)"
+              className="flex items-center gap-1.5 px-2.5 py-2 rounded-lg text-xs font-medium text-[#7A1E31] bg-[#FFF0F3] hover:bg-[#FFE0E6] border border-[#F2BDC8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#B33951] shadow-2xs"
+            >
+              <Lock className="w-3.5 h-3.5 text-[#99223A]" />
+              <span className="hidden sm:inline">Admin Studio</span>
+            </button>
+          )}
+
           <button
             onClick={onOpenCart}
             aria-label="View shopping bag"
@@ -120,6 +146,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <ShoppingBag className="w-4 h-4" />
               <span>Review Bag ({cartCount} {cartCount === 1 ? 'item' : 'items'})</span>
             </button>
+            {onNavigateToAdmin && (
+              <button
+                onClick={() => {
+                  onNavigateToAdmin();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full py-2.5 px-4 bg-[#FFF0F3] text-[#7A1E31] border border-[#F2BDC8] hover:bg-[#FFE0E6] rounded-lg text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+              >
+                <Lock className="w-4 h-4 text-[#99223A]" />
+                <span>Open Admin Studio (/admin)</span>
+              </button>
+            )}
           </div>
         </div>
       )}
