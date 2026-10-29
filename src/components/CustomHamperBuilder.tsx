@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Gift, Check, Sparkles, MessageCircle, AlertCircle, Info, Calendar, Clock, MapPin, User, Heart, Plus, Minus, Trash2, Tag, ChevronDown, ChevronUp } from 'lucide-react';
 import { CustomHamperForm, AddOnItem, SelectedAddOn } from '../types';
 import { AddOnThumbnail } from './AddOnThumbnail';
-import { generateCustomHamperWhatsAppMessage, EXACT_DELIVERY_POLICY, getThemePackagingGuidance, getBaseHamperPrice } from '../utils/whatsapp';
+import { generateCustomHamperWhatsAppMessage, EXACT_DELIVERY_POLICY, getBaseHamperPrice } from '../utils/whatsapp';
 import { useStore } from '../context/StoreContext';
-import { Breadcrumbs } from './Breadcrumbs';
+import { Breadcrumbs } from '../components/Breadcrumbs';
 
 interface CustomHamperBuilderProps {
   onOpenReviewModal: (title: string, message: string) => void;
@@ -24,7 +24,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   const [formData, setFormData] = useState<CustomHamperForm>({
     recipientType: 'Girlfriend / Partner',
     occasion: prefilledOccasion || 'Birthday Box',
-    budget: 'Medium Box — ₹969',
+    budget: 'Medium / Loved Box — ₹969',
     customBudgetAmount: '',
     selectedAddOns: [],
     recipientName: '',
@@ -38,6 +38,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
     customerPhone: '',
   });
 
+  const [selectedRibbon, setSelectedRibbon] = useState('Bordeaux Wine');
   const [activeAddOnTab, setActiveAddOnTab] = useState<'All' | 'Flowers' | 'Chocolates & Treats' | 'Cute Extras'>('All');
   const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -48,6 +49,13 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
       setFormData((prev) => ({ ...prev, occasion: prefilledOccasion }));
     }
   }, [prefilledOccasion]);
+
+  const ribbonSwatches = [
+    { name: 'Bordeaux Wine', hex: '#4A1423' },
+    { name: 'Blush Silk', hex: '#F7D8DF' },
+    { name: 'Raw Linen', hex: '#EFE8DF' },
+    { name: 'Nocturne Black', hex: '#1C1819' },
+  ];
 
   const recipientOptions = [
     'Girlfriend / Partner',
@@ -74,10 +82,10 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   ];
 
   const budgetOptions = [
-    { label: 'Small Box — ₹799', size: 'Small', desc: 'A budget-friendly sweet gesture' },
-    { label: 'Medium / Loved Box — ₹969', size: 'Medium', desc: 'Our signature balanced hamper' },
-    { label: 'Large Box — ₹1,199', size: 'Large', desc: 'Generous hamper with extra room' },
-    { label: 'Custom Budget', size: 'Custom', desc: 'Specify your target budget' },
+    { label: 'Small Box — ₹799', size: 'Small', dim: '18 × 14 × 6 cm', price: 799, desc: 'Compact sweet gesture' },
+    { label: 'Medium / Loved Box — ₹969', size: 'Medium', dim: '24 × 20 × 9 cm', price: 969, desc: 'Our signature balanced curation' },
+    { label: 'Large Box — ₹1,199', size: 'Large', dim: '32 × 26 × 12 cm', price: 1199, desc: 'Generous keepsake curation' },
+    { label: 'Custom Budget', size: 'Custom', dim: 'Custom dimension', price: null, desc: 'Specify custom budget' },
   ];
 
   const handleToggleAddOn = (addon: AddOnItem) => {
@@ -114,14 +122,6 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
           return a;
         })
         .filter(Boolean) as SelectedAddOn[],
-    }));
-  };
-
-  const handleRemoveAddOn = (id: string, e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    setFormData((prev) => ({
-      ...prev,
-      selectedAddOns: prev.selectedAddOns.filter((a) => a.id !== id),
     }));
   };
 
@@ -218,7 +218,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   });
 
   return (
-    <div className="min-h-screen bg-[#FCE7ED] text-[#3B2028] py-8 sm:py-12">
+    <div className="min-h-screen bg-[#FAF7F5] text-[#2A0D15] py-8 sm:py-14 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
         {onNavigate && (
@@ -231,31 +231,30 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
         )}
 
         {/* Section Header */}
-        <div className="max-w-3xl mb-10">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#9F2343] bg-[#FFFAF8] px-3 py-1 rounded-full border border-[#F1C5D1] mb-2 shadow-2xs">
-            <Heart className="w-3.5 h-3.5 fill-[#9F2343] text-[#9F2343]" />
-            <span>Personalised Hamper Studio</span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#3B2028] tracking-tight">
-            Create Your Custom Hamper
+        <div className="max-w-3xl mb-12">
+          <p className="text-[11px] font-sans uppercase tracking-[0.25em] text-[#7A5A63] mb-2">
+            Bespoke Atelier
+          </p>
+          <h1 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A0D15] tracking-tight">
+            The Custom Hamper Experience
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-[#79665C] font-light leading-relaxed">
-            Follow our 6 simple steps to tailor a personalised gift hamper. Packaging is styled to your chosen occasion, accompanied by your handwritten card and verified on WhatsApp before dispatch.
+          <p className="mt-2 text-sm sm:text-base text-[#6E565D] font-light leading-relaxed">
+            Construct an intimate archive of your personal relationship. From selecting the tactile container proportions to typing the exact words we hand-scribe in sealing wax.
           </p>
         </div>
 
-        {/* Mobile Collapsible Live Summary Button */}
+        {/* Mobile Live Summary Pill */}
         <div className="lg:hidden mb-6">
           <button
             type="button"
             onClick={() => setMobileSummaryOpen(!mobileSummaryOpen)}
-            className="w-full p-4 bg-[#FFFAF8] border border-[#F1C5D1] rounded-2xl flex items-center justify-between text-xs font-semibold text-[#9F2343] shadow-xs cursor-pointer"
+            className="w-full p-4 bg-white border border-[#EADBDB] flex items-center justify-between text-xs font-sans tracking-wide uppercase text-[#3E101D] cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#9F2343]" />
-              <span>Live Blueprint Summary</span>
+              <Sparkles className="w-4 h-4 text-[#3E101D]" />
+              <span>Blueprint Summary</span>
               {estimatedTotal !== null && (
-                <span className="font-serif font-bold text-sm text-[#3B2028]">
+                <span className="font-semibold text-sm text-[#2A0D15]">
                   · ₹{finalAmount.toLocaleString('en-IN')}
                 </span>
               )}
@@ -264,139 +263,176 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
           </button>
         </div>
 
-        {/* 2-Column Layout: 6 Steps on Left, Sticky Summary on Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Form: 6 Steps */}
-          <form onSubmit={handleSubmit} className="lg:col-span-8 space-y-8 bg-[#FFFAF8] p-6 sm:p-8 rounded-3xl border border-[#F1C5D1] shadow-xs">
-            {/* STEP 1: Choose Occasion / Theme */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
-                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">1</span>
-                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose Occasion / Theme</h3>
+        {/* 2-Column Layout (Matching Screenshot 4) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 sm:gap-12 items-start">
+          {/* Main Form on Left (lg:col-span-8) */}
+          <form onSubmit={handleSubmit} className="lg:col-span-8 space-y-8">
+            {/* STEP 01: Box Dimension */}
+            <div className="bg-white p-6 sm:p-8 border border-[#EADBDB]">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#EADBDB]">
+                <span className="text-[11px] font-sans uppercase tracking-[0.2em] font-medium text-[#2A0D15]">
+                  01 Choose Box Dimension
+                </span>
+                <span className="text-[10px] font-sans uppercase tracking-widest text-[#7A5A63]">
+                  Architectural Vessel
+                </span>
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-2">
-                  What is the occasion?
-                </label>
-                <select
-                  value={formData.occasion}
-                  onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
-                  className="w-full px-4 py-3 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] focus:ring-1 focus:ring-[#9F2343] focus:border-[#9F2343] outline-none"
-                >
-                  {occasionOptions.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-                <p className="mt-1.5 text-xs text-[#79665C]">
-                  Box packaging & styling automatically follows this occasion theme.
-                </p>
-              </div>
-            </div>
-
-            {/* STEP 2: Choose Recipient */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
-                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">2</span>
-                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose the Recipient</h3>
-              </div>
-
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {recipientOptions.map((opt) => {
-                  const selected = formData.recipientType === opt;
-                  return (
-                    <button
-                      key={opt}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, recipientType: opt })}
-                      className={`p-3 rounded-xl border text-xs font-medium text-left transition-all cursor-pointer ${
-                        selected
-                          ? 'bg-[#9F2343] text-white border-[#72172F] shadow-xs'
-                          : 'bg-[#FFF1F4] text-[#3B2028] border-[#F1C5D1] hover:border-[#9F2343]'
-                      }`}
-                    >
-                      {opt}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* STEP 3: Box Size & Budget */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
-                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">3</span>
-                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose Box Size & Budget</h3>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                {budgetOptions.map((b) => {
-                  const selected = formData.budget === b.label || (b.label === 'Custom Budget' && formData.budget === 'Custom Budget');
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                {budgetOptions.slice(0, 3).map((b) => {
+                  const selected = formData.budget === b.label;
                   return (
                     <div
                       key={b.label}
                       onClick={() => setFormData({ ...formData, budget: b.label })}
-                      className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                      className={`p-4 border transition-all cursor-pointer relative text-center ${
                         selected
-                          ? 'bg-[#FFF1F4] border-[#9F2343] shadow-xs ring-1 ring-[#9F2343]'
-                          : 'bg-[#FFFAF8] border-[#F1C5D1] hover:border-[#9F2343]'
+                          ? 'border-2 border-[#3E101D] bg-[#FAF7F5]'
+                          : 'border-[#EADBDB] hover:border-[#3E101D]'
                       }`}
                     >
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="font-serif font-bold text-sm text-[#3B2028]">
-                          {b.label}
+                      {selected && (
+                        <span className="absolute top-1.5 right-1.5 w-3.5 h-3.5 bg-[#3E101D] text-white flex items-center justify-center text-[9px]">
+                          ✓
                         </span>
-                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
-                          selected ? 'bg-[#9F2343] border-[#9F2343] text-white' : 'border-[#F1C5D1]'
-                        }`}>
-                          {selected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
-                        </div>
-                      </div>
-                      <p className="text-xs text-[#79665C]">{b.desc}</p>
+                      )}
+                      <span className="block font-serif text-lg text-[#2A0D15]">{b.size}</span>
+                      <span className="block text-[10px] text-[#7A5A63] mt-0.5">{b.dim}</span>
+                      <span className="block text-xs font-semibold text-[#2A0D15] mt-2 font-sans">
+                        ₹{b.price}
+                      </span>
                     </div>
                   );
                 })}
               </div>
 
+              {/* Custom Budget Toggle Option */}
+              <div
+                onClick={() => setFormData({ ...formData, budget: 'Custom Budget' })}
+                className={`p-3 border transition-all cursor-pointer text-xs flex items-center justify-between ${
+                  isCustomBudget
+                    ? 'border-2 border-[#3E101D] bg-[#FAF7F5]'
+                    : 'border-[#EADBDB] hover:border-[#3E101D]'
+                }`}
+              >
+                <span>Or propose a Custom Budget amount</span>
+                <span className="font-semibold">{isCustomBudget ? 'Selected' : 'Select'}</span>
+              </div>
+
               {isCustomBudget && (
-                <div className="p-4 bg-[#FFF1F4] rounded-xl border border-[#F1C5D1] space-y-2">
-                  <label className="block text-xs font-semibold text-[#3B2028]">
-                    Target Budget Amount (₹)
+                <div className="mt-3 p-4 bg-[#FAF7F5] border border-[#EADBDB] space-y-2">
+                  <label className="block text-xs uppercase tracking-wider text-[#2A0D15]">
+                    Target Budget (₹)
                   </label>
                   <input
                     type="number"
                     value={formData.customBudgetAmount}
                     onChange={(e) => setFormData({ ...formData, customBudgetAmount: e.target.value })}
-                    placeholder="Enter amount (e.g. 1500)"
-                    className="w-full px-3.5 py-2.5 bg-[#FFFAF8] border border-[#F1C5D1] rounded-lg text-sm text-[#3B2028] outline-none"
+                    placeholder="e.g. 1500"
+                    className="w-full px-3.5 py-2 bg-white border border-[#EADBDB] text-xs text-[#2A0D15] outline-none"
                   />
-                  <p className="text-[11px] text-[#79665C]">
-                    Custom budget requests are subject to confirmation on WhatsApp based on your chosen items.
-                  </p>
                 </div>
               )}
             </div>
 
-            {/* STEP 4: Choose Add-ons */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
-                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">4</span>
-                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose Add-ons (Optional)</h3>
+            {/* STEP 02: Theme & Color Palette */}
+            <div className="bg-white p-6 sm:p-8 border border-[#EADBDB]">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#EADBDB]">
+                <span className="text-[11px] font-sans uppercase tracking-[0.2em] font-medium text-[#2A0D15]">
+                  02 Theme & Color Palette
+                </span>
+                <span className="text-[10px] font-sans uppercase tracking-widest text-[#7A5A63]">
+                  Silk Ribbon Swatches
+                </span>
               </div>
 
-              {/* Category Filter Pills */}
-              <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
+              {/* Silk Ribbon Swatches from Screenshot 4 */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                {ribbonSwatches.map((swatch) => {
+                  const selected = selectedRibbon === swatch.name;
+                  return (
+                    <button
+                      key={swatch.name}
+                      type="button"
+                      onClick={() => setSelectedRibbon(swatch.name)}
+                      className={`p-2.5 border text-center transition-all cursor-pointer ${
+                        selected
+                          ? 'border-2 border-[#3E101D] bg-[#FAF7F5]'
+                          : 'border-[#EADBDB] hover:border-[#3E101D]'
+                      }`}
+                    >
+                      <div
+                        className="w-full h-8 mb-2 border border-black/10"
+                        style={{ backgroundColor: swatch.hex }}
+                      />
+                      <span className="text-[10px] uppercase tracking-wider text-[#2A0D15] block font-medium">
+                        {swatch.name}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Occasion & Recipient Selection */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[11px] font-sans uppercase tracking-[0.1em] text-[#2A0D15] mb-1.5">
+                    Occasion Sentiment
+                  </label>
+                  <select
+                    value={formData.occasion}
+                    onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none"
+                  >
+                    {occasionOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-sans uppercase tracking-[0.1em] text-[#2A0D15] mb-1.5">
+                    Recipient Relation
+                  </label>
+                  <select
+                    value={formData.recipientType}
+                    onChange={(e) => setFormData({ ...formData, recipientType: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none"
+                  >
+                    {recipientOptions.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            {/* STEP 03: Curated Artisan Add-Ons */}
+            <div className="bg-white p-6 sm:p-8 border border-[#EADBDB]">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#EADBDB]">
+                <span className="text-[11px] font-sans uppercase tracking-[0.2em] font-medium text-[#2A0D15]">
+                  03 Curated Artisan Add-Ons
+                </span>
+                <span className="text-[10px] font-sans uppercase tracking-widest text-[#7A5A63]">
+                  Tactile Elements
+                </span>
+              </div>
+
+              {/* Category tabs */}
+              <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1 text-xs">
                 {(['All', 'Flowers', 'Chocolates & Treats', 'Cute Extras'] as const).map((tab) => (
                   <button
                     key={tab}
                     type="button"
                     onClick={() => setActiveAddOnTab(tab)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap cursor-pointer transition-all ${
+                    className={`px-3 py-1 text-[11px] uppercase tracking-wider transition-colors cursor-pointer ${
                       activeAddOnTab === tab
-                        ? 'bg-[#9F2343] text-white font-semibold'
-                        : 'bg-[#FFF1F4] text-[#79665C] hover:text-[#9F2343] border border-[#F1C5D1]'
+                        ? 'bg-[#3E101D] text-white font-medium'
+                        : 'border border-[#EADBDB] text-[#6E565D] hover:text-[#2A0D15]'
                     }`}
                   >
                     {tab}
@@ -404,7 +440,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                 ))}
               </div>
 
-              {/* Add-on Items Grid */}
+              {/* Add-ons list */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {filteredAddOns.map((addon) => {
                   const selected = formData.selectedAddOns.find((a) => a.id === addon.id);
@@ -412,47 +448,49 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                     <div
                       key={addon.id}
                       onClick={() => handleToggleAddOn(addon)}
-                      className={`p-3 rounded-xl border flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                      className={`p-3.5 border flex items-center justify-between gap-3 cursor-pointer transition-all ${
                         selected
-                          ? 'bg-[#FFF1F4] border-[#9F2343] shadow-xs'
-                          : 'bg-[#FFFAF8] border-[#F1C5D1] hover:border-[#9F2343]'
+                          ? 'border-2 border-[#3E101D] bg-[#FAF7F5]'
+                          : 'border-[#EADBDB] hover:border-[#3E101D]'
                       }`}
                     >
                       <div className="flex items-center gap-3 min-w-0">
-                        <AddOnThumbnail type={addon.illustrationType} className="w-12 h-12 shrink-0" />
+                        <AddOnThumbnail type={addon.illustrationType} className="w-10 h-10 shrink-0 border border-[#EADBDB]" />
                         <div className="min-w-0">
-                          <p className="text-xs font-semibold text-[#3B2028] truncate">{addon.name}</p>
-                          <p className="text-xs font-bold text-[#9F2343] tabular-nums mt-0.5">₹{addon.price}</p>
+                          <p className="text-xs font-medium text-[#2A0D15] truncate">{addon.name}</p>
+                          <p className="text-xs font-semibold text-[#3E101D] tabular-nums mt-0.5 font-sans">
+                            +₹{addon.price}
+                          </p>
                         </div>
                       </div>
 
                       {selected ? (
-                        <div className="flex items-center gap-1.5 bg-[#FFFAF8] p-1 rounded-lg border border-[#F1C5D1]" onClick={(e) => e.stopPropagation()}>
+                        <div
+                          className="flex items-center gap-1.5 bg-white px-2 py-1 border border-[#EADBDB]"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <button
                             type="button"
                             onClick={(e) => handleUpdateAddOnQty(addon.id, -1, e)}
-                            className="p-1 text-[#79665C] hover:text-[#9F2343] cursor-pointer"
+                            className="p-0.5 text-[#7A5A63] hover:text-[#2A0D15] cursor-pointer"
                           >
-                            <Minus className="w-3.5 h-3.5" />
+                            <Minus className="w-3 h-3" />
                           </button>
-                          <span className="text-xs font-bold text-[#3B2028] px-1 tabular-nums">
+                          <span className="text-xs font-semibold text-[#2A0D15] px-1 tabular-nums">
                             {selected.quantity}
                           </span>
                           <button
                             type="button"
                             onClick={(e) => handleUpdateAddOnQty(addon.id, 1, e)}
-                            className="p-1 text-[#79665C] hover:text-[#9F2343] cursor-pointer"
+                            className="p-0.5 text-[#7A5A63] hover:text-[#2A0D15] cursor-pointer"
                           >
-                            <Plus className="w-3.5 h-3.5" />
+                            <Plus className="w-3 h-3" />
                           </button>
                         </div>
                       ) : (
-                        <button
-                          type="button"
-                          className="px-2.5 py-1 bg-[#FFF1F4] text-[#9F2343] rounded-lg text-xs font-semibold border border-[#F1C5D1] hover:bg-[#9F2343] hover:text-white transition-colors cursor-pointer"
-                        >
-                          + Add
-                        </button>
+                        <span className="text-[10px] uppercase tracking-wider text-[#3E101D] font-medium border border-[#EADBDB] px-2 py-1">
+                          + Select
+                        </span>
                       )}
                     </div>
                   );
@@ -460,66 +498,82 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
               </div>
             </div>
 
-            {/* STEP 5: Recipient Name & Handwritten Card Message */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
-                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">5</span>
-                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Recipient Name & Card Message</h3>
+            {/* STEP 04: Handwritten Wax-Sealed Note */}
+            <div className="bg-white p-6 sm:p-8 border border-[#EADBDB]">
+              <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#EADBDB]">
+                <span className="text-[11px] font-sans uppercase tracking-[0.2em] font-medium text-[#2A0D15]">
+                  04 Handwritten Wax-Sealed Note
+                </span>
+                <span className="text-[10px] font-sans uppercase tracking-widest text-[#7A5A63]">
+                  Deckle-Edge Cotton Paper
+                </span>
               </div>
+
+              <p className="text-xs text-[#7A5A63] mb-4">
+                Our resident calligrapher will hand-transcribe your exact sentiment onto 300gsm cold-pressed cotton cardstock:
+              </p>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                  <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
                     Recipient's Name (Optional)
                   </label>
                   <input
                     type="text"
                     value={formData.recipientName}
                     onChange={(e) => setFormData({ ...formData, recipientName: e.target.value })}
-                    placeholder="e.g. Ananya, Kabir, etc."
-                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
+                    placeholder="e.g. Priya Sharma, Kabir..."
+                    className="w-full px-3.5 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
-                    Handwritten Card Message (Optional)
+                  <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
+                    Card Sentiment Note
                   </label>
                   <textarea
                     rows={3}
                     value={formData.personalNote}
                     onChange={(e) => setFormData({ ...formData, personalNote: e.target.value })}
-                    placeholder="Write the message you would like us to handwrite on a personal card..."
-                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
+                    placeholder="To the one who makes ordinary moments feel monumental. Happy anniversary, my heart..."
+                    className="w-full px-3.5 py-2.5 bg-[#FAF7F5] border border-[#EADBDB] text-xs font-serif italic text-[#2A0D15] focus:outline-none"
                   />
+                  <div className="mt-1 flex items-center justify-between text-[10px] text-[#7A5A63]">
+                    <span>Included complimentary with Medium & Large boxes</span>
+                    <span>Max 240 characters</span>
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
-                    Special Packaging or Delivery Instructions
+                  <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
+                    Special Packaging / Surprise Instructions
                   </label>
                   <input
                     type="text"
                     value={formData.specialInstructions}
                     onChange={(e) => setFormData({ ...formData, specialInstructions: e.target.value })}
-                    placeholder="e.g. Midnight delivery request, specific chocolate preference"
-                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
+                    placeholder="e.g. Midnight surprise delivery, specific ribbon preference"
+                    className="w-full px-3.5 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            {/* STEP 6: Delivery Area & Contact Details */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
-                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">6</span>
-                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Delivery Area & Contact Details</h3>
+            {/* STEP 05: Delivery & Contact Details */}
+            <div className="bg-white p-6 sm:p-8 border border-[#EADBDB]">
+              <div className="flex items-center justify-between mb-4 pb-2 border-b border-[#EADBDB]">
+                <span className="text-[11px] font-sans uppercase tracking-[0.2em] font-medium text-[#2A0D15]">
+                  05 Delivery & Dispatch
+                </span>
+                <span className="text-[10px] font-sans uppercase tracking-widest text-[#7A5A63]">
+                  Campus & Local Handover
+                </span>
               </div>
 
               <div className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                    <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
                       Your Name *
                     </label>
                     <input
@@ -528,18 +582,18 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                       value={formData.customerName}
                       onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
                       placeholder="Your full name"
-                      className={`w-full px-4 py-2.5 bg-[#FFF1F4] border rounded-xl text-sm text-[#3B2028] outline-none ${
-                        errors.customerName ? 'border-red-500 ring-1 ring-red-500' : 'border-[#F1C5D1]'
+                      className={`w-full px-3.5 py-2 bg-[#FAF7F5] border text-xs text-[#2A0D15] outline-none ${
+                        errors.customerName ? 'border-red-500' : 'border-[#EADBDB]'
                       }`}
                     />
                     {errors.customerName && (
-                      <p className="mt-1 text-xs text-red-600">{errors.customerName}</p>
+                      <p className="mt-1 text-[11px] text-red-600">{errors.customerName}</p>
                     )}
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
-                      Your WhatsApp Phone Number *
+                    <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
+                      WhatsApp Phone Number *
                     </label>
                     <input
                       id="customerPhone"
@@ -547,25 +601,25 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                       value={formData.customerPhone}
                       onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
                       placeholder="+91 98765 43210"
-                      className={`w-full px-4 py-2.5 bg-[#FFF1F4] border rounded-xl text-sm text-[#3B2028] outline-none ${
-                        errors.customerPhone ? 'border-red-500 ring-1 ring-red-500' : 'border-[#F1C5D1]'
+                      className={`w-full px-3.5 py-2 bg-[#FAF7F5] border text-xs text-[#2A0D15] outline-none ${
+                        errors.customerPhone ? 'border-red-500' : 'border-[#EADBDB]'
                       }`}
                     />
                     {errors.customerPhone && (
-                      <p className="mt-1 text-xs text-red-600">{errors.customerPhone}</p>
+                      <p className="mt-1 text-[11px] text-red-600">{errors.customerPhone}</p>
                     )}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                    <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
                       Delivery Area (CU & Mohali)
                     </label>
                     <select
                       value={formData.deliveryArea}
                       onChange={(e) => setFormData({ ...formData, deliveryArea: e.target.value })}
-                      className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
+                      className="w-full px-3 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] outline-none"
                     >
                       {settings.deliveryAreas.map((area) => (
                         <option key={area} value={area}>
@@ -576,105 +630,113 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                   </div>
 
                   <div>
-                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
-                      Preferred Delivery Date *
+                    <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
+                      Preferred Date *
                     </label>
                     <input
                       id="deliveryDate"
                       type="date"
                       value={formData.deliveryDate}
                       onChange={(e) => setFormData({ ...formData, deliveryDate: e.target.value })}
-                      className={`w-full px-4 py-2.5 bg-[#FFF1F4] border rounded-xl text-sm text-[#3B2028] outline-none ${
-                        errors.deliveryDate ? 'border-red-500 ring-1 ring-red-500' : 'border-[#F1C5D1]'
+                      className={`w-full px-3.5 py-2 bg-[#FAF7F5] border text-xs text-[#2A0D15] outline-none ${
+                        errors.deliveryDate ? 'border-red-500' : 'border-[#EADBDB]'
                       }`}
                     />
                     {errors.deliveryDate && (
-                      <p className="mt-1 text-xs text-red-600">{errors.deliveryDate}</p>
+                      <p className="mt-1 text-[11px] text-red-600">{errors.deliveryDate}</p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
-                    Specific Landmark / Hostel / PG Details
+                  <label className="block text-[10px] uppercase tracking-wider text-[#2A0D15] mb-1">
+                    Specific Landmark / Campus Gate / PG Details
                   </label>
                   <input
                     type="text"
                     value={formData.specificLandmark}
                     onChange={(e) => setFormData({ ...formData, specificLandmark: e.target.value })}
-                    placeholder="e.g. Block C Hostel Gate, Sunny Enclave PG 4"
-                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
+                    placeholder="e.g. CU North Gate, Kharar Road PG 12..."
+                    className="w-full px-3.5 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] outline-none"
                   />
                 </div>
               </div>
-            </div>
 
-            {/* Submit Button */}
-            <div className="pt-4 border-t border-[#F1C5D1]">
-              <button
-                type="submit"
-                className="w-full py-4 px-6 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-sm font-semibold tracking-wide transition-all shadow-md shadow-[#9F2343]/20 flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4 text-white" />
-                <span>Review & Order on WhatsApp</span>
-              </button>
-              <p className="mt-2 text-center text-xs text-[#79665C]">
-                Final contents, pricing, delivery charges, and timing are confirmed with you on WhatsApp before acceptance.
-              </p>
+              {/* Submit Button */}
+              <div className="pt-6 mt-6 border-t border-[#EADBDB]">
+                <button
+                  type="submit"
+                  className="w-full py-4 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-[11px] uppercase tracking-[0.2em] font-medium transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                >
+                  <MessageCircle className="w-4 h-4 text-white" />
+                  <span>Review Blueprint & Order on WhatsApp</span>
+                </button>
+                <p className="mt-2 text-center text-[10px] text-[#7A5A63]">
+                  All items, timing, and handover specifics are personally verified on WhatsApp before dispatch.
+                </p>
+              </div>
             </div>
           </form>
 
-          {/* Sticky Live Blueprint Order Summary (Right Column) */}
+          {/* Sticky Summary Card on Right (Matching Screenshot 4) */}
           <div className={`lg:col-span-4 ${mobileSummaryOpen ? 'block' : 'hidden lg:block'} sticky top-24 space-y-4`}>
-            <div className="bg-[#FFFAF8] p-6 rounded-3xl border border-[#F1C5D1] shadow-xs space-y-4">
-              <div className="flex items-center gap-2 pb-3 border-b border-[#F1C5D1]">
-                <Sparkles className="w-4 h-4 text-[#9F2343]" />
-                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Order Blueprint</h3>
+            <div className="bg-white p-6 sm:p-7 border border-[#EADBDB] space-y-4">
+              <div className="pb-3 border-b border-[#EADBDB]">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-[#7A5A63]">
+                  Atelier Receipt
+                </p>
+                <h3 className="font-serif text-xl font-normal text-[#2A0D15] mt-1">
+                  Blueprint Summary
+                </h3>
               </div>
 
-              <div className="space-y-3 text-xs text-[#79665C]">
-                <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
-                  <span>Occasion:</span>
-                  <span className="font-semibold text-[#3B2028] text-right">{formData.occasion}</span>
+              <div className="space-y-3 text-xs text-[#6E565D]">
+                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Selected Box:</span>
+                  <span className="font-medium text-[#2A0D15]">{formData.budget.split('—')[0]}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
-                  <span>Recipient:</span>
-                  <span className="font-semibold text-[#3B2028]">{formData.recipientType}</span>
+                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Wax Seal Finish:</span>
+                  <span className="font-medium text-[#3E101D]">{selectedRibbon}</span>
                 </div>
-                <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
-                  <span>Box Target:</span>
-                  <span className="font-semibold text-[#3B2028]">{formData.budget}</span>
+                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Occasion:</span>
+                  <span className="font-medium text-[#2A0D15]">{formData.occasion}</span>
                 </div>
 
                 {formData.selectedAddOns.length > 0 && (
-                  <div className="py-1 border-b border-[#F1C5D1]/50 space-y-1">
-                    <span className="font-semibold text-[#3B2028] block">Add-ons ({formData.selectedAddOns.length}):</span>
+                  <div className="py-2 border-b border-[#EADBDB]/50 space-y-1">
+                    <span className="text-[10px] uppercase tracking-wider text-[#7A5A63] block">
+                      Artisan Add-ons ({formData.selectedAddOns.length}):
+                    </span>
                     {formData.selectedAddOns.map((addon) => (
-                      <div key={addon.id} className="flex justify-between pl-2 text-[11px]">
+                      <div key={addon.id} className="flex justify-between pl-1 text-[11px]">
                         <span>{addon.quantity}x {addon.name}</span>
-                        <span className="tabular-nums font-semibold text-[#9F2343]">₹{addon.price * addon.quantity}</span>
+                        <span className="font-medium text-[#2A0D15] tabular-nums">
+                          ₹{addon.price * addon.quantity}
+                        </span>
                       </div>
                     ))}
                   </div>
                 )}
 
-                {formData.recipientName && (
-                  <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
-                    <span>Card Name:</span>
-                    <span className="font-semibold text-[#3B2028]">{formData.recipientName}</span>
-                  </div>
-                )}
+                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Personal Note:</span>
+                  <span className="font-medium text-[#2A0D15]">
+                    {formData.personalNote ? 'Calligraphed Free' : 'Not Added'}
+                  </span>
+                </div>
 
-                <div className="pt-2 space-y-1.5 text-sm">
-                  <div className="flex justify-between font-semibold text-[#3B2028]">
-                    <span>Estimated Total:</span>
-                    <span className="font-serif font-bold text-xl text-[#9F2343] tabular-nums">
+                <div className="pt-2">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-xs uppercase tracking-wider text-[#7A5A63]">Estimated Total:</span>
+                    <span className="text-2xl font-serif font-normal text-[#2A0D15] tabular-nums">
                       {estimatedTotal !== null ? `₹${finalAmount.toLocaleString('en-IN')}` : 'To be confirmed'}
                     </span>
                   </div>
                   {appliedOffer && (
-                    <p className="text-[11px] text-emerald-800">
-                      Applied Promo: {appliedOffer.code} (-₹{discountAmount})
+                    <p className="text-[11px] text-emerald-800 mt-1">
+                      Applied: {appliedOffer.code} (-₹{discountAmount})
                     </p>
                   )}
                 </div>
@@ -684,19 +746,18 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="w-full py-3 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                  className="w-full py-3.5 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-[11px] font-medium uppercase tracking-[0.2em] transition-all cursor-pointer shadow-xs"
                 >
-                  <MessageCircle className="w-3.5 h-3.5" />
-                  <span>Send Order via WhatsApp</span>
+                  Start Creating
                 </button>
               </div>
             </div>
 
-            {/* Disclaimer & Policy Pill */}
-            <div className="p-4 bg-[#FFFAF8] rounded-2xl border border-[#F1C5D1] text-[11px] text-[#79665C] space-y-1">
-              <p className="font-semibold text-[#3B2028]">Notice:</p>
-              <p>
-                Stock and exact items are verified directly on WhatsApp before payment. We deliver directly to Chandigarh University and Mohali PGs.
+            {/* Atelier Policy Notice */}
+            <div className="p-4 bg-white border border-[#EADBDB] text-[11px] text-[#7A5A63] space-y-1">
+              <p className="font-medium text-[#2A0D15] uppercase tracking-wider text-[10px]">Atelier Promise:</p>
+              <p className="font-light leading-relaxed">
+                Personalized preview sent on WhatsApp before final handover. Delivered directly to Chandigarh University & Mohali PGs.
               </p>
             </div>
           </div>

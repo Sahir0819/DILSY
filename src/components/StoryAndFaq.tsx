@@ -1,66 +1,87 @@
 import React, { useState } from 'react';
-import { Heart, Truck, ShieldCheck, ChevronDown, ChevronUp, MessageCircle, MapPin, Lock } from 'lucide-react';
+import { Heart, Truck, ShieldCheck, ChevronDown, ChevronUp, MessageCircle, MapPin, Mail, ArrowRight } from 'lucide-react';
 import { EXACT_DELIVERY_POLICY, WHATSAPP_PHONE_INTERNATIONAL } from '../utils/whatsapp';
+
+/**
+ * Editorial Manifesto Section (Screenshot 5)
+ */
+export const ManifestoSection: React.FC = () => {
+  return (
+    <section className="py-20 sm:py-28 bg-[#FBF4F2] border-t border-b border-[#EADBDB] text-center px-6">
+      <div className="max-w-4xl mx-auto">
+        <p className="text-[11px] font-sans uppercase tracking-[0.25em] text-[#7A5A63] mb-6">
+          The Manifesto of DILSY
+        </p>
+        <blockquote className="font-serif text-2xl sm:text-3xl md:text-4xl text-[#2A0D15] font-normal leading-[1.35] tracking-tight max-w-3xl mx-auto">
+          “We believe gifts should not merely be exchanged, but felt. Each DILSY box is an archive of unspoken affection, packaged with bespoke intention.”
+        </blockquote>
+        <div className="w-16 h-px bg-[#C9A89B] mx-auto my-7" />
+        <p className="text-[10px] font-sans uppercase tracking-[0.25em] text-[#7A5A63]">
+          Handcrafted in our Atelier • Since 2024
+        </p>
+      </div>
+    </section>
+  );
+};
 
 export const OurStory: React.FC = () => {
   return (
-    <section id="our-story" className="py-16 md:py-24 bg-[#FCE7ED] border-t border-[#F1C5D1]">
+    <section id="our-story" className="py-16 md:py-24 bg-[#FAF7F5] border-t border-[#EADBDB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Story Narrative */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#9F2343] bg-[#FFFAF8] px-3 py-1 rounded-full border border-[#F1C5D1] shadow-2xs">
-              <Heart className="w-3.5 h-3.5 fill-[#9F2343] text-[#9F2343]" />
-              <span>Behind The Box</span>
-            </div>
+            <p className="text-[11px] font-sans uppercase tracking-[0.25em] text-[#7A5A63]">
+              Behind The Box
+            </p>
 
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#3B2028] tracking-tight text-balance">
+            <h2 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A0D15] tracking-tight text-balance leading-snug">
               Thoughtful gifting, personal touches, and real feelings.
             </h2>
 
-            <div className="space-y-4 text-sm sm:text-base text-[#795A63] font-light leading-relaxed">
+            <div className="space-y-4 text-sm sm:text-base text-[#6E565D] font-light leading-relaxed font-sans">
               <p>
-                DILSY began with a simple belief right here around Chandigarh University and Mohali: gifts shouldn't be plastic wrapped items or rushed convenience confections. When you want to surprise someone—whether your partner, a hostel roommate who supported you through exams, or a best friend miles away—the gesture should feel thoughtful and personal.
+                DILSY began with a simple belief right here around Chandigarh University and Mohali: gifts shouldn't be plastic-wrapped items or rushed convenience confections. When you want to surprise someone—whether your partner, a hostel roommate who supported you through exams, or a best friend miles away—the gesture should feel thoughtful, intimate, and deeply personal.
               </p>
               <p>
-                We assemble each hamper with care in our local studio: preparing chosen items, personalising keepsake photos, and hand-writing your words onto a card to make someone feel truly cherished.
+                We assemble each hamper with care in our local studio: preparing chosen items, personalising keepsake photos, and hand-writing your words onto 300gsm cold-pressed cotton cardstock to make someone feel truly cherished.
               </p>
               <p>
                 No automated templates. Just <em>A Little Box Full of Feelings</em>, delivered straight to campus gates, hostel desks, and local PGs.
               </p>
             </div>
 
-            <div className="pt-2 flex items-center gap-6">
+            <div className="pt-4 flex items-center gap-6 text-[#2A0D15] font-sans">
               <div>
-                <span className="block font-serif font-bold text-2xl text-[#9F2343]">100%</span>
-                <span className="text-xs text-[#795A63]">Personalised by Hand</span>
+                <span className="block font-serif font-normal text-2xl text-[#3E101D]">100%</span>
+                <span className="text-[11px] text-[#7A5A63] tracking-wide uppercase">Handcrafted</span>
               </div>
-              <div className="w-px h-8 bg-[#F1C5D1]" />
+              <div className="w-px h-8 bg-[#EADBDB]" />
               <div>
-                <span className="block font-serif font-bold text-2xl text-[#9F2343]">₹799–₹1,199</span>
-                <span className="text-xs text-[#795A63]">Official Box Pricing</span>
+                <span className="block font-serif font-normal text-2xl text-[#3E101D]">₹799–₹1,199</span>
+                <span className="text-[11px] text-[#7A5A63] tracking-wide uppercase">Box Pricing</span>
               </div>
-              <div className="w-px h-8 bg-[#F1C5D1]" />
+              <div className="w-px h-8 bg-[#EADBDB]" />
               <div>
-                <span className="block font-serif font-bold text-2xl text-[#9F2343]">Mohali & CU</span>
-                <span className="text-xs text-[#795A63]">Direct Local Handover</span>
+                <span className="block font-serif font-normal text-2xl text-[#3E101D]">Mohali & CU</span>
+                <span className="text-[11px] text-[#7A5A63] tracking-wide uppercase">Local Handover</span>
               </div>
             </div>
           </div>
 
           {/* Visual Showcase Box */}
-          <div className="lg:col-span-5 bg-[#FFFAF8] p-8 rounded-2xl border border-[#F1C5D1] relative overflow-hidden shadow-sm">
-            <div className="space-y-4">
-              <div className="w-12 h-12 rounded-full bg-[#FFF1F4] border border-[#F1C5D1] flex items-center justify-center text-[#9F2343] font-serif font-bold text-xl shadow-xs">
-                ♥
-              </div>
-              <blockquote className="font-serif italic text-lg text-[#3B2028] leading-relaxed">
+          <div className="lg:col-span-5 bg-white p-8 border border-[#EADBDB] relative overflow-hidden">
+            <div className="space-y-5">
+              <span className="text-[10px] font-sans uppercase tracking-[0.25em] text-[#7A5A63]">
+                Atelier Creed
+              </span>
+              <blockquote className="font-serif italic text-xl text-[#2A0D15] leading-relaxed">
                 "We don't just put items in a box. We preserve feelings that deserve to be felt."
               </blockquote>
-              <div className="pt-4 border-t border-[#F1C5D1] text-xs text-[#795A63] space-y-1">
-                <p className="font-semibold text-[#3B2028]">DILSY Studio</p>
+              <div className="pt-4 border-t border-[#EADBDB] text-xs font-sans text-[#7A5A63] space-y-1">
+                <p className="font-medium text-[#2A0D15]">DILSY Studio Atelier</p>
                 <p>Personalised gifting for him, for her, and besties</p>
-                <p className="text-[11px] text-[#9F2343]">Chandigarh University & Mohali, Punjab</p>
+                <p className="text-[11px] text-[#3E101D]">Chandigarh University & Mohali, Punjab</p>
               </div>
             </div>
           </div>
@@ -72,35 +93,35 @@ export const OurStory: React.FC = () => {
 
 export const DeliveryPolicySection: React.FC = () => {
   return (
-    <section id="delivery-policy" className="py-12 bg-[#FCE7ED] border-t border-[#F1C5D1]">
+    <section id="delivery-policy" className="py-14 bg-[#FAF7F5] border-t border-[#EADBDB]">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#FFFAF8] rounded-2xl p-6 sm:p-8 border border-[#F1C5D1] shadow-xs">
+        <div className="bg-white p-6 sm:p-10 border border-[#EADBDB]">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-[#FFF1F4] border border-[#F1C5D1] flex items-center justify-center text-[#9F2343] shrink-0 mt-1">
+            <div className="w-10 h-10 border border-[#EADBDB] bg-[#FAF7F5] flex items-center justify-center text-[#3E101D] shrink-0 mt-1">
               <Truck className="w-5 h-5" />
             </div>
 
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <h3 className="font-serif font-bold text-xl text-[#3B2028]">Official Delivery Policy</h3>
-                <span className="text-[11px] px-2 py-0.5 rounded bg-[#FFF1F4] text-[#9F2343] font-medium border border-[#F1C5D1]">
-                  Service Area: CU & Mohali
+            <div className="space-y-4 font-sans">
+              <div className="flex items-center gap-3 flex-wrap">
+                <h3 className="font-serif text-2xl font-normal text-[#2A0D15]">Official Delivery Policy</h3>
+                <span className="text-[10px] uppercase tracking-wider px-2.5 py-0.5 bg-[#FAF7F5] text-[#3E101D] border border-[#EADBDB] font-medium">
+                  CU Campus & Mohali
                 </span>
               </div>
 
-              <div className="p-4 bg-[#FFF1F4] rounded-xl border border-[#F1C5D1] shadow-2xs">
-                <p className="text-sm sm:text-base text-[#3B2028] font-serif italic leading-relaxed">
+              <div className="p-5 bg-[#FAF7F5] border border-[#EADBDB]">
+                <p className="text-sm sm:text-base text-[#2A0D15] font-serif italic leading-relaxed">
                   "{EXACT_DELIVERY_POLICY}"
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-[#795A63] pt-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs text-[#7A5A63] pt-2">
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-[#9F2343] shrink-0" />
-                  <span>Service area: Chandigarh University and nearby PGs around Mohali.</span>
+                  <MapPin className="w-4 h-4 text-[#3E101D] shrink-0" />
+                  <span>Service area: Chandigarh University and nearby student PGs around Mohali.</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#9F2343] shrink-0" />
+                  <ShieldCheck className="w-4 h-4 text-[#3E101D] shrink-0" />
                   <span>Every order verified manually on WhatsApp before payment or dispatch.</span>
                 </div>
               </div>
@@ -118,11 +139,11 @@ export const FaqSection: React.FC = () => {
   const faqs = [
     {
       q: 'How does ordering on WhatsApp work?',
-      a: 'When you click "Order on WhatsApp" or check out your bag, our website generates a clean, complete summary of your chosen hamper, customisation notes, and delivery preferences. You get to review the message before opening WhatsApp to chat with us at +91 8360958844. We confirm item availability, handover timing, delivery charges, and final pricing directly with you.',
+      a: 'When you click "WhatsApp Order" or check out your bag, our website generates a clean, complete summary of your chosen hamper, customisation notes, and delivery preferences. You get to review the message before opening WhatsApp to chat with us at +91 8360958844. We confirm item availability, handover timing, delivery charges, and final pricing directly with you.',
     },
     {
       q: 'Can I personalise the greeting card note and include photos?',
-      a: 'Yes, absolutely! Every DILSY hamper includes a personal greeting card hand-written with your message. You can also share your photo with us on WhatsApp right after submitting your inquiry to include it with your hamper.',
+      a: 'Yes, absolutely! Every DILSY hamper includes a personal greeting card hand-transcribed with your message. You can also share your photo with us on WhatsApp right after submitting your inquiry to include it with your hamper.',
     },
     {
       q: 'Can I request same-day or next-morning delivery?',
@@ -143,17 +164,17 @@ export const FaqSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-16 bg-[#FCE7ED] border-t border-[#F1C5D1]">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-16 sm:py-20 bg-[#FAF7F5] border-t border-[#EADBDB]">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 font-sans">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#9F2343]">
-            Common Questions
-          </span>
-          <h2 className="text-3xl font-serif font-bold text-[#3B2028] mt-1">
+          <p className="text-[11px] uppercase tracking-[0.25em] text-[#7A5A63]">
+            Common Inquiries
+          </p>
+          <h2 className="text-3xl font-serif font-normal text-[#2A0D15] mt-2">
             Frequently Asked Questions
           </h2>
-          <p className="text-sm text-[#795A63] mt-2 font-light">
-            Everything you need to know about our hampers, handwritten cards, and Mohali campus deliveries.
+          <p className="text-sm text-[#7A5A63] mt-2 font-light">
+            Everything you need to know about our hampers, handwritten calligraphy notes, and Mohali deliveries.
           </p>
         </div>
 
@@ -163,23 +184,23 @@ export const FaqSection: React.FC = () => {
             return (
               <div
                 key={index}
-                className="bg-[#FFFAF8] rounded-xl border border-[#F1C5D1] overflow-hidden transition-colors"
+                className="bg-white border border-[#EADBDB] overflow-hidden transition-colors"
               >
                 <button
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
-                  className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 focus-visible:outline-none cursor-pointer"
+                  className="w-full px-6 py-4 text-left flex items-center justify-between gap-4 focus-visible:outline-none cursor-pointer"
                 >
-                  <span className="font-serif font-semibold text-base text-[#3B2028]">
+                  <span className="font-serif font-normal text-base text-[#2A0D15]">
                     {faq.q}
                   </span>
-                  <span className="p-1 rounded text-[#9F2343] hover:bg-[#FFF1F4] shrink-0">
+                  <span className="p-1 text-[#3E101D] shrink-0">
                     {isOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                   </span>
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 pt-1 text-sm text-[#795A63] font-light leading-relaxed border-t border-[#F1C5D1]">
+                  <div className="px-6 pb-5 pt-1 text-xs text-[#6E565D] font-light leading-relaxed border-t border-[#EADBDB]">
                     {faq.a}
                   </div>
                 )}
@@ -192,96 +213,178 @@ export const FaqSection: React.FC = () => {
   );
 };
 
+/**
+ * Editorial Footer matching Google Stitch Screenshot 5
+ */
 export const Footer: React.FC<{ onNavigate: (path: string) => void }> = ({ onNavigate }) => {
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterSent, setNewsletterSent] = useState(false);
+
+  const handleNewsletter = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newsletterEmail.trim()) {
+      setNewsletterSent(true);
+      setTimeout(() => {
+        setNewsletterEmail('');
+        setNewsletterSent(false);
+      }, 4000);
+    }
+  };
+
   return (
-    <footer className="bg-[#72172F] text-[#FFFAF8] pt-14 pb-8 border-t border-[#9F2343]">
+    <footer className="bg-[#FAF7F5] text-[#2A0D15] pt-16 pb-12 border-t border-[#EADBDB] font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-12 border-b border-[#F1C5D1]/20">
-          {/* Brand Info */}
-          <div className="md:col-span-5 space-y-3">
-            <div className="flex items-center gap-1.5">
-              <span className="font-serif font-bold text-2xl text-[#FFFAF8] tracking-tight">DILSY</span>
-              <span className="w-2 h-2 rounded-full bg-[#E88AA4]" />
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 sm:gap-12 pb-14 border-b border-[#EADBDB]">
+          {/* Brand Column (Screenshot 5 Left) */}
+          <div className="md:col-span-4 space-y-4">
+            <button
+              onClick={() => onNavigate('/')}
+              className="text-2xl font-serif font-normal tracking-[0.25em] text-[#2A0D15] hover:opacity-85 transition-opacity text-left cursor-pointer"
+            >
+              DILSY
+            </button>
+            <p className="text-xs text-[#6E565D] font-light leading-relaxed max-w-sm">
+              High-fashion personal gifting created for enduring sentiment. Handcrafted with bespoke intention in Mohali for university milestones, romantic keepsakes, and lifelong friends.
+            </p>
+            <div className="text-xs text-[#7A5A63] space-y-1.5 pt-2">
+              <p className="flex items-center gap-2">
+                <MessageCircle className="w-3.5 h-3.5 text-[#3E101D]" />
+                <span>WhatsApp Concierge: <strong className="text-[#2A0D15]">{WHATSAPP_PHONE_INTERNATIONAL}</strong></span>
+              </p>
+              <p className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#3E101D]" />
+                <span>Serving Chandigarh University & Mohali PGs (Punjab)</span>
+              </p>
             </div>
-            <p className="font-serif italic text-[#E88AA4] text-sm">
-              A Little Box Full of Feelings.
-            </p>
-            <p className="text-xs text-[#FFFAF8]/80 font-light leading-relaxed max-w-sm">
-              Boutique personalised handmade gift hampers. Thoughtfully crafted with love in Mohali for university students, couples, best friends, and everyone who treasures meaningful surprises.
-            </p>
           </div>
 
-          {/* Quick Navigation */}
-          <div className="md:col-span-3 space-y-3">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#E88AA4]">
-              Explore DILSY
+          {/* Collections Column (Screenshot 5 Column 2) */}
+          <div className="md:col-span-2 space-y-3">
+            <h4 className="text-xs font-serif font-semibold uppercase tracking-[0.15em] text-[#2A0D15]">
+              Collections
             </h4>
-            <ul className="space-y-2 text-xs text-[#FFFAF8]/80">
+            <ul className="space-y-2 text-xs text-[#6E565D]">
               <li>
-                <button onClick={() => onNavigate('/')} className="hover:text-white transition-colors cursor-pointer">
-                  Home
+                <button
+                  onClick={() => onNavigate('/themes')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  Curated Collections
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('/themes')} className="hover:text-white transition-colors cursor-pointer">
+                <button
+                  onClick={() => onNavigate('/themes')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
                   Shop by Theme
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('/hampers')} className="hover:text-white transition-colors cursor-pointer">
-                  All Hampers (₹799–₹1,199)
+                <button
+                  onClick={() => onNavigate('/custom-hamper')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  Custom Hamper
                 </button>
               </li>
               <li>
-                <button onClick={() => onNavigate('/custom-hamper')} className="hover:text-white transition-colors cursor-pointer">
-                  Custom Hamper Studio
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigate('/our-story')} className="hover:text-white transition-colors cursor-pointer">
-                  Our Story
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigate('/delivery-policy')} className="hover:text-white transition-colors cursor-pointer">
-                  Delivery Policy
-                </button>
-              </li>
-              <li>
-                <button onClick={() => onNavigate('/login')} className="hover:text-white transition-colors cursor-pointer">
-                  Customer Sign In / Register
+                <button
+                  onClick={() => onNavigate('/hampers')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  All Editions (₹799–₹1,199)
                 </button>
               </li>
             </ul>
           </div>
 
-          {/* Contact & Service Info */}
-          <div className="md:col-span-4 space-y-3 text-xs text-[#FFFAF8]/80">
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-[#E88AA4]">
-              Connect & Coordinate
+          {/* Concierge Column (Screenshot 5 Column 3) */}
+          <div className="md:col-span-2 space-y-3">
+            <h4 className="text-xs font-serif font-semibold uppercase tracking-[0.15em] text-[#2A0D15]">
+              Concierge
             </h4>
-            <div className="space-y-2">
-              <p className="flex items-center gap-2">
-                <MessageCircle className="w-4 h-4 text-[#E88AA4]" />
-                <span>WhatsApp: <strong>{WHATSAPP_PHONE_INTERNATIONAL}</strong></span>
-              </p>
-              <p className="flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-[#E88AA4]" />
-                <span>Serving: Chandigarh University & Mohali PGs (Punjab)</span>
-              </p>
-              <p className="text-[11px] text-[#FFFAF8]/60 pt-1">
-                Official Box Price Range: ₹799 – ₹1,199
-              </p>
-            </div>
+            <ul className="space-y-2 text-xs text-[#6E565D]">
+              <li>
+                <button
+                  onClick={() => onNavigate('/our-story')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  Customer Care
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('/delivery-policy')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  Shipping & Returns
+                </button>
+              </li>
+              <li>
+                <a
+                  href={`https://wa.me/918360958844`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  WhatsApp Atelier
+                </a>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('/our-story')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  Our Story
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => onNavigate('/login')}
+                  className="hover:text-[#2A0D15] transition-colors cursor-pointer"
+                >
+                  Account Access
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Private Dispatch Column (Screenshot 5 Column 4) */}
+          <div className="md:col-span-4 space-y-3">
+            <h4 className="text-xs font-serif font-semibold uppercase tracking-[0.15em] text-[#2A0D15]">
+              Private Dispatch
+            </h4>
+            <p className="text-xs text-[#6E565D] font-light leading-relaxed">
+              Receive intimate edition announcements and seasonal catalog dispatch directly from our Mohali atelier.
+            </p>
+
+            <form onSubmit={handleNewsletter} className="pt-1">
+              <div className="flex border border-[#EADBDB] bg-white">
+                <input
+                  type="email"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  placeholder="Enter your email address..."
+                  required
+                  className="w-full px-3 py-2 text-xs text-[#2A0D15] placeholder-[#7A5A63] focus:outline-none bg-transparent"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-[10px] font-sans font-medium uppercase tracking-[0.18em] whitespace-nowrap transition-colors cursor-pointer"
+                >
+                  {newsletterSent ? 'Subscribed' : 'Join'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
 
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-[#FFFAF8]/60 gap-4">
-          <p>© {new Date().getFullYear()} DILSY Gifting Studio. All rights reserved.</p>
-          <p className="text-[11px] flex items-center gap-1">
-            <span>Made with</span>
-            <span className="text-[#E88AA4]">♥</span>
-            <span>for real feelings</span>
+        {/* Bottom Rights Bar */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-[#7A5A63] gap-4">
+          <p>© {new Date().getFullYear()} DILSY Gifting Atelier. All rights reserved.</p>
+          <p className="text-[11px] tracking-wide">
+            A Little Box Full of Feelings • Mohali & Chandigarh University
           </p>
         </div>
       </div>

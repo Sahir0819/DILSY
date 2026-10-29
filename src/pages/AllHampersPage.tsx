@@ -41,7 +41,7 @@ export const AllHampersPage: React.FC<AllHampersPageProps> = ({
   }
 
   return (
-    <div className="min-h-screen bg-[#FCE7ED] text-[#3B2028] py-8 sm:py-12">
+    <div className="min-h-screen bg-[#FAF7F5] text-[#2A0D15] py-8 sm:py-14 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <div className="mb-6">
@@ -52,35 +52,34 @@ export const AllHampersPage: React.FC<AllHampersPageProps> = ({
         </div>
 
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div>
-            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#9F2343] bg-[#FFFAF8] px-3 py-1 rounded-full border border-[#F1C5D1] mb-2 shadow-2xs">
-              <Heart className="w-3.5 h-3.5 fill-[#9F2343] text-[#9F2343]" />
-              <span>Official Curations</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#3B2028] tracking-tight">
+            <p className="text-[11px] font-sans uppercase tracking-[0.25em] text-[#7A5A63] mb-2">
+              Curated Editions
+            </p>
+            <h1 className="text-3xl sm:text-4xl font-serif font-normal text-[#2A0D15] tracking-tight">
               All Hampers
             </h1>
-            <p className="mt-2 text-sm sm:text-base text-[#79665C] font-light max-w-xl">
-              Featuring our recommended Loved Box (Medium — ₹969) alongside our official Small Box (₹799) and Large Box (₹1,199).
+            <p className="mt-2 text-sm sm:text-base text-[#6E565D] font-light max-w-xl">
+              Featuring our signature Loved Box (Medium — ₹969) alongside our official Small Box (₹799) and Large Box (₹1,199).
             </p>
           </div>
 
           {/* Filtering & Sorting Controls */}
           <div className="flex flex-wrap items-center gap-3">
-            {/* Filter Pills */}
-            <div className="flex items-center gap-1 p-1 bg-[#FFFAF8] rounded-xl border border-[#F1C5D1] shadow-2xs">
+            {/* Filter Buttons */}
+            <div className="flex items-center gap-1 p-1 bg-white border border-[#EADBDB]">
               {(['all', 'for-him', 'for-her', 'besties'] as const).map((cat) => (
                 <button
                   key={cat}
                   onClick={() => setActiveFilter(cat)}
-                  className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors capitalize cursor-pointer ${
+                  className={`px-3 py-1.5 text-xs font-sans tracking-wide uppercase transition-colors cursor-pointer ${
                     activeFilter === cat
-                      ? 'bg-[#9F2343] text-white font-semibold shadow-xs'
-                      : 'text-[#79665C] hover:text-[#9F2343]'
+                      ? 'bg-[#3E101D] text-white font-medium'
+                      : 'text-[#6E565D] hover:text-[#2A0D15]'
                   }`}
                 >
-                  {cat === 'all' ? 'All Hampers' : cat.replace('-', ' ')}
+                  {cat === 'all' ? 'All' : cat.replace('-', ' ')}
                 </button>
               ))}
             </div>
@@ -90,7 +89,7 @@ export const AllHampersPage: React.FC<AllHampersPageProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-3 py-1.5 bg-[#FFFAF8] border border-[#F1C5D1] rounded-xl text-xs font-medium text-[#3B2028] focus:outline-none focus:ring-1 focus:ring-[#9F2343] cursor-pointer shadow-2xs"
+                className="px-3 py-2 bg-white border border-[#EADBDB] text-xs font-sans text-[#2A0D15] focus:outline-none cursor-pointer"
               >
                 <option value="default">Default Order</option>
                 <option value="price-asc">Price: Low to High</option>
@@ -100,7 +99,7 @@ export const AllHampersPage: React.FC<AllHampersPageProps> = ({
           </div>
         </div>
 
-        {/* Product Cards Grid: Small Box ₹799, Loved Box ₹969 (ONCE!), Large Box ₹1,199 */}
+        {/* Product Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {displayed.map((product) => (
             <ProductCard
@@ -115,24 +114,22 @@ export const AllHampersPage: React.FC<AllHampersPageProps> = ({
         </div>
 
         {/* Custom Hamper Callout Banner */}
-        <div className="mt-14 p-6 sm:p-8 rounded-2xl bg-[#FFFAF8] border border-[#F1C5D1] flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-[#FFF1F4] border border-[#F1C5D1] flex items-center justify-center text-[#9F2343] shrink-0">
-              <Sparkles className="w-6 h-6 fill-[#9F2343]" />
-            </div>
-            <div>
-              <h3 className="font-serif font-bold text-lg text-[#3B2028]">
-                Looking for a custom combination or specific budget?
-              </h3>
-              <p className="text-xs text-[#79665C] mt-0.5">
-                Mix and match goodies, polaroid memories, scents, and keepsakes in our Hamper Studio.
-              </p>
-            </div>
+        <div className="mt-16 p-8 bg-white border border-[#EADBDB] flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="space-y-1">
+            <span className="text-[10px] font-sans uppercase tracking-[0.2em] text-[#7A5A63]">
+              Bespoke Studio
+            </span>
+            <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#2A0D15]">
+              Looking for a custom combination or specific budget?
+            </h3>
+            <p className="text-xs text-[#6E565D] font-light max-w-xl">
+              Mix and match curated goodies, scents, handwritten cards, and keepsake touches in our Bespoke Atelier.
+            </p>
           </div>
 
           <button
             onClick={() => onNavigate('/custom-hamper')}
-            className="px-6 py-3 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0"
+            className="px-7 py-3.5 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-[11px] font-medium uppercase tracking-[0.18em] transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0"
           >
             <span>Custom Hamper Studio</span>
             <ArrowRight className="w-3.5 h-3.5" />

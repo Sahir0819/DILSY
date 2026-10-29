@@ -9,6 +9,7 @@ interface ProductCardProps {
   onOrderWhatsApp: (product: Product, customisation: ProductCustomisation) => void;
   onViewDetails?: (product: Product) => void;
   activePromoText?: string;
+  badgeLabel?: string;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -17,6 +18,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onOrderWhatsApp,
   onViewDetails,
   activePromoText,
+  badgeLabel,
 }) => {
   const [isCustomising, setIsCustomising] = useState(false);
   const [recipientChoice, setRecipientChoice] = useState<'For Him' | 'For Her'>('For Her');
@@ -48,136 +50,114 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     onOrderWhatsApp(product, getCustomisation());
   };
 
-  const formattedDisplayTitle = `${product.name} (${product.size}) — ₹${product.price.toLocaleString('en-IN')}`;
+  // Determine badge text according to Stitch aesthetic
+  const displayedBadge =
+    badgeLabel ||
+    product.badge ||
+    (product.id === 'loved-box'
+      ? 'SIGNATURE'
+      : product.id === 'the-little-affair'
+      ? 'BESPOKE KEEPSAKE'
+      : 'CELEBRATION');
+
+  // Default to Stitch editorial photography if customImage is not set
+  const productImage =
+    product.customImage ||
+    (product.id === 'loved-box'
+      ? '/assets/images/product-loved-box.jpg'
+      : product.id === 'the-little-affair'
+      ? '/assets/images/product-anniversary-box.jpg'
+      : product.id === 'the-everything-box'
+      ? '/assets/images/product-birthday-box.jpg'
+      : null);
 
   return (
-    <div className={`bg-[#FFFAF8] rounded-2xl border transition-all flex flex-col justify-between group overflow-hidden ${
-      isOutOfStock
-        ? 'border-[#F1C5D1]/60 opacity-90'
-        : 'border-[#F1C5D1] hover:border-[#9F2343] shadow-xs hover:shadow-lg hover:shadow-[#72172F]/10'
-    }`}>
+    <div
+      className={`bg-[#FFFFFF] border transition-all flex flex-col justify-between group overflow-hidden ${
+        isOutOfStock
+          ? 'border-[#EADBDB] opacity-85'
+          : 'border-[#EADBDB] hover:border-[#3E101D]/40'
+      }`}
+    >
       <div>
-        {/* Top Product Artwork Illustration or Real Image */}
-        <div className="relative">
-          {product.customImage ? (
-            <div className="w-full aspect-[4/3] bg-[#FFF1F4] overflow-hidden flex items-center justify-center border-b border-[#F1C5D1]">
-              <img
-                src={product.customImage}
-                alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-            </div>
+        {/* Product Image Area */}
+        <div className="relative aspect-[4/3] bg-[#FAF7F5] overflow-hidden border-b border-[#EADBDB]">
+          {productImage ? (
+            <img
+              src={productImage}
+              alt={product.name}
+              className="w-full h-full object-cover object-center group-hover:scale-103 transition-transform duration-700"
+            />
           ) : (
             <ProductArtwork type={product.illustrationType} />
           )}
 
-          {/* Out of Stock Overlay / Badge */}
+          {/* Floating Category Badge (Stitch Mockup Top Left) */}
+          {displayedBadge && (
+            <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2.5 py-1 text-[9px] font-sans uppercase tracking-[0.18em] text-[#3E101D] border border-[#EADBDB]/60 shadow-2xs">
+              {displayedBadge}
+            </div>
+          )}
+
+          {/* Out of Stock Overlay */}
           {isOutOfStock && (
-            <div className="absolute inset-0 bg-[#3B2028]/40 backdrop-blur-[1px] flex items-center justify-center p-4">
-              <span className="bg-[#991B1B] text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 uppercase tracking-wider flex items-center gap-1.5">
+            <div className="absolute inset-0 bg-[#2A0D15]/40 backdrop-blur-[1px] flex items-center justify-center p-4">
+              <span className="bg-[#991B1B] text-white text-[10px] font-sans font-semibold px-3 py-1 uppercase tracking-widest flex items-center gap-1.5 border border-white/20">
                 <AlertCircle className="w-3.5 h-3.5" />
                 <span>Out of Stock</span>
               </span>
             </div>
           )}
 
-          {/* Coming Soon Overlay / Badge */}
+          {/* Coming Soon Overlay */}
           {isComingSoon && (
-            <div className="absolute inset-0 bg-[#3B2028]/40 backdrop-blur-[1px] flex items-center justify-center p-4">
-              <span className="bg-[#9F2343] text-white text-xs font-bold px-3.5 py-1.5 rounded-full shadow-lg border border-white/20 uppercase tracking-wider flex items-center gap-1.5">
+            <div className="absolute inset-0 bg-[#2A0D15]/40 backdrop-blur-[1px] flex items-center justify-center p-4">
+              <span className="bg-[#3E101D] text-white text-[10px] font-sans font-semibold px-3 py-1 uppercase tracking-widest flex items-center gap-1.5 border border-white/20">
                 <Clock className="w-3.5 h-3.5" />
                 <span>Coming Soon</span>
               </span>
             </div>
           )}
-
-          {/* Clickable View Details Overlay Button */}
-          {onViewDetails && (
-            <button
-              onClick={() => onViewDetails(product)}
-              className="absolute top-3 left-3 bg-[#FFFAF8]/90 hover:bg-[#FFFAF8] text-[#9F2343] p-1.5 rounded-lg border border-[#F1C5D1] shadow-xs opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer flex items-center gap-1 text-[11px] font-medium"
-              title="View full product details"
-            >
-              <ExternalLink className="w-3.5 h-3.5" />
-              <span>Details</span>
-            </button>
-          )}
         </div>
 
-        {/* Product Details Header */}
-        <div className="p-6">
-          <div className="flex items-start justify-between gap-4 mb-2">
+        {/* Product Meta & Description */}
+        <div className="p-5 sm:p-6">
+          <div className="flex items-start justify-between gap-3 mb-1.5">
             <div>
-              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                {isOutOfStock ? (
-                  <span className="text-[10px] uppercase tracking-wider text-[#991B1B] font-bold bg-[#FEE2E2] px-2 py-0.5 rounded-full border border-[#FECACA]">
-                    Out of Stock
-                  </span>
-                ) : isComingSoon ? (
-                  <span className="text-[10px] uppercase tracking-wider text-[#9F2343] font-bold bg-[#FFF1F4] px-2 py-0.5 rounded-full border border-[#F1C5D1]">
-                    Coming Soon
-                  </span>
-                ) : product.badge ? (
-                  <span className="text-[11px] uppercase tracking-wider text-[#9F2343] font-bold flex items-center gap-1 bg-[#FFF1F4] px-2.5 py-0.5 rounded-full border border-[#F1C5D1] shadow-2xs">
-                    {product.badge}
-                  </span>
-                ) : (
-                  <span className="text-[11px] uppercase tracking-wider text-[#9F2343] font-semibold flex items-center gap-1 bg-[#FFF1F4] px-2 py-0.5 rounded-full border border-[#F1C5D1]">
-                    <Heart className="w-3 h-3 fill-[#9F2343] text-[#9F2343]" />
-                    Curated With Love
-                  </span>
-                )}
-                <span className="text-[11px] font-semibold text-[#3B2028] bg-[#FFF1F4] px-2 py-0.5 rounded-full border border-[#F1C5D1]">
-                  Size: {product.size}
-                </span>
-                {activePromoText && isPurchasable && (
-                  <span className="text-[10px] font-semibold text-[#1B4332] bg-[#EBF7EE] px-2 py-0.5 rounded-full border border-[#B7E4C7]">
-                    {activePromoText}
-                  </span>
-                )}
-              </div>
               <h3
                 onClick={() => onViewDetails && onViewDetails(product)}
-                className={`text-xl font-serif font-bold text-[#3B2028] group-hover:text-[#9F2343] transition-colors ${onViewDetails ? 'cursor-pointer' : ''}`}
+                className={`text-lg font-serif font-normal text-[#2A0D15] group-hover:text-[#4A1423] transition-colors ${
+                  onViewDetails ? 'cursor-pointer' : ''
+                }`}
               >
                 {product.name}
+                {product.size && (
+                  <span className="text-sm font-sans font-light text-[#7A6368] ml-1.5">
+                    / {product.size}
+                  </span>
+                )}
               </h3>
-              <p className="text-[11px] text-[#795A63] font-serif italic">
-                {formattedDisplayTitle}
-              </p>
-            </div>
-            <div className="text-right shrink-0">
-              <span className="text-2xl font-serif font-bold text-[#9F2343] tabular-nums">
-                ₹{product.price.toLocaleString('en-IN')}
-              </span>
-              {product.originalPrice && (
-                <span className="block text-[11px] text-[#795A63] line-through">
-                  ₹{product.originalPrice.toLocaleString('en-IN')}
-                </span>
-              )}
-              <span className="block text-[11px] text-[#795A63]">Base price</span>
             </div>
           </div>
 
-          <p className="text-sm text-[#3B2028] font-light leading-relaxed mb-4">
+          <p className="text-xs text-[#7A6368] font-sans font-light line-clamp-2 leading-relaxed mb-4">
             {product.description}
           </p>
 
           {/* Recipient Choice for Loved Box */}
           {product.allowRecipientChoice && isPurchasable && (
-            <div className="mb-4 p-3 bg-[#FFF1F4] rounded-xl border border-[#F1C5D1]">
-              <label className="block text-xs font-semibold text-[#3B2028] mb-1.5 flex items-center gap-1">
-                <span>Who is this box for?</span>
-                <span className="text-[10px] text-[#9F2343] font-normal">(Select recipient)</span>
+            <div className="mb-4 p-3 bg-[#FAF7F5] border border-[#EADBDB]">
+              <label className="block text-[11px] font-sans uppercase tracking-[0.1em] text-[#2A0D15] mb-1.5">
+                Who is this box for?
               </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   type="button"
                   onClick={() => setRecipientChoice('For Her')}
-                  className={`py-1.5 px-3 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
+                  className={`py-1.5 px-3 text-xs font-sans tracking-wide border transition-all cursor-pointer ${
                     recipientChoice === 'For Her'
-                      ? 'bg-[#9F2343] text-white border-[#72172F] shadow-xs'
-                      : 'bg-[#FFFAF8] text-[#3B2028] border-[#F1C5D1] hover:border-[#9F2343]'
+                      ? 'bg-[#3E101D] text-white border-[#3E101D]'
+                      : 'bg-white text-[#2A0D15] border-[#EADBDB] hover:border-[#3E101D]'
                   }`}
                 >
                   For Her
@@ -185,10 +165,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 <button
                   type="button"
                   onClick={() => setRecipientChoice('For Him')}
-                  className={`py-1.5 px-3 rounded-lg text-xs font-medium border transition-all cursor-pointer ${
+                  className={`py-1.5 px-3 text-xs font-sans tracking-wide border transition-all cursor-pointer ${
                     recipientChoice === 'For Him'
-                      ? 'bg-[#9F2343] text-white border-[#72172F] shadow-xs'
-                      : 'bg-[#FFFAF8] text-[#3B2028] border-[#F1C5D1] hover:border-[#9F2343]'
+                      ? 'bg-[#3E101D] text-white border-[#3E101D]'
+                      : 'bg-white text-[#2A0D15] border-[#EADBDB] hover:border-[#3E101D]'
                   }`}
                 >
                   For Him
@@ -197,63 +177,63 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           )}
 
-          {/* Quick Details link and Personalisation accordion */}
+          {/* Personalisation Accordion */}
           {isPurchasable && (
-            <div className="border-t border-[#F1C5D1] pt-3 mt-1 space-y-2">
+            <div className="border-t border-[#EADBDB] pt-3 mt-1">
               <button
                 type="button"
                 onClick={() => setIsCustomising(!isCustomising)}
-                className="w-full flex items-center justify-between text-xs font-semibold text-[#9F2343] hover:text-[#72172F] py-1 transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between text-xs font-sans text-[#4A1423] hover:text-[#2A0D15] py-1 transition-colors cursor-pointer"
               >
                 <span className="flex items-center gap-1.5">
-                  <Sparkles className="w-3.5 h-3.5 text-[#9F2343]" />
-                  <span>Personalise greeting card message</span>
+                  <Sparkles className="w-3.5 h-3.5 text-[#4A1423]" />
+                  <span>Personalise wax-sealed greeting note</span>
                 </span>
                 {isCustomising ? (
-                  <ChevronUp className="w-3.5 h-3.5 text-[#9F2343]" />
+                  <ChevronUp className="w-3.5 h-3.5 text-[#4A1423]" />
                 ) : (
-                  <ChevronDown className="w-3.5 h-3.5 text-[#9F2343]" />
+                  <ChevronDown className="w-3.5 h-3.5 text-[#4A1423]" />
                 )}
               </button>
 
               {isCustomising && (
-                <div className="mt-2 space-y-3 bg-[#FFF1F4] p-3.5 rounded-xl border border-[#F1C5D1] animate-in fade-in slide-in-from-top-1">
+                <div className="mt-2 space-y-3 bg-[#FAF7F5] p-3 border border-[#EADBDB] animate-in fade-in slide-in-from-top-1 font-sans">
                   <div>
-                    <label className="block text-[11px] font-medium text-[#3B2028] mb-1">
+                    <label className="block text-[10px] uppercase tracking-wider font-medium text-[#2A0D15] mb-1">
                       Recipient's Name
                     </label>
                     <input
                       type="text"
                       value={recipientName}
                       onChange={(e) => setRecipientName(e.target.value)}
-                      placeholder="e.g. Ananya, Kabir, etc."
-                      className="w-full px-3 py-1.5 bg-[#FFFAF8] border border-[#F1C5D1] rounded-lg text-xs text-[#3B2028] focus:ring-1 focus:ring-[#9F2343] focus:border-[#9F2343] outline-none"
+                      placeholder="e.g. Priya Sharma, Ananya..."
+                      className="w-full px-3 py-1.5 bg-white border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none focus:border-[#3E101D]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-[#3B2028] mb-1">
-                      Greeting-card message
+                    <label className="block text-[10px] uppercase tracking-wider font-medium text-[#2A0D15] mb-1">
+                      Handwritten Note Sentiment
                     </label>
                     <textarea
                       rows={2}
                       value={personalNote}
                       onChange={(e) => setPersonalNote(e.target.value)}
-                      placeholder="Write your personal message to be handwritten on the card..."
-                      className="w-full px-3 py-1.5 bg-[#FFFAF8] border border-[#F1C5D1] rounded-lg text-xs text-[#3B2028] focus:ring-1 focus:ring-[#9F2343] focus:border-[#9F2343] outline-none"
+                      placeholder="Write your words to be calligraphed on cotton paper..."
+                      className="w-full px-3 py-1.5 bg-white border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none focus:border-[#3E101D]"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-medium text-[#3B2028] mb-1">
-                      Special Instructions
+                    <label className="block text-[10px] uppercase tracking-wider font-medium text-[#2A0D15] mb-1">
+                      Special Requests / Landmark
                     </label>
                     <input
                       type="text"
                       value={specialInstructions}
                       onChange={(e) => setSpecialInstructions(e.target.value)}
-                      placeholder="e.g. Include ribbon, delivery surprise request"
-                      className="w-full px-3 py-1.5 bg-[#FFFAF8] border border-[#F1C5D1] rounded-lg text-xs text-[#3B2028] focus:ring-1 focus:ring-[#9F2343] focus:border-[#9F2343] outline-none"
+                      placeholder="e.g. Campus delivery gate, room delivery..."
+                      className="w-full px-3 py-1.5 bg-white border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none focus:border-[#3E101D]"
                     />
                   </div>
                 </div>
@@ -263,17 +243,40 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="p-6 pt-0 space-y-2">
+      {/* Card Footer: Price & Actions */}
+      <div className="p-5 sm:p-6 pt-0 border-t border-[#EADBDB]">
+        {/* Bottom Price & Curate Row (Stitch Reference) */}
+        <div className="flex items-center justify-between pt-4 mb-4">
+          <div>
+            <span className="text-base font-sans font-semibold text-[#2A0D15] tabular-nums">
+              ₹{product.price.toLocaleString('en-IN')}
+            </span>
+            {product.originalPrice && (
+              <span className="ml-2 text-xs text-[#7A6368] line-through tabular-nums">
+                ₹{product.originalPrice.toLocaleString('en-IN')}
+              </span>
+            )}
+          </div>
+
+          {onViewDetails && (
+            <button
+              type="button"
+              onClick={() => onViewDetails(product)}
+              className="text-[10px] uppercase tracking-[0.2em] font-sans font-semibold text-[#3E101D] hover:underline cursor-pointer"
+            >
+              Curate
+            </button>
+          )}
+        </div>
+
+        {/* Purchase & Order Actions */}
         {isOutOfStock ? (
-          <div className="w-full py-2.5 px-3 bg-[#FFF1F4] border border-[#F1C5D1] text-[#795A63] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-not-allowed">
-            <AlertCircle className="w-3.5 h-3.5 text-[#795A63]" />
-            <span>Currently Out of Stock</span>
+          <div className="w-full py-2.5 px-3 bg-[#FAF7F5] border border-[#EADBDB] text-[#7A5A63] text-xs font-sans tracking-wide text-center cursor-not-allowed uppercase">
+            Out of Stock
           </div>
         ) : isComingSoon ? (
-          <div className="w-full py-2.5 px-3 bg-[#FFF1F4] border border-[#F1C5D1] text-[#9F2343] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-not-allowed">
-            <Clock className="w-3.5 h-3.5 text-[#9F2343]" />
-            <span>Coming Soon — Stay Tuned</span>
+          <div className="w-full py-2.5 px-3 bg-[#FAF7F5] border border-[#EADBDB] text-[#3E101D] text-xs font-sans tracking-wide text-center cursor-not-allowed uppercase">
+            Coming Soon
           </div>
         ) : (
           <div className="space-y-2">
@@ -281,16 +284,16 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <button
                 type="button"
                 onClick={handleAdd}
-                className="w-full py-2.5 px-3 bg-[#FFFAF8] hover:bg-[#FFF1F4] border border-[#F1C5D1] text-[#9F2343] rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9F2343] cursor-pointer"
+                className="w-full py-2.5 px-3 bg-[#FAF7F5] hover:bg-[#F5ECE7] border border-[#EADBDB] text-[#3E101D] text-[10px] font-sans uppercase tracking-[0.15em] font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 {addedAnimation ? (
                   <>
-                    <Check className="w-3.5 h-3.5 text-emerald-700" />
-                    <span className="text-emerald-800">Added to Bag</span>
+                    <Check className="w-3.5 h-3.5 text-emerald-800" />
+                    <span>Added</span>
                   </>
                 ) : (
                   <>
-                    <ShoppingBag className="w-3.5 h-3.5 text-[#9F2343]" />
+                    <ShoppingBag className="w-3.5 h-3.5 text-[#3E101D]" />
                     <span>Add to Bag</span>
                   </>
                 )}
@@ -299,29 +302,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <button
                 type="button"
                 onClick={handleWhatsApp}
-                className="w-full py-2.5 px-3 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs shadow-[#72172F]/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#9F2343] cursor-pointer"
+                className="w-full py-2.5 px-3 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-[10px] font-sans uppercase tracking-[0.15em] font-semibold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <MessageCircle className="w-3.5 h-3.5 text-white" />
-                <span>WhatsApp Order</span>
+                <span>WhatsApp</span>
               </button>
             </div>
-
-            {onViewDetails && (
-              <button
-                type="button"
-                onClick={() => onViewDetails(product)}
-                className="w-full py-1.5 text-center text-xs font-medium text-[#795A63] hover:text-[#9F2343] transition-colors cursor-pointer"
-              >
-                View Full Details & Add-ons →
-              </button>
-            )}
           </div>
         )}
-
-        <p className="text-[10px] text-center text-[#795A63] flex items-center justify-center gap-1 pt-1">
-          <Heart className="w-2.5 h-2.5 fill-[#9F2343] text-[#9F2343]" />
-          <span>Delivery around CU & Mohali · WhatsApp preview before sending</span>
-        </p>
       </div>
     </div>
   );

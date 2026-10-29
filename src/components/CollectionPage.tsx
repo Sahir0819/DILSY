@@ -36,7 +36,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
     .filter(Boolean) as ThemeCategory[];
 
   return (
-    <div className="min-h-screen bg-[#FCE7ED] text-[#3B2028] py-8 sm:py-12 animate-in fade-in-50 duration-300">
+    <div className="min-h-screen bg-[#FAF7F5] text-[#2A0D15] py-8 sm:py-12 animate-in fade-in-50 duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Top Breadcrumb & Back Navigation */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
@@ -50,45 +50,45 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
 
           <button
             onClick={() => onNavigate('/themes')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#FFFAF8] hover:bg-[#FFF1F4] text-[#9F2343] rounded-xl text-xs font-semibold border border-[#F1C5D1] shadow-2xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-[#FAF7F5] text-[#3E101D] text-xs font-medium border border-[#EADBDB] transition-colors cursor-pointer tracking-wide"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Explore All Themes</span>
+            <span>Explore All Occasions</span>
           </button>
         </div>
 
         {/* Occasion Hero Header Banner */}
-        <div className="mb-12 p-6 sm:p-10 rounded-3xl bg-[#FFFAF8] border border-[#F1C5D1] shadow-xs overflow-hidden">
+        <div className="mb-12 p-6 sm:p-10 bg-white border border-[#EADBDB] overflow-hidden">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             <div className="lg:col-span-7 space-y-4">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-xs uppercase tracking-wider font-bold text-[#9F2343] bg-[#FFF1F4] px-3 py-1 rounded-full border border-[#F1C5D1]">
+                <span className="text-[10px] uppercase tracking-widest font-semibold text-[#3E101D] bg-[#FAF7F5] px-2.5 py-1 border border-[#EADBDB]">
                   {collection.badge}
                 </span>
                 {collection.isComingSoon && (
-                  <span className="text-xs font-bold text-white bg-[#72172F] px-2.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+                  <span className="text-[10px] font-semibold text-white bg-[#3E101D] px-2.5 py-0.5 uppercase tracking-widest flex items-center gap-1">
                     <Clock className="w-3 h-3" />
                     <span>Coming Soon</span>
                   </span>
                 )}
               </div>
 
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#3B2028] tracking-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#2A0D15] tracking-tight">
                 {collection.name}
               </h1>
 
-              <p className="text-base sm:text-lg text-[#79665C] font-light leading-relaxed">
+              <p className="text-base sm:text-lg text-[#7A5A63] font-light leading-relaxed">
                 "{collection.description}"
               </p>
 
               {collection.heroHeadline && (
-                <p className="text-sm font-serif font-semibold text-[#9F2343]">
+                <p className="text-sm font-serif italic text-[#3E101D]">
                   {collection.heroHeadline}
                 </p>
               )}
 
               {collection.heroStory && (
-                <p className="text-xs sm:text-sm text-[#79665C] font-light leading-relaxed max-w-xl">
+                <p className="text-xs sm:text-sm text-[#7A5A63] font-light leading-relaxed max-w-xl">
                   {collection.heroStory}
                 </p>
               )}
@@ -96,17 +96,17 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
               {/* Actions */}
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 {collection.isComingSoon ? (
-                  <div className="p-3.5 bg-[#FFF1F4] text-[#9F2343] rounded-xl text-xs font-semibold border border-[#F1C5D1] flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-[#9F2343]" />
+                  <div className="p-3.5 bg-[#FAF7F5] text-[#3E101D] border border-[#EADBDB] text-xs font-medium flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-[#3E101D]" />
                     <span>{collection.comingSoonMessage || 'Something special for him is on its way. Stay tuned!'}</span>
                   </div>
                 ) : (
                   <button
                     onClick={() => onNavigate(`/custom-hamper?occasion=${encodeURIComponent(collection.name)}`)}
-                    className="px-5 py-3 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+                    className="px-5 py-3 bg-[#3E101D] hover:bg-[#2A0D15] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center gap-2 cursor-pointer"
                   >
                     <Heart className="w-3.5 h-3.5 fill-white" />
-                    <span>Customise a Hamper for {collection.name}</span>
+                    <span>Customise an Edition for {collection.name}</span>
                   </button>
                 )}
               </div>
@@ -114,7 +114,7 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
 
             {/* Right: Cover Artwork */}
             <div className="lg:col-span-5">
-              <div className="rounded-2xl overflow-hidden border border-[#F1C5D1] shadow-md bg-[#FFF1F4]">
+              <div className="overflow-hidden border border-[#EADBDB] bg-[#FAF7F5]">
                 {collection.coverImage ? (
                   <img
                     src={collection.coverImage}
@@ -132,28 +132,28 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
         {/* Assigned Products in this Collection */}
         <div className="mb-14">
           <div className="mb-8">
-            <h2 className="text-2xl font-serif font-bold text-[#3B2028]">
-              Available Hampers for {collection.name}
+            <h2 className="text-2xl font-serif text-[#2A0D15]">
+              Available Editions for {collection.name}
             </h2>
-            <p className="text-xs text-[#79665C] mt-1">
-              Curated gift boxes suited for this occasion. Exact treats, handwritten cards, and personal details confirmed on WhatsApp.
+            <p className="text-xs text-[#7A5A63] mt-1 font-light">
+              Curated gift boxes suited for this occasion. Exact keepsakes, handwritten cards, and personal details confirmed on WhatsApp.
             </p>
           </div>
 
           {collection.isComingSoon ? (
-            <div className="p-8 sm:p-12 bg-[#FFFAF8] rounded-2xl border border-[#F1C5D1] text-center space-y-4 max-w-xl mx-auto">
-              <div className="w-12 h-12 rounded-full bg-[#FFF1F4] border border-[#F1C5D1] text-[#9F2343] flex items-center justify-center mx-auto">
+            <div className="p-8 sm:p-12 bg-white border border-[#EADBDB] text-center space-y-4 max-w-xl mx-auto">
+              <div className="w-12 h-12 bg-[#FAF7F5] border border-[#EADBDB] text-[#3E101D] flex items-center justify-center mx-auto">
                 <Clock className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-[#3B2028]">
+              <h3 className="text-xl font-serif text-[#2A0D15]">
                 Coming Soon
               </h3>
-              <p className="text-xs text-[#79665C] leading-relaxed">
+              <p className="text-xs text-[#7A5A63] leading-relaxed font-light">
                 We are curating refined goodies and gifts specifically designed for him. Ordering for this collection will be enabled once inventory is ready!
               </p>
               <button
                 onClick={() => onNavigate('/themes')}
-                className="px-5 py-2.5 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+                className="px-5 py-2.5 bg-[#3E101D] hover:bg-[#2A0D15] text-white text-xs uppercase tracking-widest font-semibold transition-colors cursor-pointer"
               >
                 Browse Other Available Occasions
               </button>
@@ -171,19 +171,19 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
               ))}
             </div>
           ) : (
-            <div className="p-8 sm:p-12 bg-[#FFFAF8] rounded-2xl border border-[#F1C5D1] text-center space-y-4 max-w-xl mx-auto">
-              <div className="w-12 h-12 rounded-full bg-[#FFF1F4] border border-[#F1C5D1] text-[#9F2343] flex items-center justify-center mx-auto">
-                <Heart className="w-6 h-6 fill-[#9F2343]" />
+            <div className="p-8 sm:p-12 bg-white border border-[#EADBDB] text-center space-y-4 max-w-xl mx-auto">
+              <div className="w-12 h-12 bg-[#FAF7F5] border border-[#EADBDB] text-[#3E101D] flex items-center justify-center mx-auto">
+                <Heart className="w-6 h-6 fill-[#3E101D]" />
               </div>
-              <h3 className="text-xl font-serif font-bold text-[#3B2028]">
+              <h3 className="text-xl font-serif text-[#2A0D15]">
                 Handcrafted Studio Hamper
               </h3>
-              <p className="text-xs text-[#79665C] leading-relaxed">
+              <p className="text-xs text-[#7A5A63] leading-relaxed font-light">
                 For this occasion, we handcraft custom hampers based on your budget and personal preferences. Use our Hamper Studio to select your box size and treats.
               </p>
               <button
                 onClick={() => onNavigate(`/custom-hamper?occasion=${encodeURIComponent(collection.name)}`)}
-                className="px-6 py-3 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold transition-colors shadow-xs cursor-pointer inline-flex items-center gap-2"
+                className="px-6 py-3 bg-[#3E101D] hover:bg-[#2A0D15] text-white text-xs uppercase tracking-widest font-semibold transition-colors cursor-pointer inline-flex items-center gap-2"
               >
                 <span>Build Custom {collection.name}</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -194,8 +194,8 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
 
         {/* Related Collections Section */}
         {relatedCollections.length > 0 && (
-          <div className="pt-8 border-t border-[#F1C5D1]">
-            <h3 className="text-xl font-serif font-bold text-[#3B2028] mb-6">
+          <div className="pt-8 border-t border-[#EADBDB]">
+            <h3 className="text-xl font-serif text-[#2A0D15] mb-6">
               You Might Also Like
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
@@ -203,15 +203,15 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
                 <button
                   key={rel.id}
                   onClick={() => onNavigate(`/collections/${rel.slug || rel.id}`)}
-                  className="p-4 bg-[#FFFAF8] hover:bg-[#FFF1F4] rounded-xl border border-[#F1C5D1] hover:border-[#9F2343] text-left transition-all shadow-2xs group cursor-pointer"
+                  className="p-4 bg-white hover:bg-[#FAF7F5] border border-[#EADBDB] hover:border-[#3E101D] text-left transition-all group cursor-pointer"
                 >
-                  <span className="text-[10px] font-semibold text-[#9F2343] uppercase tracking-wider block mb-1">
+                  <span className="text-[10px] font-semibold text-[#3E101D] uppercase tracking-widest block mb-1">
                     {rel.badge}
                   </span>
-                  <h4 className="font-serif font-bold text-base text-[#3B2028] group-hover:text-[#9F2343] transition-colors">
+                  <h4 className="font-serif text-base text-[#2A0D15] group-hover:text-[#3E101D] transition-colors">
                     {rel.name}
                   </h4>
-                  <p className="text-xs text-[#79665C] line-clamp-1 mt-1">
+                  <p className="text-xs text-[#7A5A63] line-clamp-1 mt-1 font-light">
                     {rel.description}
                   </p>
                 </button>

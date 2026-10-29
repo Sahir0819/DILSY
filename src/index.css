@@ -5,30 +5,30 @@
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
 
-    /* DILSY Restored Original Pink & Burgundy Brand Palette */
-    --color-soft-blush: #FCE7ED;
-    --color-light-pink: #FFF1F4;
-    --color-warm-ivory: #FFFAF8;
-    --color-rose-pink: #E88AA4;
-    --color-deep-burgundy: #9F2343;
-    --color-dark-burgundy: #72172F;
-    --color-dark-text: #3B2028;
-    --color-muted-text: #795A63;
-    --color-soft-border: #F1C5D1;
+    /* DILSY Google Stitch Haute Editorial Brand Palette */
+    --color-page-bg: #FAF7F5;
+    --color-surface-ivory: #FFFDFB;
+    --color-surface-blush: #FBF4F2;
+    --color-announcement: #F5ECE7;
+    --color-deep-burgundy: #4A1423;
+    --color-rich-burgundy: #3E101D;
+    --color-dark-wine: #2A0D15;
+    --color-muted-taupe: #7A5A63;
+    --color-fine-border: #EADBDB;
   }
   
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    background-color: #FCE7ED;
-    color: #3B2028;
+    background-color: #FAF7F5;
+    color: #2A0D15;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
   }
 
   ::selection {
-    background-color: #F1C5D1;
-    color: #72172F;
+    background-color: #F5ECE7;
+    color: #3E101D;
   }
 }
 
@@ -42,18 +42,18 @@
 
 /* Subtle elegant custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #FCE7ED;
+  background: #FAF7F5;
 }
 ::-webkit-scrollbar-thumb {
-  background: #F1C5D1;
+  background: #EADBDB;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #9F2343;
+  background: #4A1423;
 }
 
 /* Elegant gentle pulse */

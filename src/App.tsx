@@ -235,11 +235,11 @@ function StorefrontApp() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FCE7ED] text-[#3B2028] flex flex-col font-sans">
+    <div className="min-h-screen bg-[#FAF7F5] text-[#2A0D15] flex flex-col font-sans">
       {/* Toast Feedback */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#9F2343] text-white px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 border border-[#72172F] animate-in fade-in slide-in-from-bottom-2">
-          <Heart className="w-4 h-4 text-white fill-white animate-heart-pulse" />
+        <div className="fixed bottom-6 right-6 z-50 bg-[#3E101D] text-white px-5 py-3.5 shadow-2xl text-xs font-sans tracking-wide uppercase flex items-center gap-2.5 border border-[#EADBDB]/40 animate-in fade-in slide-in-from-bottom-2">
+          <Heart className="w-3.5 h-3.5 text-white fill-white animate-heart-pulse" />
           <span>{toastMessage}</span>
         </div>
       )}
