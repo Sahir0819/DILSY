@@ -13,6 +13,7 @@ interface CartDrawerProps {
   onClearCart: () => void;
   onOpenReviewModal: (title: string, message: string) => void;
   onBrowseProducts: () => void;
+  onNavigateToCartPage?: () => void;
 }
 
 export const CartDrawer: React.FC<CartDrawerProps> = ({
@@ -24,6 +25,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   onClearCart,
   onOpenReviewModal,
   onBrowseProducts,
+  onNavigateToCartPage,
 }) => {
   const { settings, calculateDiscount, recordOrderInquiry } = useStore();
 
@@ -97,187 +99,176 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/60 backdrop-blur-xs flex justify-end">
-      <div className="w-full max-w-lg bg-[#FFFCFD] h-full shadow-2xl flex flex-col justify-between border-l border-[#FFCCD5] animate-in slide-in-from-right duration-300">
-        {/* Drawer Header with Romantic Accent */}
-        <div className="px-6 py-4 bg-gradient-to-r from-[#FFF0F4] via-[#FFEBF0] to-[#FFF5F8] border-b border-[#FFCCD5] flex items-center justify-between">
+      <div className="w-full max-w-lg bg-[#FFFAF8] h-full shadow-2xl flex flex-col justify-between border-l border-[#F1C5D1] animate-in slide-in-from-right duration-300">
+        {/* Drawer Header */}
+        <div className="p-6 border-b border-[#F1C5D1] flex items-center justify-between bg-[#FFF1F4]">
           <div className="flex items-center gap-2">
-            <ShoppingBag className="w-5 h-5 text-[#99223A]" />
-            <h2 className="font-serif font-bold text-xl text-[#2D1B22]">
-              {checkoutStep === 'cart' ? 'Your Shopping Bag' : 'Delivery & Coordination'}
-            </h2>
+            <ShoppingBag className="w-5 h-5 text-[#9F2343]" />
+            <h3 className="font-serif font-bold text-lg text-[#3B2028]">
+              {checkoutStep === 'cart' ? 'Shopping Bag' : 'Delivery & Recipient Details'}
+            </h3>
+            <span className="text-xs bg-[#FFFAF8] text-[#9F2343] px-2 py-0.5 rounded-full font-semibold border border-[#F1C5D1]">
+              {items.reduce((acc, i) => acc + i.quantity, 0)}
+            </span>
           </div>
           <button
             onClick={onClose}
-            aria-label="Close bag drawer"
-            className="p-1 rounded-md text-[#7A1E31] hover:bg-[#FFE5EC] transition-colors cursor-pointer"
+            aria-label="Close cart"
+            className="p-1 rounded-md text-[#9F2343] hover:bg-[#FCE7ED] transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Drawer Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        {/* Drawer Content */}
+        <div className="p-6 overflow-y-auto flex-1 space-y-4">
           {items.length === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center py-16 space-y-4">
-              <div className="w-16 h-16 rounded-full bg-[#FFE5EC] border border-[#FFCCD5] flex items-center justify-center text-[#99223A]">
-                <ShoppingBag className="w-8 h-8 opacity-80" />
+            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-16">
+              <div className="w-16 h-16 rounded-full bg-[#FFF1F4] border border-[#F1C5D1] flex items-center justify-center text-[#9F2343]">
+                <ShoppingBag className="w-8 h-8" />
               </div>
-              <p className="text-sm text-[#4D2D37] font-medium">Your shopping bag is currently empty.</p>
+              <div>
+                <p className="font-serif font-bold text-lg text-[#3B2028]">Your bag is empty</p>
+                <p className="text-xs text-[#79665C] mt-1 max-w-xs">
+                  Discover our official curated hampers or design your own personalized gift box.
+                </p>
+              </div>
               <button
                 onClick={() => {
                   onClose();
                   onBrowseProducts();
                 }}
-                className="px-5 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] text-[#FFF0F3] rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold transition-all shadow-xs cursor-pointer"
               >
-                Explore Curated Hampers
+                Explore Hampers
               </button>
             </div>
           ) : checkoutStep === 'cart' ? (
             <div className="space-y-4">
-              <div className="flex items-center justify-between pb-2 border-b border-[#E8D0D6]">
-                <span className="text-xs font-semibold uppercase tracking-wider text-[#6B424E]">
-                  Hampers ({items.reduce((acc, i) => acc + i.quantity, 0)})
-                </span>
-                <button
-                  type="button"
-                  onClick={onClearCart}
-                  className="text-xs text-[#99223A] hover:underline cursor-pointer"
-                >
-                  Clear Bag
-                </button>
-              </div>
-
-              {items.map((item) => (
-                <div
-                  key={item.id}
-                  className="p-4 rounded-xl bg-white border border-[#E8C2CC] shadow-2xs space-y-3"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-serif font-bold text-base text-[#2D1B22]">
-                          {item.product.name}
-                        </h4>
-                        <span className="text-[10px] font-sans font-semibold text-[#7A1E31] bg-[#FFF0F4] px-1.5 py-0.5 rounded border border-[#FFCCD5]">
-                          {item.product.size}
+              {/* Items List */}
+              <div className="space-y-3">
+                {items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="p-4 bg-[#FFF1F4] rounded-xl border border-[#F1C5D1] flex items-start justify-between gap-3 shadow-2xs"
+                  >
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
+                        <span className="text-[10px] font-bold text-[#9F2343] bg-[#FFFAF8] px-2 py-0.5 rounded-full border border-[#F1C5D1]">
+                          Size: {item.product.size}
                         </span>
+                        {item.customisation.recipientChoice && (
+                          <span className="text-[10px] font-semibold text-[#72172F] bg-[#FFFAF8] px-2 py-0.5 rounded-full border border-[#F1C5D1]">
+                            {item.customisation.recipientChoice}
+                          </span>
+                        )}
                       </div>
-                      <div className="text-xs font-semibold text-[#99223A] mt-0.5 tabular-nums">
-                        ₹{item.product.price.toLocaleString('en-IN')} each
-                      </div>
-                    </div>
+                      <h4 className="font-serif font-bold text-sm text-[#3B2028] truncate">
+                        {item.product.name}
+                      </h4>
+                      <p className="text-xs font-serif font-bold text-[#9F2343] mt-0.5">
+                        ₹{item.product.price.toLocaleString('en-IN')}
+                      </p>
 
-                    <button
-                      type="button"
-                      onClick={() => onRemoveItem(item.id)}
-                      className="text-[#8C6B75] hover:text-[#991B1B] p-1 cursor-pointer"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-
-                  {/* Personalisation details */}
-                  {(item.customisation.recipientName ||
-                    item.customisation.recipientChoice ||
-                    item.customisation.personalNote) && (
-                    <div className="p-2.5 rounded-lg bg-[#FAF0F3] border border-[#FFCCD5] text-[11px] text-[#4D2D37] space-y-0.5">
-                      {item.customisation.recipientChoice && (
-                        <div>• Selection: {item.customisation.recipientChoice}</div>
-                      )}
                       {item.customisation.recipientName && (
-                        <div>• For: {item.customisation.recipientName}</div>
+                        <p className="text-[11px] text-[#3B2028] mt-1 truncate">
+                          <strong>For:</strong> {item.customisation.recipientName}
+                        </p>
                       )}
                       {item.customisation.personalNote && (
-                        <div className="italic line-clamp-2">
-                          • Card: "{item.customisation.personalNote}"
-                        </div>
+                        <p className="text-[10px] text-[#79665C] italic line-clamp-1 mt-0.5">
+                          "{item.customisation.personalNote}"
+                        </p>
                       )}
                     </div>
-                  )}
 
-                  <div className="flex items-center justify-between pt-1">
-                    <div className="flex items-center gap-2 border border-[#E8C2CC] rounded-lg px-2 py-1 bg-[#FAF7F2]">
+                    <div className="flex flex-col items-end gap-2 shrink-0">
                       <button
-                        type="button"
-                        onClick={() => onUpdateQuantity(item.id, -1)}
-                        className="text-[#6B3241] hover:text-[#99223A] p-0.5 cursor-pointer"
+                        onClick={() => onRemoveItem(item.id)}
+                        className="text-[#79665C] hover:text-red-700 p-1 cursor-pointer"
+                        title="Remove"
                       >
-                        <Minus className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
-                      <span className="text-xs font-semibold tabular-nums px-2">
-                        {item.quantity}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => onUpdateQuantity(item.id, 1)}
-                        className="text-[#6B3241] hover:text-[#99223A] p-0.5 cursor-pointer"
-                      >
-                        <Plus className="w-3.5 h-3.5" />
-                      </button>
+
+                      <div className="flex items-center gap-1.5 bg-[#FFFAF8] p-1 rounded-lg border border-[#F1C5D1]">
+                        <button
+                          onClick={() => onUpdateQuantity(item.id, -1)}
+                          className="p-1 text-[#79665C] hover:text-[#9F2343] cursor-pointer"
+                        >
+                          <Minus className="w-3 h-3" />
+                        </button>
+                        <span className="text-xs font-bold text-[#3B2028] px-1 tabular-nums">
+                          {item.quantity}
+                        </span>
+                        <button
+                          onClick={() => onUpdateQuantity(item.id, 1)}
+                          className="p-1 text-[#79665C] hover:text-[#9F2343] cursor-pointer"
+                        >
+                          <Plus className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
-
-                    <span className="font-semibold text-sm text-[#2D1B22] tabular-nums">
-                      ₹{(item.product.price * item.quantity).toLocaleString('en-IN')}
-                    </span>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
+
+              {onNavigateToCartPage && (
+                <button
+                  onClick={() => {
+                    onClose();
+                    onNavigateToCartPage();
+                  }}
+                  className="w-full py-2 text-center text-xs text-[#9F2343] hover:text-[#72172F] font-semibold cursor-pointer"
+                >
+                  View Full Cart Page →
+                </button>
+              )}
             </div>
           ) : (
-            <div className="space-y-4 animate-in fade-in">
-              <button
-                type="button"
-                onClick={() => setCheckoutStep('cart')}
-                className="text-xs text-[#99223A] font-semibold flex items-center gap-1 hover:underline cursor-pointer mb-2"
-              >
-                ← Back to Review Items
-              </button>
-
+            <div className="space-y-4">
               {validationError && (
-                <div className="p-3 bg-[#FFF0F3] border border-[#FFCCD5] rounded-xl text-xs text-[#801B30] flex items-center gap-2">
+                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-center gap-2">
                   <AlertCircle className="w-4 h-4 shrink-0" />
                   <span>{validationError}</span>
                 </div>
               )}
 
-              <div className="space-y-3 text-xs">
+              <div className="space-y-3">
                 <div>
-                  <label className="block font-semibold text-[#3D141C] mb-1">
+                  <label className="block text-xs font-semibold text-[#3B2028] mb-1">
                     Your Name *
                   </label>
                   <input
                     type="text"
-                    required
                     value={delivery.customerName}
                     onChange={(e) => setDelivery({ ...delivery, customerName: e.target.value })}
                     placeholder="Enter your name"
-                    className="w-full px-3 py-2 bg-white border border-[#E8C2CC] rounded-lg text-xs text-[#2D1B22] outline-none focus:ring-1 focus:ring-[#99223A]"
+                    className="w-full px-3 py-2 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-xs text-[#3B2028] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#3D141C] mb-1">
-                    Your Contact Phone (WhatsApp) *
+                  <label className="block text-xs font-semibold text-[#3B2028] mb-1">
+                    WhatsApp Phone Number *
                   </label>
                   <input
                     type="tel"
-                    required
                     value={delivery.customerPhone}
                     onChange={(e) => setDelivery({ ...delivery, customerPhone: e.target.value })}
-                    placeholder="e.g. 9876543210"
-                    className="w-full px-3 py-2 bg-white border border-[#E8C2CC] rounded-lg text-xs text-[#2D1B22] outline-none focus:ring-1 focus:ring-[#99223A]"
+                    placeholder="+91 98765 43210"
+                    className="w-full px-3 py-2 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-xs text-[#3B2028] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#3D141C] mb-1">
-                    Delivery Area
+                  <label className="block text-xs font-semibold text-[#3B2028] mb-1">
+                    Delivery Area (CU & Mohali)
                   </label>
                   <select
                     value={delivery.deliveryArea}
                     onChange={(e) => setDelivery({ ...delivery, deliveryArea: e.target.value })}
-                    className="w-full px-3 py-2 bg-white border border-[#E8C2CC] rounded-lg text-xs text-[#2D1B22] outline-none"
+                    className="w-full px-3 py-2 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-xs text-[#3B2028] outline-none"
                   >
                     {settings.deliveryAreas.map((area) => (
                       <option key={area} value={area}>
@@ -288,59 +279,27 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-[#3D141C] mb-1">
-                    Specific Hostel / PG / Flat / Landmark
+                  <label className="block text-xs font-semibold text-[#3B2028] mb-1">
+                    Specific Landmark / Hostel / PG
                   </label>
                   <input
                     type="text"
                     value={delivery.specificLandmark}
                     onChange={(e) => setDelivery({ ...delivery, specificLandmark: e.target.value })}
-                    placeholder="e.g. NC4 Hostel, Gate 2, or Sunny Enclave Flat"
-                    className="w-full px-3 py-2 bg-white border border-[#E8C2CC] rounded-lg text-xs text-[#2D1B22] outline-none"
+                    placeholder="e.g. CU South Gate, Sunny Enclave PG 2"
+                    className="w-full px-3 py-2 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-xs text-[#3B2028] outline-none"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block font-semibold text-[#3D141C] mb-1">
-                      Preferred Date
-                    </label>
-                    <input
-                      type="date"
-                      value={delivery.deliveryDate}
-                      onChange={(e) => setDelivery({ ...delivery, deliveryDate: e.target.value })}
-                      className="w-full px-3 py-2 bg-white border border-[#E8C2CC] rounded-lg text-xs text-[#2D1B22] outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block font-semibold text-[#3D141C] mb-1">
-                      Preferred Time Window
-                    </label>
-                    <select
-                      value={delivery.timeWindow}
-                      onChange={(e) => setDelivery({ ...delivery, timeWindow: e.target.value })}
-                      className="w-full px-3 py-2 bg-white border border-[#E8C2CC] rounded-lg text-xs text-[#2D1B22] outline-none"
-                    >
-                      {settings.timeWindows.map((win) => (
-                        <option key={win} value={win}>
-                          {win}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
                 <div>
-                  <label className="block font-semibold text-[#3D141C] mb-1">
-                    Additional Notes for Handover
+                  <label className="block text-xs font-semibold text-[#3B2028] mb-1">
+                    Preferred Delivery Date
                   </label>
                   <input
-                    type="text"
-                    value={delivery.additionalNotes || ''}
-                    onChange={(e) => setDelivery({ ...delivery, additionalNotes: e.target.value })}
-                    placeholder="e.g. Please call before arriving, keep it a surprise"
-                    className="w-full px-3 py-2 bg-white border border-[#E8C2CC] rounded-lg text-xs text-[#2D1B22] outline-none"
+                    type="date"
+                    value={delivery.deliveryDate}
+                    onChange={(e) => setDelivery({ ...delivery, deliveryDate: e.target.value })}
+                    className="w-full px-3 py-2 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-xs text-[#3B2028] outline-none"
                   />
                 </div>
               </div>
@@ -348,65 +307,54 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           )}
         </div>
 
-        {/* Drawer Footer with Calculations & Exact Delivery Policy */}
+        {/* Drawer Footer */}
         {items.length > 0 && (
-          <div className="p-6 bg-gradient-to-t from-[#FFF0F4] to-[#FFF8FA] border-t border-[#FFCCD5] space-y-4">
-            <div className="space-y-1.5 text-xs">
-              <div className="flex items-center justify-between text-[#52333D]">
-                <span>Items Subtotal</span>
-                <span className="font-semibold text-sm text-[#2D1B22] tabular-nums">
+          <div className="p-6 border-t border-[#F1C5D1] bg-[#FFF1F4] space-y-4">
+            <div className="space-y-1.5 text-xs text-[#79665C]">
+              <div className="flex justify-between">
+                <span>Subtotal:</span>
+                <span className="font-semibold text-[#3B2028] tabular-nums">
                   ₹{subtotal.toLocaleString('en-IN')}
                 </span>
               </div>
-
-              {discountAmount > 0 && appliedOffer && (
-                <div className="flex items-center justify-between text-[#2D6A4F] font-semibold">
-                  <span className="flex items-center gap-1">
-                    <Tag className="w-3 h-3" />
-                    <span>Promo ({appliedOffer.code})</span>
-                  </span>
-                  <span className="tabular-nums">-₹{discountAmount.toLocaleString('en-IN')}</span>
+              {appliedOffer && (
+                <div className="flex justify-between text-emerald-800">
+                  <span>Discount ({appliedOffer.code}):</span>
+                  <span className="font-semibold tabular-nums">-₹{discountAmount}</span>
                 </div>
               )}
-
-              <div className="flex items-center justify-between pt-1 border-t border-[#FFCCD5]">
-                <span className="font-serif font-bold text-sm text-[#2D1B22]">Order Total</span>
-                <span className="font-serif font-bold text-base text-[#99223A] tabular-nums">
+              <div className="flex justify-between items-baseline pt-2 border-t border-[#F1C5D1] text-sm">
+                <span className="font-bold text-[#3B2028]">Estimated Total:</span>
+                <span className="font-serif font-bold text-2xl text-[#9F2343] tabular-nums">
                   ₹{finalAmount.toLocaleString('en-IN')}
                 </span>
               </div>
-
-              <div className="flex items-center justify-between text-[#6B424E] text-[11px]">
-                <span>Delivery Charges</span>
-                <span>Calculated via WhatsApp based on exact PG/Campus spot</span>
-              </div>
             </div>
 
-            {/* Exact Delivery Policy Quote */}
-            <div className="p-3 bg-white border border-[#FFCCD5] rounded-xl text-[10px] text-[#52333D] leading-tight shadow-2xs">
-              <span className="font-semibold text-[#99223A] block mb-0.5">Delivery Policy:</span>
-              "{EXACT_DELIVERY_POLICY}"
-            </div>
-
-            {/* Action Buttons */}
             {checkoutStep === 'cart' ? (
               <button
-                type="button"
                 onClick={handleProceedToDelivery}
-                className="w-full py-3.5 px-4 bg-gradient-to-r from-[#99223A] via-[#A82841] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-md shadow-[#99223A]/25 cursor-pointer"
+                className="w-full py-3.5 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
               >
-                <span>Continue to Delivery & Details</span>
+                <span>Proceed to WhatsApp Checkout</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             ) : (
-              <button
-                type="button"
-                onClick={handleCheckoutWhatsApp}
-                className="w-full py-3.5 px-4 bg-[#25D366] hover:bg-[#20BD5A] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer"
-              >
-                <MessageCircle className="w-4 h-4" />
-                <span>Review & Order on WhatsApp (+91 {settings.whatsappPhone})</span>
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={handleCheckoutWhatsApp}
+                  className="w-full py-3.5 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer"
+                >
+                  <MessageCircle className="w-4 h-4 text-white" />
+                  <span>Review & Send WhatsApp Order</span>
+                </button>
+                <button
+                  onClick={() => setCheckoutStep('cart')}
+                  className="w-full py-2 text-center text-xs text-[#79665C] hover:text-[#3B2028] cursor-pointer"
+                >
+                  ← Back to Bag Items
+                </button>
+              </div>
             )}
           </div>
         )}

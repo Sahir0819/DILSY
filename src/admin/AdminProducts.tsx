@@ -52,7 +52,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
       themeIds: ['valentine-box', 'anniversary'],
       idealFor: 'Girlfriend or boyfriend surprises, anniversaries, and sweet milestones.',
       packaging: 'Thoughtfully styled gift presentation with ribbon and personal touches.',
-      accentColor: '#C73858',
+      accentColor: '#6D1F32',
       illustrationType: 'loved-box',
       stockStatus: 'available',
       allowRecipientChoice: true,
@@ -133,10 +133,10 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in">
       {/* Top action header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-[#E8D0D6]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFF9F2] p-5 rounded-2xl border border-[#D8BFAF]">
         <div>
-          <h2 className="text-xl font-serif font-bold text-[#2D1B22]">Hamper Catalog & Official Pricing</h2>
-          <p className="text-xs text-[#7A4E5A]">
+          <h2 className="text-xl font-serif font-bold text-[#2D201D]">Hamper Catalog & Official Pricing</h2>
+          <p className="text-xs text-[#79665C]">
             Manage hamper base rates (Small ₹799, Loved Box ₹969, Large ₹1,199), themes, descriptions, and imagery.
           </p>
         </div>
@@ -145,7 +145,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
           <select
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
-            className="text-xs font-medium px-3 py-2 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-[#2D1B22] focus:outline-none focus:ring-2 focus:ring-[#99223A]"
+            className="text-xs font-medium px-3 py-2 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-[#2D201D] focus:outline-none focus:ring-2 focus:ring-[#6D1F32]"
           >
             <option value="all">All Audiences</option>
             <option value="for-him">For Him</option>
@@ -155,7 +155,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
 
           <button
             onClick={handleOpenAdd}
-            className="px-4 py-2 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-white rounded-xl text-xs font-semibold tracking-wide shadow-xs flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 bg-[#6D1F32] hover:bg-[#4A1423] text-white rounded-xl text-xs font-semibold tracking-wide shadow-xs flex items-center gap-1.5 cursor-pointer transition-colors"
           >
             <Plus className="w-4 h-4" />
             <span>Create New Hamper</span>
@@ -164,11 +164,11 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
       </div>
 
       {/* Products Table */}
-      <div className="bg-white rounded-2xl border border-[#E8D0D6] shadow-xs overflow-hidden">
+      <div className="bg-[#FFF9F2] rounded-2xl border border-[#D8BFAF] shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
-              <tr className="bg-[#FAF7F2] border-b border-[#E8D0D6] text-[#7A4E5A] font-semibold uppercase tracking-wider">
+              <tr className="bg-[#F3E9DC] border-b border-[#D8BFAF] text-[#79665C] font-semibold uppercase tracking-wider">
                 <th className="py-3.5 pl-4">Hamper</th>
                 <th className="py-3.5">Size</th>
                 <th className="py-3.5">Base Price</th>
@@ -178,12 +178,12 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                 <th className="py-3.5 pr-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#F2E4E8]">
+            <tbody className="divide-y divide-[#D8BFAF]/40">
               {filtered.map((product) => (
-                <tr key={product.id} className="hover:bg-[#FCF9F7] transition-colors">
+                <tr key={product.id} className="hover:bg-[#F3E9DC]/30 transition-colors">
                   <td className="py-4 pl-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-xl bg-[#FAF0F3] border border-[#E8C2CC] overflow-hidden flex items-center justify-center shrink-0">
+                      <div className="w-12 h-12 rounded-xl bg-[#F3E9DC] border border-[#D8BFAF] overflow-hidden flex items-center justify-center shrink-0">
                         {product.customImage ? (
                           <img
                             src={product.customImage}
@@ -198,31 +198,31 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                         )}
                       </div>
                       <div>
-                        <div className="font-serif font-bold text-sm text-[#2D1B22] flex items-center gap-1.5">
+                        <div className="font-serif font-bold text-sm text-[#2D201D] flex items-center gap-1.5">
                           <span>{product.name}</span>
                           {product.isFeatured && (
-                            <span className="text-[10px] font-sans font-semibold text-[#99223A] bg-[#FFEBF0] px-1.5 py-0.5 rounded-full border border-[#FFCCD5]">
+                            <span className="text-[10px] font-sans font-semibold text-[#6D1F32] bg-[#F3E9DC] px-1.5 py-0.5 rounded-full border border-[#D8BFAF]">
                               Featured
                             </span>
                           )}
                         </div>
-                        <p className="text-[11px] text-[#7A4E5A] line-clamp-1 max-w-[240px]">
+                        <p className="text-[11px] text-[#79665C] line-clamp-1 max-w-[240px]">
                           {product.tagline}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="py-4">
-                    <span className="font-medium text-[#4D2D37] bg-[#FAF0F3] px-2 py-0.5 rounded-md border border-[#E8C2CC]">
+                    <span className="font-medium text-[#2D201D] bg-[#F3E9DC] px-2 py-0.5 rounded-md border border-[#D8BFAF]">
                       {product.size}
                     </span>
                   </td>
                   <td className="py-4">
-                    <div className="font-semibold text-sm text-[#2D1B22] tabular-nums">
+                    <div className="font-semibold text-sm text-[#6D1F32] tabular-nums">
                       ₹{product.price.toLocaleString('en-IN')}
                     </div>
                     {product.originalPrice && (
-                      <div className="text-[10px] text-[#8C6B75] line-through">
+                      <div className="text-[10px] text-[#79665C] line-through">
                         ₹{product.originalPrice.toLocaleString('en-IN')}
                       </div>
                     )}
@@ -248,24 +248,24 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                     </select>
                   </td>
                   <td className="py-4 max-w-[180px]">
-                    <div className="text-[11px] text-[#6B424E] truncate">
+                    <div className="text-[11px] text-[#79665C] truncate">
                       {product.themeIds?.join(', ') || 'All Occasions'}
                     </div>
                   </td>
                   <td className="py-4">
                     {product.badge ? (
-                      <span className="text-[10px] font-semibold text-[#801B30] bg-[#FFE5EC] px-2 py-0.5 rounded-full border border-[#FFCCD5]">
+                      <span className="text-[10px] font-semibold text-[#6D1F32] bg-[#F3E9DC] px-2 py-0.5 rounded-full border border-[#D8BFAF]">
                         {product.badge}
                       </span>
                     ) : (
-                      <span className="text-[11px] text-[#A07B86]">—</span>
+                      <span className="text-[11px] text-[#79665C]">—</span>
                     )}
                   </td>
                   <td className="py-4 pr-4 text-right">
                     <div className="flex items-center justify-end gap-1.5">
                       <button
                         onClick={() => handleOpenEdit(product)}
-                        className="p-1.5 text-[#6B3241] hover:text-[#99223A] hover:bg-[#FAF0F3] rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 text-[#6D1F32] hover:text-[#4A1423] hover:bg-[#F3E9DC] rounded-lg transition-colors cursor-pointer"
                         title="Edit Hamper"
                       >
                         <Edit2 className="w-3.5 h-3.5" />
@@ -276,7 +276,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                             onDeleteProduct(product.id);
                           }
                         }}
-                        className="p-1.5 text-[#A07B86] hover:text-[#991B1B] hover:bg-[#FEE2E2] rounded-lg transition-colors cursor-pointer"
+                        className="p-1.5 text-[#79665C] hover:text-[#991B1B] hover:bg-[#FEE2E2] rounded-lg transition-colors cursor-pointer"
                         title="Delete Hamper"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -292,26 +292,26 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
 
       {/* Add / Edit Product Modal */}
       {isModalOpen && editingProduct && (
-        <div className="fixed inset-0 z-50 bg-[#2D1B22]/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-3xl w-full border border-[#E8D0D6] shadow-2xl p-6 sm:p-8 my-8 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-[#2D201D]/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-[#FFF9F2] rounded-3xl max-w-3xl w-full border border-[#D8BFAF] shadow-2xl p-6 sm:p-8 my-8 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full text-[#7A4E5A] hover:bg-[#FAF0F3] transition-colors cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-full text-[#79665C] hover:bg-[#F3E9DC] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="mb-6">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#99223A] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#6D1F32] bg-[#F3E9DC] px-3 py-1 rounded-full border border-[#D8BFAF]">
                 {editingProduct.id ? 'Edit Hamper Details' : 'New Hamper Curation'}
               </span>
-              <h3 className="text-2xl font-serif font-bold text-[#2D1B22] mt-2">
+              <h3 className="text-2xl font-serif font-bold text-[#2D201D] mt-2">
                 {editingProduct.id ? `Editing ${editingProduct.name}` : 'Create New Gift Hamper'}
               </h3>
             </div>
 
             {errorMsg && (
-              <div className="mb-5 p-3 rounded-xl bg-[#FFF0F3] border border-[#FFCCD5] text-xs font-medium text-[#801B30]">
+              <div className="mb-5 p-3 rounded-xl bg-[#F3E9DC] border border-[#D8BFAF] text-xs font-medium text-[#4A1423]">
                 {errorMsg}
               </div>
             )}
@@ -320,7 +320,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Hamper Name */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Hamper Name *
                   </label>
                   <input
@@ -331,13 +331,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                       setEditingProduct({ ...editingProduct, name: e.target.value })
                     }
                     placeholder="e.g. Loved Box (Medium) or Sweet Surprise"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                 </div>
 
                 {/* Box Size */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Official Box Size *
                   </label>
                   <select
@@ -348,7 +348,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                         size: e.target.value as BoxSize,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   >
                     <option value="Small">Small Box</option>
                     <option value="Medium">Medium Box (Loved Box)</option>
@@ -360,7 +360,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {/* Price in INR */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Selling Price (₹) *
                   </label>
                   <input
@@ -375,15 +375,15 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                       })
                     }
                     placeholder="e.g. 969"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
-                  <p className="text-[10px] text-[#8C6B75] mt-1">Official base rates: Small ₹799, Medium ₹969, Large ₹1,199</p>
+                  <p className="text-[10px] text-[#79665C] mt-1">Official base rates: Small ₹799, Medium ₹969, Large ₹1,199</p>
                 </div>
 
                 {/* Original Price */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
-                    Original Price (₹) <span className="font-normal text-[#8C6B75]">(optional)</span>
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
+                    Original Price (₹) <span className="font-normal text-[#79665C]">(optional)</span>
                   </label>
                   <input
                     type="number"
@@ -396,13 +396,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                       })
                     }
                     placeholder="e.g. 1199"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                 </div>
 
                 {/* Stock Status */}
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Stock Availability *
                   </label>
                   <select
@@ -413,7 +413,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                         stockStatus: e.target.value as StockStatus,
                       })
                     }
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   >
                     <option value="available">Available (In Stock)</option>
                     <option value="out_of_stock">Out of Stock</option>
@@ -425,7 +425,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
 
               {/* Tagline */}
               <div>
-                <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                   Tagline (Catchy 1-liner)
                 </label>
                 <input
@@ -435,13 +435,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                     setEditingProduct({ ...editingProduct, tagline: e.target.value })
                   }
                   placeholder="e.g. A little box full of love, thoughtful surprises, and personal touches."
-                  className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                 />
               </div>
 
               {/* Description (Realistic, Honest Copy) */}
               <div>
-                <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                   Hamper Description (Honest, experience-focused)
                 </label>
                 <textarea
@@ -451,15 +451,15 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                     setEditingProduct({ ...editingProduct, description: e.target.value })
                   }
                   placeholder="Write an appealing description without claiming unconfirmed contents..."
-                  className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                 />
               </div>
 
               {/* Badge & Positioning */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
-                    Highlight Badge <span className="font-normal text-[#8C6B75]">(e.g. ❤️ RECOMMENDED)</span>
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
+                    Highlight Badge <span className="font-normal text-[#79665C]">(e.g. ❤️ RECOMMENDED)</span>
                   </label>
                   <input
                     type="text"
@@ -468,12 +468,12 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                       setEditingProduct({ ...editingProduct, badge: e.target.value })
                     }
                     placeholder="e.g. ❤️ RECOMMENDED or BESTSELLER"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Packaging Note
                   </label>
                   <input
@@ -483,18 +483,18 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                       setEditingProduct({ ...editingProduct, packaging: e.target.value })
                     }
                     placeholder="e.g. Thoughtfully styled gift presentation with ribbon and personal touches."
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Image Uploader & Artwork Selector */}
-              <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8D0D6] space-y-3">
-                <label className="block text-xs font-semibold text-[#4D2D37]">
+              <div className="p-4 rounded-2xl bg-[#F3E9DC] border border-[#D8BFAF] space-y-3">
+                <label className="block text-xs font-semibold text-[#2D201D]">
                   Hamper Image / Artwork
                 </label>
                 <div className="flex flex-col sm:flex-row items-center gap-4">
-                  <div className="w-24 h-24 rounded-2xl bg-white border border-[#E8C2CC] overflow-hidden flex items-center justify-center shrink-0 shadow-2xs">
+                  <div className="w-24 h-24 rounded-2xl bg-[#FFF9F2] border border-[#D8BFAF] overflow-hidden flex items-center justify-center shrink-0 shadow-2xs">
                     {editingProduct.customImage ? (
                       <img
                         src={editingProduct.customImage}
@@ -511,8 +511,8 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
 
                   <div className="flex-1 space-y-2 w-full">
                     <div className="flex flex-wrap items-center gap-2">
-                      <label className="px-3.5 py-2 bg-white border border-[#E2CBD2] hover:bg-[#FAF0F3] text-[#6B3241] rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 shadow-2xs">
-                        <UploadCloud className="w-3.5 h-3.5 text-[#99223A]" />
+                      <label className="px-3.5 py-2 bg-[#FFF9F2] border border-[#D8BFAF] hover:bg-[#F3E9DC] text-[#6D1F32] rounded-xl text-xs font-semibold cursor-pointer flex items-center gap-1.5 shadow-2xs transition-colors">
+                        <UploadCloud className="w-3.5 h-3.5 text-[#6D1F32]" />
                         <span>{isUploading ? 'Uploading...' : 'Upload Real Image'}</span>
                         <input
                           type="file"
@@ -526,13 +526,13 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                         <button
                           type="button"
                           onClick={() => setEditingProduct({ ...editingProduct, customImage: undefined })}
-                          className="text-xs text-[#A07B86] hover:text-[#991B1B] underline"
+                          className="text-xs text-[#79665C] hover:text-[#991B1B] underline cursor-pointer"
                         >
                           Reset to illustration
                         </button>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#8C6B75]">
+                    <p className="text-[11px] text-[#79665C]">
                       Upload photos from your studio or phone. Supported: JPG, PNG, WebP up to 10MB.
                     </p>
                   </div>
@@ -541,7 +541,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
 
               {/* Theme Occasions Link */}
               <div>
-                <label className="block text-xs font-semibold text-[#4D2D37] mb-2">
+                <label className="block text-xs font-semibold text-[#2D201D] mb-2">
                   Occasions & Themes
                 </label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -552,8 +552,8 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                         key={theme.id}
                         className={`flex items-center gap-2 p-2 rounded-xl border text-xs cursor-pointer transition-colors ${
                           isChecked
-                            ? 'bg-[#FFEBF0] border-[#FFB3C6] text-[#801B30] font-medium'
-                            : 'bg-white border-[#E8D0D6] text-[#6B424E]'
+                            ? 'bg-[#6D1F32] border-[#6D1F32] text-[#FFF9F2] font-medium'
+                            : 'bg-[#FFF9F2] border-[#D8BFAF] text-[#2D201D]'
                         }`}
                       >
                         <input
@@ -566,7 +566,7 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                               : current.filter((id) => id !== theme.id);
                             setEditingProduct({ ...editingProduct, themeIds: next });
                           }}
-                          className="rounded text-[#99223A] focus:ring-[#99223A]"
+                          className="rounded text-[#6D1F32] focus:ring-[#6D1F32]"
                         />
                         <span className="truncate">{theme.name}</span>
                       </label>
@@ -577,19 +577,19 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
 
               {/* Toggles */}
               <div className="flex flex-wrap items-center gap-6 pt-2">
-                <label className="flex items-center gap-2 text-xs font-semibold text-[#4D2D37] cursor-pointer">
+                <label className="flex items-center gap-2 text-xs font-semibold text-[#2D201D] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={editingProduct.isFeatured || false}
                     onChange={(e) =>
                       setEditingProduct({ ...editingProduct, isFeatured: e.target.checked })
                     }
-                    className="rounded text-[#99223A] focus:ring-[#99223A]"
+                    className="rounded text-[#6D1F32] focus:ring-[#6D1F32]"
                   />
                   <span>Mark as Featured in Storefront</span>
                 </label>
 
-                <label className="flex items-center gap-2 text-xs font-semibold text-[#4D2D37] cursor-pointer">
+                <label className="flex items-center gap-2 text-xs font-semibold text-[#2D201D] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={editingProduct.allowRecipientChoice || false}
@@ -599,25 +599,25 @@ export const AdminProducts: React.FC<AdminProductsProps> = ({
                         allowRecipientChoice: e.target.checked,
                       })
                     }
-                    className="rounded text-[#99223A] focus:ring-[#99223A]"
+                    className="rounded text-[#6D1F32] focus:ring-[#6D1F32]"
                   />
                   <span>Enable For Him / For Her Recipient Choice</span>
                 </label>
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#F2E4E8]">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#D8BFAF]/50">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl border border-[#E2CBD2] text-xs font-medium text-[#6B424E] hover:bg-[#FAF7F2] transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-[#D8BFAF] text-xs font-medium text-[#79665C] hover:bg-[#F3E9DC] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving || isUploading}
-                  className="px-6 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-white rounded-xl text-xs font-semibold shadow-xs transition-all disabled:opacity-60 cursor-pointer"
+                  className="px-6 py-2.5 bg-[#6D1F32] hover:bg-[#4A1423] text-white rounded-xl text-xs font-semibold shadow-xs transition-colors disabled:opacity-60 cursor-pointer"
                 >
                   {isSaving ? 'Saving...' : 'Save Hamper'}
                 </button>

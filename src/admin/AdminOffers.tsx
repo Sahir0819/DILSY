@@ -103,17 +103,17 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in">
       {/* Top action header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-[#E8D0D6]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFF9F2] p-5 rounded-2xl border border-[#D8BFAF]">
         <div>
-          <h2 className="text-xl font-serif font-bold text-[#2D1B22]">Promotional Offers & Discounts</h2>
-          <p className="text-xs text-[#7A4E5A]">
+          <h2 className="text-xl font-serif font-bold text-[#2D201D]">Promotional Offers & Discounts</h2>
+          <p className="text-xs text-[#79665C]">
             Configure promotional percentage or flat discounts. Active offers apply automatically to carts and WhatsApp messages.
           </p>
         </div>
 
         <button
           onClick={handleOpenAdd}
-          className="px-4 py-2 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-white rounded-xl text-xs font-semibold tracking-wide shadow-xs flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+          className="px-4 py-2 bg-[#6D1F32] hover:bg-[#4A1423] text-white rounded-xl text-xs font-semibold tracking-wide shadow-xs flex items-center gap-1.5 cursor-pointer self-start sm:self-auto transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>Create New Offer</span>
@@ -130,8 +130,8 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
               key={offer.id}
               className={`p-6 rounded-2xl border transition-all ${
                 offer.isActive
-                  ? 'bg-white border-[#E8D0D6] shadow-xs'
-                  : 'bg-[#FAF7F2] border-[#E8D0D6]/60 opacity-75'
+                  ? 'bg-[#FFF9F2] border-[#D8BFAF] shadow-xs'
+                  : 'bg-[#F3E9DC]/60 border-[#D8BFAF]/60 opacity-75'
               }`}
             >
               <div className="flex items-start justify-between gap-3 mb-3">
@@ -139,7 +139,7 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                   <div
                     className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-xs ${
                       offer.discountType === 'percent'
-                        ? 'bg-[#FFE5EC] text-[#99223A]'
+                        ? 'bg-[#F3E9DC] text-[#6D1F32] border border-[#D8BFAF]'
                         : 'bg-[#EBF7EE] text-[#1B4332]'
                     }`}
                   >
@@ -150,14 +150,14 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                     )}
                   </div>
                   <div>
-                    <h3 className="font-serif font-bold text-base text-[#2D1B22]">
+                    <h3 className="font-serif font-bold text-base text-[#2D201D]">
                       {offer.title}
                     </h3>
                     <div className="flex items-center gap-2 mt-0.5">
-                      <span className="font-mono text-xs font-bold text-[#99223A] bg-[#FFEBF0] px-2 py-0.5 rounded-md border border-[#FFCCD5]">
+                      <span className="font-mono text-xs font-bold text-[#6D1F32] bg-[#F3E9DC] px-2 py-0.5 rounded-md border border-[#D8BFAF]">
                         {offer.code}
                       </span>
-                      <span className="text-[11px] font-semibold text-[#4D2D37]">
+                      <span className="text-[11px] font-semibold text-[#2D201D]">
                         {offer.discountType === 'percent'
                           ? `${offer.discountValue}% OFF`
                           : `₹${offer.discountValue} FLAT OFF`}
@@ -169,7 +169,7 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => handleOpenEdit(offer)}
-                    className="p-1.5 text-[#6B3241] hover:text-[#99223A] hover:bg-[#FAF0F3] rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-[#6D1F32] hover:text-[#4A1423] hover:bg-[#F3E9DC] rounded-lg transition-colors cursor-pointer"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
                   </button>
@@ -179,25 +179,25 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                         onDeleteOffer(offer.id);
                       }
                     }}
-                    className="p-1.5 text-[#A07B86] hover:text-[#991B1B] hover:bg-[#FEE2E2] rounded-lg transition-colors cursor-pointer"
+                    className="p-1.5 text-[#79665C] hover:text-[#991B1B] hover:bg-[#FEE2E2] rounded-lg transition-colors cursor-pointer"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
-              <p className="text-xs text-[#6B424E] mb-4">{offer.description}</p>
+              <p className="text-xs text-[#79665C] mb-4">{offer.description}</p>
 
               {/* Status & Min Order */}
-              <div className="flex flex-wrap items-center justify-between text-xs py-3 border-t border-[#F2E4E8] text-[#7A4E5A]">
+              <div className="flex flex-wrap items-center justify-between text-xs py-3 border-t border-[#D8BFAF]/40 text-[#79665C]">
                 <div>
                   Min Order:{' '}
-                  <strong className="text-[#2D1B22]">₹{offer.minOrderAmount}</strong>
+                  <strong className="text-[#2D201D]">₹{offer.minOrderAmount}</strong>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <span
                     className={`w-2 h-2 rounded-full ${
-                      offer.isActive ? 'bg-[#2D6A4F]' : 'bg-[#A07B86]'
+                      offer.isActive ? 'bg-[#2D6A4F]' : 'bg-[#79665C]'
                     }`}
                   />
                   <span className="font-medium">
@@ -207,14 +207,14 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
               </div>
 
               {/* Live Preview Bar */}
-              <div className="mt-3 p-3 rounded-xl bg-[#FAF7F2] border border-[#E8D0D6] flex items-center justify-between text-xs">
-                <span className="text-[#6B424E]">
+              <div className="mt-3 p-3 rounded-xl bg-[#F3E9DC] border border-[#D8BFAF] flex items-center justify-between text-xs">
+                <span className="text-[#79665C]">
                   Sample order (₹{testAmount}):
                 </span>
-                <span className="font-semibold text-[#2D1B22] tabular-nums">
+                <span className="font-semibold text-[#2D201D] tabular-nums">
                   {test.discount > 0 ? (
                     <>
-                      <span className="line-through text-[#8C6B75] mr-1.5">
+                      <span className="line-through text-[#79665C] mr-1.5">
                         ₹{testAmount}
                       </span>
                       <span className="text-[#2D6A4F]">₹{test.final}</span>
@@ -234,26 +234,26 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
 
       {/* Add / Edit Offer Modal */}
       {isModalOpen && editingOffer && (
-        <div className="fixed inset-0 z-50 bg-[#2D1B22]/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-xl w-full border border-[#E8D0D6] shadow-2xl p-6 sm:p-8 my-8 relative animate-in zoom-in-95">
+        <div className="fixed inset-0 z-50 bg-[#2D201D]/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-[#FFF9F2] rounded-3xl max-w-xl w-full border border-[#D8BFAF] shadow-2xl p-6 sm:p-8 my-8 relative animate-in zoom-in-95">
             <button
               onClick={() => setIsModalOpen(false)}
-              className="absolute top-6 right-6 p-2 rounded-full text-[#7A4E5A] hover:bg-[#FAF0F3] transition-colors cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-full text-[#79665C] hover:bg-[#F3E9DC] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="mb-6">
-              <span className="text-xs font-semibold uppercase tracking-wider text-[#99223A] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5]">
+              <span className="text-xs font-semibold uppercase tracking-wider text-[#6D1F32] bg-[#F3E9DC] px-3 py-1 rounded-full border border-[#D8BFAF]">
                 {editingOffer.id ? 'Edit Offer' : 'New Promotional Offer'}
               </span>
-              <h3 className="text-2xl font-serif font-bold text-[#2D1B22] mt-2">
+              <h3 className="text-2xl font-serif font-bold text-[#2D201D] mt-2">
                 {editingOffer.id ? `Editing ${editingOffer.title}` : 'Create Promotion'}
               </h3>
             </div>
 
             {errorMsg && (
-              <div className="mb-5 p-3 rounded-xl bg-[#FFF0F3] border border-[#FFCCD5] text-xs font-medium text-[#801B30]">
+              <div className="mb-5 p-3 rounded-xl bg-[#F3E9DC] border border-[#D8BFAF] text-xs font-medium text-[#4A1423]">
                 {errorMsg}
               </div>
             )}
@@ -261,7 +261,7 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Title */}
               <div>
-                <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                   Offer Title *
                 </label>
                 <input
@@ -272,13 +272,13 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                     setEditingOffer({ ...editingOffer, title: e.target.value })
                   }
                   placeholder="e.g. First Gift Flat ₹50 Off"
-                  className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                 />
               </div>
 
               {/* Code */}
               <div>
-                <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                   Coupon Code (uppercase) *
                 </label>
                 <input
@@ -292,14 +292,14 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                     })
                   }
                   placeholder="e.g. LOVE50 or DILSY10"
-                  className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs font-mono font-bold text-[#99223A] focus:ring-2 focus:ring-[#99223A] focus:outline-none uppercase"
+                  className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs font-mono font-bold text-[#6D1F32] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none uppercase"
                 />
               </div>
 
               {/* Discount Type and Value */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Discount Type *
                   </label>
                   <select
@@ -310,7 +310,7 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                         discountType: e.target.value as 'percent' | 'flat',
                       })
                     }
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   >
                     <option value="flat">Flat Amount (₹)</option>
                     <option value="percent">Percentage (%)</option>
@@ -318,7 +318,7 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Discount Value *
                   </label>
                   <input
@@ -333,7 +333,7 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                       })
                     }
                     placeholder={editingOffer.discountType === 'percent' ? '10 (%)' : '50 (₹)'}
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                 </div>
               </div>
@@ -341,7 +341,7 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
               {/* Min Order & Badge */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Minimum Order Amount (₹)
                   </label>
                   <input
@@ -355,12 +355,12 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                       })
                     }
                     placeholder="e.g. 799"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                  <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                     Badge Label
                   </label>
                   <input
@@ -370,14 +370,14 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                       setEditingOffer({ ...editingOffer, badgeText: e.target.value })
                     }
                     placeholder="e.g. ₹50 OFF on ₹799+"
-                    className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                 </div>
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+                <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
                   Offer Description
                 </label>
                 <input
@@ -387,38 +387,38 @@ export const AdminOffers: React.FC<AdminOffersProps> = ({
                     setEditingOffer({ ...editingOffer, description: e.target.value })
                   }
                   placeholder="e.g. Get flat ₹50 off on orders above ₹799 when ordered with DILSY."
-                  className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                  className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                 />
               </div>
 
               {/* Active Toggle */}
               <div className="pt-2">
-                <label className="flex items-center gap-2 text-xs font-semibold text-[#4D2D37] cursor-pointer">
+                <label className="flex items-center gap-2 text-xs font-semibold text-[#2D201D] cursor-pointer">
                   <input
                     type="checkbox"
                     checked={editingOffer.isActive || false}
                     onChange={(e) =>
                       setEditingOffer({ ...editingOffer, isActive: e.target.checked })
                     }
-                    className="rounded text-[#99223A] focus:ring-[#99223A]"
+                    className="rounded text-[#6D1F32] focus:ring-[#6D1F32]"
                   />
                   <span>Activate this offer on customer storefront</span>
                 </label>
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#F2E4E8]">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#D8BFAF]/50">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 rounded-xl border border-[#E2CBD2] text-xs font-medium text-[#6B424E] hover:bg-[#FAF7F2] transition-colors cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl border border-[#D8BFAF] text-xs font-medium text-[#79665C] hover:bg-[#F3E9DC] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSaving}
-                  className="px-6 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-white rounded-xl text-xs font-semibold shadow-xs transition-all disabled:opacity-60 cursor-pointer"
+                  className="px-6 py-2.5 bg-[#6D1F32] hover:bg-[#4A1423] text-white rounded-xl text-xs font-semibold shadow-xs transition-colors disabled:opacity-60 cursor-pointer"
                 >
                   {isSaving ? 'Saving...' : 'Save Offer'}
                 </button>

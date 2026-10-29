@@ -66,37 +66,37 @@ export const AdminStockManager: React.FC<AdminStockManagerProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in">
       {/* Overview Info Banner */}
-      <div className="p-5 rounded-2xl bg-[#FAF0F3] border border-[#E8C2CC] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-5 rounded-2xl bg-[#FFF9F2] border border-[#D8BFAF] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[#FFE5EC] border border-[#FFCCD5] flex items-center justify-center text-[#99223A] shrink-0 mt-0.5">
+          <div className="w-9 h-9 rounded-xl bg-[#F3E9DC] border border-[#D8BFAF] flex items-center justify-center text-[#6D1F32] shrink-0 mt-0.5">
             <Info className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-sm font-semibold text-[#2D1B22]">Rapid Inventory & Availability Control</h3>
-            <p className="text-xs text-[#6B424E] mt-0.5">
+            <h3 className="text-sm font-semibold text-[#2D201D]">Rapid Inventory & Availability Control</h3>
+            <p className="text-xs text-[#79665C] mt-0.5">
               Instantly toggle item availability across your storefront. Marking an item "Out of Stock" immediately displays a customer badge and disables Add to Bag to prevent accidental orders.
             </p>
           </div>
         </div>
 
-        <div className="text-xs text-[#801B30] font-medium bg-white/70 px-3 py-1.5 rounded-xl border border-[#FFCCD5] shrink-0">
+        <div className="text-xs text-[#4A1423] font-medium bg-[#F3E9DC] px-3 py-1.5 rounded-xl border border-[#D8BFAF] shrink-0">
           💡 For Him collection is currently <strong>Coming Soon</strong>
         </div>
       </div>
 
       {/* Hampers Stock List */}
-      <div className="bg-white rounded-2xl border border-[#E8D0D6] shadow-xs overflow-hidden divide-y divide-[#F2E4E8]">
+      <div className="bg-[#FFF9F2] rounded-2xl border border-[#D8BFAF] shadow-xs overflow-hidden divide-y divide-[#D8BFAF]/40">
         {products.map((product) => {
           const currentStatus = product.stockStatus || 'available';
 
           return (
             <div
               key={product.id}
-              className="p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 hover:bg-[#FCF9F7] transition-colors"
+              className="p-5 sm:p-6 flex flex-col md:flex-row md:items-center justify-between gap-5 hover:bg-[#F3E9DC]/30 transition-colors"
             >
               {/* Product Info */}
               <div className="flex items-center gap-4 min-w-[280px]">
-                <div className="w-14 h-14 rounded-2xl bg-[#FAF0F3] border border-[#E8C2CC] overflow-hidden flex items-center justify-center shrink-0">
+                <div className="w-14 h-14 rounded-2xl bg-[#F3E9DC] border border-[#D8BFAF] overflow-hidden flex items-center justify-center shrink-0">
                   {product.customImage ? (
                     <img
                       src={product.customImage}
@@ -112,17 +112,17 @@ export const AdminStockManager: React.FC<AdminStockManagerProps> = ({
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h4 className="font-serif font-bold text-base text-[#2D1B22]">
+                    <h4 className="font-serif font-bold text-base text-[#2D201D]">
                       {product.name}
                     </h4>
-                    <span className="text-[10px] font-sans font-semibold text-[#4D2D37] bg-[#FAF0F3] px-2 py-0.5 rounded-md border border-[#E8C2CC]">
+                    <span className="text-[10px] font-sans font-semibold text-[#2D201D] bg-[#F3E9DC] px-2 py-0.5 rounded-md border border-[#D8BFAF]">
                       {product.size}
                     </span>
                   </div>
-                  <div className="text-xs font-semibold text-[#99223A] mt-0.5 tabular-nums">
+                  <div className="text-xs font-semibold text-[#6D1F32] mt-0.5 tabular-nums">
                     ₹{product.price.toLocaleString('en-IN')}
                   </div>
-                  <p className="text-[11px] text-[#7A4E5A] line-clamp-1 max-w-sm mt-0.5">
+                  <p className="text-[11px] text-[#79665C] line-clamp-1 max-w-sm mt-0.5">
                     {product.tagline}
                   </p>
                 </div>
@@ -141,8 +141,8 @@ export const AdminStockManager: React.FC<AdminStockManagerProps> = ({
                       disabled={isBusy}
                       className={`px-3 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50 ${
                         isSelected
-                          ? `${opt.colorClasses} ring-2 ring-offset-1 ring-[#99223A]/30 shadow-xs font-bold`
-                          : 'bg-white text-[#6B424E] border-[#E8D0D6] hover:bg-[#FAF7F2]'
+                          ? `${opt.colorClasses} ring-2 ring-offset-1 ring-[#6D1F32]/30 shadow-xs font-bold`
+                          : 'bg-[#FFF9F2] text-[#79665C] border-[#D8BFAF] hover:bg-[#F3E9DC]'
                       }`}
                     >
                       {isSelected ? (

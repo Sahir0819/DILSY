@@ -82,30 +82,30 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
   return (
     <div className="space-y-6 animate-in fade-in">
       {/* Search and Filter Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-[#E8D0D6]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#FFF9F2] p-5 rounded-2xl border border-[#D8BFAF]">
         <div>
-          <h2 className="text-xl font-serif font-bold text-[#2D1B22]">WhatsApp Order Requests Log</h2>
-          <p className="text-xs text-[#7A4E5A]">
+          <h2 className="text-xl font-serif font-bold text-[#2D201D]">WhatsApp Order Requests Log</h2>
+          <p className="text-xs text-[#79665C]">
             Genuine inquiries submitted by customers through cart and hamper checkout.
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#8C6B75]" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#79665C]" />
             <input
               type="text"
               placeholder="Search by name, phone, ID..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-8 pr-3 py-2 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none w-48 sm:w-60"
+              className="pl-8 pr-3 py-2 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none w-48 sm:w-60"
             />
           </div>
 
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs font-medium px-3 py-2 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+            className="text-xs font-medium px-3 py-2 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
           >
             <option value="all">All Statuses ({orders.length})</option>
             <option value="Pending">Pending</option>
@@ -120,19 +120,19 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
 
       {/* Orders Table */}
       {filteredOrders.length === 0 ? (
-        <div className="bg-white rounded-2xl border border-[#E8D0D6] p-12 text-center">
-          <ShoppingBag className="w-8 h-8 text-[#A07B86] mx-auto mb-2 opacity-60" />
-          <p className="text-sm font-semibold text-[#2D1B22]">No order requests found</p>
-          <p className="text-xs text-[#8C6B75] mt-1">
+        <div className="bg-[#FFF9F2] rounded-2xl border border-[#D8BFAF] p-12 text-center">
+          <ShoppingBag className="w-8 h-8 text-[#79665C] mx-auto mb-2 opacity-60" />
+          <p className="text-sm font-semibold text-[#2D201D]">No order requests found</p>
+          <p className="text-xs text-[#79665C] mt-1">
             {searchQuery ? 'Try clearing your search query.' : 'Customer orders and WhatsApp inquiries will be listed here.'}
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-2xl border border-[#E8D0D6] shadow-xs overflow-hidden">
+        <div className="bg-[#FFF9F2] rounded-2xl border border-[#D8BFAF] shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="bg-[#FAF7F2] border-b border-[#E8D0D6] text-[#7A4E5A] font-semibold uppercase tracking-wider">
+                <tr className="bg-[#F3E9DC] border-b border-[#D8BFAF] text-[#79665C] font-semibold uppercase tracking-wider">
                   <th className="py-3.5 pl-4">Order ID & Date</th>
                   <th className="py-3.5">Customer</th>
                   <th className="py-3.5">Area & Schedule</th>
@@ -142,12 +142,12 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                   <th className="py-3.5 pr-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#F2E4E8]">
+              <tbody className="divide-y divide-[#D8BFAF]/40">
                 {filteredOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-[#FCF9F7] transition-colors">
-                    <td className="py-3.5 pl-4 font-mono font-semibold text-[#2D1B22]">
+                  <tr key={order.id} className="hover:bg-[#F3E9DC]/30 transition-colors">
+                    <td className="py-3.5 pl-4 font-mono font-semibold text-[#2D201D]">
                       <div>{order.id}</div>
-                      <div className="text-[10px] text-[#8C6B75] font-sans">
+                      <div className="text-[10px] text-[#79665C] font-sans">
                         {new Date(order.createdAt).toLocaleDateString('en-IN', {
                           month: 'short',
                           day: 'numeric',
@@ -158,9 +158,9 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                     </td>
 
                     <td className="py-3.5">
-                      <div className="font-semibold text-[#2D1B22]">{order.customerName}</div>
+                      <div className="font-semibold text-[#2D201D]">{order.customerName}</div>
                       {order.customerPhone && (
-                        <div className="text-[11px] text-[#7A4E5A] flex items-center gap-1 mt-0.5">
+                        <div className="text-[11px] text-[#79665C] flex items-center gap-1 mt-0.5">
                           <PhoneCall className="w-3 h-3 text-[#2D6A4F]" />
                           <span>{order.customerPhone}</span>
                         </div>
@@ -168,28 +168,28 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                     </td>
 
                     <td className="py-3.5 max-w-[180px]">
-                      <div className="text-[11px] text-[#2D1B22] flex items-center gap-1 font-medium truncate">
-                        <MapPin className="w-3 h-3 text-[#99223A] shrink-0" />
+                      <div className="text-[11px] text-[#2D201D] flex items-center gap-1 font-medium truncate">
+                        <MapPin className="w-3 h-3 text-[#6D1F32] shrink-0" />
                         <span className="truncate">{order.deliveryArea}</span>
                       </div>
-                      <div className="text-[10px] text-[#8C6B75] mt-0.5 flex items-center gap-1">
+                      <div className="text-[10px] text-[#79665C] mt-0.5 flex items-center gap-1">
                         <Calendar className="w-3 h-3 shrink-0" />
                         <span>{order.deliveryDate}</span>
                       </div>
                     </td>
 
                     <td className="py-3.5 max-w-[200px]">
-                      <div className="font-medium text-[#2D1B22] truncate">
+                      <div className="font-medium text-[#2D201D] truncate">
                         {order.items.map((i) => `${i.title} (x${i.quantity})`).join(', ') || 'Custom Hamper'}
                       </div>
                       {order.addOns && order.addOns.length > 0 && (
-                        <div className="text-[10px] text-[#99223A] mt-0.5">
+                        <div className="text-[10px] text-[#6D1F32] font-semibold mt-0.5">
                           + {order.addOns.length} add-on{order.addOns.length > 1 ? 's' : ''}
                         </div>
                       )}
                     </td>
 
-                    <td className="py-3.5 font-bold text-sm text-[#2D1B22] tabular-nums">
+                    <td className="py-3.5 font-bold text-sm text-[#6D1F32] tabular-nums">
                       ₹{order.total.toLocaleString('en-IN')}
                       {order.discountAmount > 0 && (
                         <div className="text-[10px] font-normal text-[#2D6A4F]">
@@ -226,7 +226,7 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                     <td className="py-3.5 pr-4 text-right">
                       <button
                         onClick={() => handleOpenDetail(order)}
-                        className="px-2.5 py-1 text-xs font-semibold text-[#99223A] hover:bg-[#FAF0F3] rounded-lg transition-colors cursor-pointer"
+                        className="px-2.5 py-1 text-xs font-semibold text-[#6D1F32] hover:bg-[#F3E9DC] rounded-lg transition-colors cursor-pointer"
                       >
                         View Order
                       </button>
@@ -241,71 +241,71 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
 
       {/* Order Detail Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 bg-[#2D1B22]/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full border border-[#E8D0D6] shadow-2xl p-6 sm:p-8 my-8 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 bg-[#2D201D]/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-[#FFF9F2] rounded-3xl max-w-2xl w-full border border-[#D8BFAF] shadow-2xl p-6 sm:p-8 my-8 relative animate-in zoom-in-95 max-h-[90vh] overflow-y-auto">
             <button
               onClick={() => setSelectedOrder(null)}
-              className="absolute top-6 right-6 p-2 rounded-full text-[#7A4E5A] hover:bg-[#FAF0F3] transition-colors cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-full text-[#79665C] hover:bg-[#F3E9DC] transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <div className="mb-6">
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold text-[#99223A] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5]">
+                <span className="text-xs font-mono font-bold text-[#6D1F32] bg-[#F3E9DC] px-3 py-1 rounded-full border border-[#D8BFAF]">
                   {selectedOrder.id}
                 </span>
-                <span className="text-xs text-[#8C6B75]">
+                <span className="text-xs text-[#79665C]">
                   {new Date(selectedOrder.createdAt).toLocaleString('en-IN')}
                 </span>
               </div>
-              <h3 className="text-2xl font-serif font-bold text-[#2D1B22] mt-2">
+              <h3 className="text-2xl font-serif font-bold text-[#2D201D] mt-2">
                 Order for {selectedOrder.customerName}
               </h3>
             </div>
 
             <div className="space-y-5 text-xs">
               {/* Customer and Delivery info */}
-              <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8D0D6] grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="p-4 rounded-2xl bg-[#F3E9DC] border border-[#D8BFAF] grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <span className="text-[10px] uppercase font-semibold text-[#8C6B75] tracking-wider">
+                  <span className="text-[10px] uppercase font-semibold text-[#79665C] tracking-wider">
                     Customer Contact
                   </span>
-                  <div className="font-bold text-sm text-[#2D1B22] mt-0.5">
+                  <div className="font-bold text-sm text-[#2D201D] mt-0.5">
                     {selectedOrder.customerName}
                   </div>
-                  <div className="text-[#6B424E] mt-0.5 flex items-center gap-1">
+                  <div className="text-[#2D201D] mt-0.5 flex items-center gap-1">
                     <PhoneCall className="w-3.5 h-3.5 text-[#2D6A4F]" />
                     <span>{selectedOrder.customerPhone || 'Not provided'}</span>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-[10px] uppercase font-semibold text-[#8C6B75] tracking-wider">
+                  <span className="text-[10px] uppercase font-semibold text-[#79665C] tracking-wider">
                     Delivery Logistics
                   </span>
-                  <div className="font-medium text-[#2D1B22] mt-0.5">
+                  <div className="font-medium text-[#2D201D] mt-0.5">
                     {selectedOrder.deliveryArea} {selectedOrder.specificLandmark ? `(${selectedOrder.specificLandmark})` : ''}
                   </div>
-                  <div className="text-[#6B424E] mt-0.5">
+                  <div className="text-[#79665C] mt-0.5">
                     {selectedOrder.deliveryDate} • {selectedOrder.timeWindow}
                   </div>
                 </div>
               </div>
 
               {/* Items Breakdown */}
-              <div className="border border-[#E8D0D6] rounded-2xl p-4 space-y-3">
-                <div className="font-semibold text-sm text-[#2D1B22] border-b border-[#F2E4E8] pb-2">
+              <div className="border border-[#D8BFAF] rounded-2xl p-4 space-y-3 bg-[#FFF9F2]">
+                <div className="font-semibold text-sm text-[#2D201D] border-b border-[#D8BFAF]/40 pb-2">
                   Items Breakdown
                 </div>
                 {selectedOrder.items.map((item, idx) => (
                   <div key={idx} className="flex justify-between items-start py-1">
                     <div>
-                      <div className="font-semibold text-[#2D1B22]">
-                        {item.title} <span className="text-[#8C6B75]">x{item.quantity}</span>
+                      <div className="font-semibold text-[#2D201D]">
+                        {item.title} <span className="text-[#79665C]">x{item.quantity}</span>
                       </div>
                       {item.customisation && (
-                        <div className="text-[11px] text-[#6B424E] pl-2 mt-0.5 space-y-0.5">
+                        <div className="text-[11px] text-[#79665C] pl-2 mt-0.5 space-y-0.5">
                           {item.customisation.recipientName && (
                             <div>• For: {item.customisation.recipientName}</div>
                           )}
@@ -318,7 +318,7 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                         </div>
                       )}
                     </div>
-                    <div className="font-semibold text-[#2D1B22] tabular-nums">
+                    <div className="font-semibold text-[#6D1F32] tabular-nums">
                       ₹{(item.price * item.quantity).toLocaleString('en-IN')}
                     </div>
                   </div>
@@ -326,22 +326,22 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
 
                 {/* Add-ons */}
                 {selectedOrder.addOns && selectedOrder.addOns.length > 0 && (
-                  <div className="pt-2 border-t border-[#F2E4E8] space-y-1">
-                    <div className="text-[11px] font-semibold text-[#99223A]">
+                  <div className="pt-2 border-t border-[#D8BFAF]/40 space-y-1">
+                    <div className="text-[11px] font-semibold text-[#6D1F32]">
                       Selected Add-ons:
                     </div>
                     {selectedOrder.addOns.map((add, idx) => (
-                      <div key={idx} className="flex justify-between items-center text-[11px] text-[#4D2D37] pl-2">
+                      <div key={idx} className="flex justify-between items-center text-[11px] text-[#2D201D] pl-2">
                         <span>• {add.name} (x{add.quantity})</span>
-                        <span className="font-medium">₹{add.price * add.quantity}</span>
+                        <span className="font-medium text-[#6D1F32]">₹{add.price * add.quantity}</span>
                       </div>
                     ))}
                   </div>
                 )}
 
                 {/* Pricing Summary */}
-                <div className="pt-3 border-t border-[#F2E4E8] space-y-1 text-right">
-                  <div className="flex justify-between text-[#7A4E5A]">
+                <div className="pt-3 border-t border-[#D8BFAF]/40 space-y-1 text-right">
+                  <div className="flex justify-between text-[#79665C]">
                     <span>Subtotal</span>
                     <span>₹{selectedOrder.subtotal.toLocaleString('en-IN')}</span>
                   </div>
@@ -351,24 +351,24 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                       <span>-₹{selectedOrder.discountAmount}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-bold text-sm text-[#2D1B22] pt-1 border-t border-[#F2E4E8]">
+                  <div className="flex justify-between font-bold text-sm text-[#2D201D] pt-1 border-t border-[#D8BFAF]/40">
                     <span>Estimated Total</span>
-                    <span>₹{selectedOrder.total.toLocaleString('en-IN')}</span>
+                    <span className="text-[#6D1F32]">₹{selectedOrder.total.toLocaleString('en-IN')}</span>
                   </div>
                 </div>
               </div>
 
               {/* Special Instructions if any */}
               {selectedOrder.specialInstructions && (
-                <div className="p-3.5 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-xs">
-                  <span className="font-semibold text-[#801B30]">Customer Instructions:</span>{' '}
-                  <span className="text-[#4D2D37]">{selectedOrder.specialInstructions}</span>
+                <div className="p-3.5 rounded-xl bg-[#F3E9DC] border border-[#D8BFAF] text-xs">
+                  <span className="font-semibold text-[#4A1423]">Customer Instructions:</span>{' '}
+                  <span className="text-[#2D201D]">{selectedOrder.specialInstructions}</span>
                 </div>
               )}
 
               {/* Internal Owner Notes */}
               <div>
-                <label className="block text-xs font-semibold text-[#4D2D37] mb-1">
+                <label className="block text-xs font-semibold text-[#2D201D] mb-1">
                   Private Studio Notes (Owner only)
                 </label>
                 <div className="flex gap-2">
@@ -377,12 +377,12 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                     value={adminNoteInput}
                     onChange={(e) => setAdminNoteInput(e.target.value)}
                     placeholder="e.g. Paid ₹50 advance on UPI, delivery scheduled for 2 PM"
-                    className="flex-1 px-3.5 py-2 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                    className="flex-1 px-3.5 py-2 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
                   />
                   <button
                     onClick={handleSaveNotes}
                     disabled={isUpdating}
-                    className="px-4 py-2 bg-[#FAF0F3] hover:bg-[#F5E1E7] border border-[#E8C2CC] text-[#99223A] font-semibold rounded-xl text-xs cursor-pointer"
+                    className="px-4 py-2 bg-[#FFF9F2] hover:bg-[#F3E9DC] border border-[#D8BFAF] text-[#6D1F32] font-semibold rounded-xl text-xs cursor-pointer transition-colors"
                   >
                     Save Note
                   </button>
@@ -393,7 +393,7 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
               {selectedOrder.rawWhatsappMessage && (
                 <div>
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-semibold text-[#4D2D37]">
+                    <span className="text-xs font-semibold text-[#2D201D]">
                       Raw WhatsApp Message Text
                     </span>
                     <button
@@ -403,7 +403,7 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                           selectedOrder.id
                         )
                       }
-                      className="text-xs text-[#99223A] font-semibold flex items-center gap-1 hover:underline cursor-pointer"
+                      className="text-xs text-[#6D1F32] font-semibold flex items-center gap-1 hover:underline cursor-pointer"
                     >
                       {copiedId === selectedOrder.id ? (
                         <>
@@ -418,7 +418,7 @@ export const AdminOrders: React.FC<AdminOrdersProps> = ({
                       )}
                     </button>
                   </div>
-                  <pre className="p-3 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-[11px] text-[#4D2D37] whitespace-pre-wrap font-mono max-h-36 overflow-y-auto">
+                  <pre className="p-3 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-[11px] text-[#2D201D] whitespace-pre-wrap font-mono max-h-36 overflow-y-auto">
                     {selectedOrder.rawWhatsappMessage}
                   </pre>
                 </div>

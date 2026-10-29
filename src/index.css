@@ -4,20 +4,31 @@
   :root {
     --font-serif: 'Cormorant Garamond', Georgia, serif;
     --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+    /* DILSY Restored Original Pink & Burgundy Brand Palette */
+    --color-soft-blush: #FCE7ED;
+    --color-light-pink: #FFF1F4;
+    --color-warm-ivory: #FFFAF8;
+    --color-rose-pink: #E88AA4;
+    --color-deep-burgundy: #9F2343;
+    --color-dark-burgundy: #72172F;
+    --color-dark-text: #3B2028;
+    --color-muted-text: #795A63;
+    --color-soft-border: #F1C5D1;
   }
   
   body {
     font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-    background-color: #FDF9F7;
-    color: #2D1B22;
+    background-color: #FCE7ED;
+    color: #3B2028;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
   }
 
   ::selection {
-    background-color: #F7D0D8;
-    color: #5C1D27;
+    background-color: #F1C5D1;
+    color: #72172F;
   }
 }
 
@@ -29,23 +40,23 @@
   font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
-/* Subtle romantic custom scrollbar */
+/* Subtle elegant custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FDF9F7;
+  background: #FCE7ED;
 }
 ::-webkit-scrollbar-thumb {
-  background: #E89CAE80;
+  background: #F1C5D1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #C74B64;
+  background: #9F2343;
 }
 
-/* Romantic gentle pulse */
+/* Elegant gentle pulse */
 @keyframes heartPulse {
   0%, 100% {
     transform: scale(1);

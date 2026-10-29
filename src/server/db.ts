@@ -218,7 +218,7 @@ export function createProduct(productData: Partial<Product>): Product {
     themeIds: productData.themeIds || ['valentine-box', 'anniversary'],
     idealFor: productData.idealFor || 'Special moments and sweet gestures.',
     packaging: productData.packaging || 'Thoughtfully styled gift presentation with ribbon and personal touches.',
-    accentColor: productData.accentColor || '#C73858',
+    accentColor: productData.accentColor || '#9F2343',
     illustrationType: productData.illustrationType || 'loved-box',
     customImage: productData.customImage,
     allowRecipientChoice: !!productData.allowRecipientChoice,

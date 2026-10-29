@@ -1,10 +1,17 @@
 import { Router, Request, Response } from 'express';
 import {
   verifyAdminPassword,
+  verifyAdminCredentials,
+  authenticateUser,
+  registerCustomer,
+  getCustomerById,
+  updateCustomerProfile,
+  verifyTokenPayload,
   isValidToken,
   revokeToken,
   changeAdminPassword,
   requireAdminAuth,
+  requireAnyAuth,
 } from './auth';
 import {
   getAllProducts,
@@ -78,19 +85,197 @@ apiRouter.post('/public/orders', (req: Request, res: Response) => {
   }
 });
 
+// ================= UNIFIED AUTH & CUSTOMER ENDPOINTS =================
+
+/**
+ * Unified Login Endpoint
+ * Supports both Administrator (Leaderrrr / Error 404 LEADER NOT FOUND)
+ * and regular Customer accounts from the same login form.
+ */
+apiRouter.post('/auth/login', (req: Request, res: Response) => {
+  const identifier = req.body.identifier || req.body.username || req.body.email;
+  const password = req.body.password;
+
+  if (!identifier || !password) {
+    res.status(400).json({ error: 'Please enter both your username/email and password.' });
+    return;
+  }
+
+  const result = authenticateUser(identifier, password);
+  if (!result.success) {
+    res.status(401).json({ error: result.error || 'Invalid credentials' });
+    return;
+  }
+
+  res.json(result);
+});
+
+/**
+ * Customer Sign Up Endpoint
+ */
+apiRouter.post('/auth/signup', (req: Request, res: Response) => {
+  const result = registerCustomer(req.body);
+  if (!result.success) {
+    res.status(400).json({ error: result.error || 'Failed to create account' });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+/**
+ * Session Token Verification Endpoint
+ */
+apiRouter.get('/auth/verify', (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    res.status(401).json({ valid: false });
+    return;
+  }
+
+  const token = authHeader.substring(7).trim();
+  const payload = verifyTokenPayload(token);
+  if (!payload) {
+    res.status(401).json({ valid: false });
+    return;
+  }
+
+  res.json({
+    valid: true,
+    role: payload.role,
+    user:
+      payload.role === 'admin'
+        ? { username: payload.username || 'Leaderrrr', role: 'admin', displayName: 'Studio Administrator' }
+        : undefined,
+    customer:
+      payload.role === 'customer'
+        ? {
+            id: payload.customerId,
+            name: payload.name,
+            email: payload.email,
+            phone: payload.phone,
+          }
+        : undefined,
+  });
+});
+
+/**
+ * Session Logout Endpoint
+ */
+apiRouter.post('/auth/logout', (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7).trim();
+    revokeToken(token);
+  }
+  res.json({ success: true, message: 'Signed out successfully' });
+});
+
+/**
+ * Customer Profile
+ */
+apiRouter.get('/customer/profile', requireAnyAuth, (req: Request, res: Response) => {
+  const user = (req as any).user;
+  if (!user || user.role !== 'customer') {
+    res.status(403).json({ error: 'Customer session required' });
+    return;
+  }
+
+  const customer = getCustomerById(user.customerId);
+  if (!customer) {
+    res.status(404).json({ error: 'Customer account not found' });
+    return;
+  }
+
+  res.json({
+    success: true,
+    customer: {
+      id: customer.id,
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone,
+      deliveryAddress: customer.deliveryAddress || '',
+      specificLandmark: customer.specificLandmark || '',
+      createdAt: customer.createdAt,
+    },
+  });
+});
+
+/**
+ * Customer Profile Update
+ */
+apiRouter.put('/customer/profile', requireAnyAuth, (req: Request, res: Response) => {
+  const user = (req as any).user;
+  if (!user || user.role !== 'customer') {
+    res.status(403).json({ error: 'Customer session required' });
+    return;
+  }
+
+  const updated = updateCustomerProfile(user.customerId, req.body);
+  if (!updated) {
+    res.status(404).json({ error: 'Customer account not found' });
+    return;
+  }
+
+  res.json({
+    success: true,
+    customer: {
+      id: updated.id,
+      name: updated.name,
+      email: updated.email,
+      phone: updated.phone,
+      deliveryAddress: updated.deliveryAddress || '',
+      specificLandmark: updated.specificLandmark || '',
+      createdAt: updated.createdAt,
+    },
+  });
+});
+
+/**
+ * Customer's Past Orders / Inquiries
+ */
+apiRouter.get('/customer/orders', requireAnyAuth, (req: Request, res: Response) => {
+  const user = (req as any).user;
+  const allOrders = getAllOrders();
+
+  if (user.role === 'admin') {
+    res.json({ success: true, orders: allOrders });
+    return;
+  }
+
+  const cleanPhone = (user.phone || '').replace(/\D/g, '');
+  const cleanName = (user.name || '').toLowerCase().trim();
+
+  const customerOrders = allOrders.filter((order) => {
+    const orderPhone = (order.customerPhone || '').replace(/\D/g, '');
+    const orderName = (order.customerName || '').toLowerCase().trim();
+    if (cleanPhone && orderPhone && (cleanPhone.endsWith(orderPhone) || orderPhone.endsWith(cleanPhone))) {
+      return true;
+    }
+    if (cleanName && orderName && (orderName.includes(cleanName) || cleanName.includes(orderName))) {
+      return true;
+    }
+    return false;
+  });
+
+  res.json({ success: true, orders: customerOrders });
+});
+
 // ================= ADMIN AUTH ENDPOINTS =================
 
 /**
- * Admin Login
+ * Admin Login (supports legacy password payload and { username, password })
  */
 apiRouter.post('/admin/login', (req: Request, res: Response) => {
-  const { password } = req.body;
+  const { username, password } = req.body;
   if (!password) {
     res.status(400).json({ error: 'Password is required' });
     return;
   }
 
-  const result = verifyAdminPassword(password);
+  const result = username
+    ? verifyAdminCredentials(username, password)
+    : verifyAdminPassword(password);
+
   if (!result.success) {
     res.status(401).json({ error: result.error || 'Invalid admin credentials' });
     return;
@@ -121,7 +306,7 @@ apiRouter.get('/admin/verify', (req: Request, res: Response) => {
 /**
  * Admin Logout
  */
-apiRouter.post('/admin/logout', requireAdminAuth, (req: Request, res: Response) => {
+apiRouter.post('/admin/logout', (req: Request, res: Response) => {
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7).trim();

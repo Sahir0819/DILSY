@@ -1,0 +1,26 @@
+[
+  {
+    "id": "cust_1793294248629_a022b155",
+    "name": "Aarav Kapoor",
+    "email": "aarav@gmail.com",
+    "phone": "9812345678",
+    "passwordHash": "a35a737cb8194a16d9d5a8f1c9f743800d758a45753021a9bec9e6b4b8b1376b198160a1ff674f26ed6d02eb4155f188a6e41e4ce7e92e63c7c8506f73162baa",
+    "passwordSalt": "2a1b6cc915b32c046f7b40d8462c1076",
+    "deliveryAddress": "CU Hostel 4",
+    "specificLandmark": "Near Gate 2",
+    "createdAt": "2026-10-29T17:17:28.629Z",
+    "updatedAt": "2026-10-29T17:17:28.629Z"
+  },
+  {
+    "id": "cust_1793294775397_ebd80cd9",
+    "name": "Sahir Pathan",
+    "email": "sahirpathana47@gmail.com",
+    "phone": "9876543210",
+    "passwordHash": "37ff86801b72e908745a5074f30b6dc92cdc89ee846014dfa263e3c66a63844f2ea7fae35ee1f876641ace32c34dd258b352926bebee66de0868c160669dbd40",
+    "passwordSalt": "007cfa3a106ea1a47ba3a8b2366580cc",
+    "deliveryAddress": "",
+    "specificLandmark": "",
+    "createdAt": "2026-10-29T17:26:15.397Z",
+    "updatedAt": "2026-10-29T17:26:15.397Z"
+  }
+]

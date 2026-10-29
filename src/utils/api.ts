@@ -10,22 +10,71 @@ import {
 } from '../types';
 
 const ADMIN_TOKEN_KEY = 'dilsy_admin_token_v1';
+const AUTH_TOKEN_KEY = 'dilsy_auth_token_v1';
+const CUSTOMER_SESSION_KEY = 'dilsy_customer_session_v1';
+
+export interface CustomerSession {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  deliveryAddress?: string;
+  specificLandmark?: string;
+}
 
 export function getAdminToken(): string | null {
   if (typeof window === 'undefined') return null;
-  return sessionStorage.getItem(ADMIN_TOKEN_KEY);
+  return sessionStorage.getItem(ADMIN_TOKEN_KEY) || localStorage.getItem(AUTH_TOKEN_KEY);
 }
 
 export function setAdminToken(token: string): void {
   sessionStorage.setItem(ADMIN_TOKEN_KEY, token);
+  localStorage.setItem(AUTH_TOKEN_KEY, token);
 }
 
 export function removeAdminToken(): void {
   sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+}
+
+export function getAuthToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  return (
+    localStorage.getItem(AUTH_TOKEN_KEY) ||
+    sessionStorage.getItem(ADMIN_TOKEN_KEY)
+  );
+}
+
+export function setAuthToken(token: string): void {
+  localStorage.setItem(AUTH_TOKEN_KEY, token);
+}
+
+export function removeAuthToken(): void {
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  sessionStorage.removeItem(ADMIN_TOKEN_KEY);
+  localStorage.removeItem(CUSTOMER_SESSION_KEY);
+}
+
+export function getCustomerSession(): CustomerSession | null {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(CUSTOMER_SESSION_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setCustomerSession(customer: CustomerSession): void {
+  localStorage.setItem(CUSTOMER_SESSION_KEY, JSON.stringify(customer));
+}
+
+export function removeCustomerSession(): void {
+  localStorage.removeItem(CUSTOMER_SESSION_KEY);
 }
 
 function authHeaders(): HeadersInit {
-  const token = getAdminToken();
+  const token = getAuthToken();
   return {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -143,6 +192,166 @@ export async function submitPublicOrderInquiry(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(orderData),
   });
+}
+
+// ================= UNIFIED AUTH & CUSTOMER CALLS =================
+
+export interface UnifiedLoginResult {
+  success: boolean;
+  role: 'admin' | 'customer';
+  redirectTo: string;
+  token: string;
+  user?: {
+    username: string;
+    role: 'admin';
+    displayName: string;
+  };
+  customer?: CustomerSession;
+}
+
+export async function unifiedLoginApi(
+  identifier: string,
+  password: string
+): Promise<UnifiedLoginResult> {
+  let data: any;
+  try {
+    data = await safeFetchJson<UnifiedLoginResult>('/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ identifier, password }),
+    });
+  } catch (err: any) {
+    // Netlify fallback if /api/auth/login hits legacy redirect
+    if (err.message && (err.message.includes('404') || err.message.includes('not found'))) {
+      data = await safeFetchJson<UnifiedLoginResult>('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, password }),
+      });
+    } else {
+      throw err;
+    }
+  }
+
+  if (!data?.token) {
+    throw new Error('Authentication succeeded but server returned no session token.');
+  }
+
+  setAuthToken(data.token);
+
+  if (data.role === 'admin') {
+    setAdminToken(data.token);
+  } else if (data.role === 'customer' && data.customer) {
+    setCustomerSession(data.customer);
+  }
+
+  return data;
+}
+
+export async function customerSignupApi(data: {
+  name: string;
+  email: string;
+  phone: string;
+  password: string;
+  deliveryAddress?: string;
+  specificLandmark?: string;
+}): Promise<UnifiedLoginResult> {
+  const res = await safeFetchJson<UnifiedLoginResult>('/api/auth/signup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  if (!res?.token) {
+    throw new Error('Account created but no session token was issued.');
+  }
+
+  setAuthToken(res.token);
+  if (res.customer) {
+    setCustomerSession(res.customer);
+  }
+
+  return res;
+}
+
+export async function verifyUnifiedSessionApi(): Promise<{
+  valid: boolean;
+  role?: 'admin' | 'customer';
+  customer?: CustomerSession;
+}> {
+  const token = getAuthToken();
+  if (!token) return { valid: false };
+
+  try {
+    const res = await safeFetchJson<{
+      valid: boolean;
+      role?: 'admin' | 'customer';
+      customer?: CustomerSession;
+    }>('/api/auth/verify', {
+      headers: authHeaders(),
+    });
+    if (res.valid && res.customer) {
+      setCustomerSession(res.customer);
+    }
+    return res;
+  } catch {
+    return { valid: false };
+  }
+}
+
+export async function fetchCustomerProfile(): Promise<CustomerSession> {
+  const data = await safeFetchJson<{ success: boolean; customer: CustomerSession }>(
+    '/api/customer/profile',
+    {
+      headers: authHeaders(),
+    }
+  );
+  if (data.customer) {
+    setCustomerSession(data.customer);
+  }
+  return data.customer;
+}
+
+export async function updateCustomerProfileApi(
+  updates: Partial<CustomerSession>
+): Promise<CustomerSession> {
+  const data = await safeFetchJson<{ success: boolean; customer: CustomerSession }>(
+    '/api/customer/profile',
+    {
+      method: 'PUT',
+      headers: authHeaders(),
+      body: JSON.stringify(updates),
+    }
+  );
+  if (data.customer) {
+    setCustomerSession(data.customer);
+  }
+  return data.customer;
+}
+
+export async function fetchCustomerOrders(): Promise<OrderRequest[]> {
+  const data = await safeFetchJson<{ success: boolean; orders: OrderRequest[] }>(
+    '/api/customer/orders',
+    {
+      headers: authHeaders(),
+    }
+  );
+  return data.orders || [];
+}
+
+export async function unifiedLogoutApi(): Promise<void> {
+  try {
+    await safeFetchJson('/api/auth/logout', {
+      method: 'POST',
+      headers: authHeaders(),
+    });
+  } catch {
+    // Non-fatal
+  } finally {
+    removeAuthToken();
+    removeCustomerSession();
+    removeAdminToken();
+  }
 }
 
 // ================= ADMIN AUTH CALLS =================

@@ -33,15 +33,15 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#FCE7ED] flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-12 relative overflow-hidden font-sans">
       {/* Decorative delicate background glow */}
-      <div className="absolute top-0 -left-20 w-80 h-80 rounded-full bg-[#FFE5EC]/60 blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 -right-20 w-80 h-80 rounded-full bg-[#F5DDE3]/50 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 -left-20 w-80 h-80 rounded-full bg-[#F1C5D1]/40 blur-3xl pointer-events-none" />
+      <div className="absolute bottom-0 -right-20 w-80 h-80 rounded-full bg-[#FFF1F4]/70 blur-3xl pointer-events-none" />
 
       {/* Discrete return to storefront */}
       <button
         onClick={onBackToStore}
-        className="absolute top-6 left-6 inline-flex items-center gap-2 text-xs font-medium text-[#6B3241] hover:text-[#99223A] transition-colors bg-[#FAF0F3] px-3.5 py-2 rounded-xl border border-[#E8C2CC] shadow-2xs group"
+        className="absolute top-6 left-6 inline-flex items-center gap-2 text-xs font-medium text-[#9F2343] hover:text-[#72172F] transition-colors bg-[#FFFAF8] px-3.5 py-2 rounded-xl border border-[#F1C5D1] shadow-2xs group cursor-pointer"
       >
         <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
         <span>Return to Customer Store</span>
@@ -50,26 +50,26 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
       <div className="w-full max-w-md relative z-10">
         {/* Brand Monogram & Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-tr from-[#99223A] to-[#C73858] text-[#FFF0F3] shadow-md shadow-[#99223A]/25 mb-4 border border-[#FFCCD5]/40 animate-in zoom-in-95">
-            <Heart className="w-7 h-7 fill-[#FFF0F3] text-[#FFF0F3]" />
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#9F2343] text-white shadow-md shadow-[#72172F]/20 mb-4 border border-[#72172F]">
+            <Heart className="w-7 h-7 fill-white text-white" />
           </div>
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#99223A] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5] mb-2 shadow-2xs">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#C73858]" />
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-[#9F2343] bg-[#FFFAF8] px-3 py-1 rounded-full border border-[#F1C5D1] mb-2 shadow-2xs">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#9F2343]" />
             <span>Private Management Studio</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#2D1B22] tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#3B2028] tracking-tight">
             DILSY Admin Studio
           </h1>
-          <p className="mt-2 text-sm text-[#6B424E] font-medium">
+          <p className="mt-2 text-sm text-[#79665C] font-medium">
             Your brand. Your rules.
           </p>
         </div>
 
         {/* Card Form */}
-        <div className="bg-[#FFFFFF]/90 backdrop-blur-md rounded-3xl p-7 sm:p-8 shadow-xl shadow-[#2D1B22]/5 border border-[#E8D0D6]">
+        <div className="bg-[#FFFAF8] rounded-3xl p-7 sm:p-8 shadow-xl shadow-[#3B2028]/5 border border-[#F1C5D1]">
           {errorMessage && (
-            <div className="mb-5 p-3.5 rounded-xl bg-[#FFF0F3] border border-[#FFCCD5] text-xs font-medium text-[#801B30] flex items-start gap-2.5 animate-in fade-in slide-in-from-top-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#99223A] mt-1.5 shrink-0" />
+            <div className="mb-5 p-3.5 rounded-xl bg-[#FEE2E2] border border-[#FECACA] text-xs font-medium text-[#991B1B] flex items-start gap-2.5 animate-in fade-in slide-in-from-top-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#991B1B] mt-1.5 shrink-0" />
               <div className="flex-1">{errorMessage}</div>
             </div>
           )}
@@ -78,12 +78,12 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
             <div>
               <label
                 htmlFor="admin-password"
-                className="block text-xs font-semibold uppercase tracking-wider text-[#4D2D37] mb-2"
+                className="block text-xs font-semibold uppercase tracking-wider text-[#3B2028] mb-2"
               >
                 Studio Master Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#99223A]">
+                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#9F2343]">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -94,13 +94,13 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
                   placeholder="Enter admin password..."
                   required
                   autoFocus
-                  className="w-full pl-10 pr-11 py-3 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-sm text-[#2D1B22] placeholder-[#A07B86] focus:outline-none focus:ring-2 focus:ring-[#99223A] focus:border-[#99223A] transition-all"
+                  className="w-full pl-10 pr-11 py-3 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] placeholder-[#79665C] focus:outline-none focus:ring-2 focus:ring-[#9F2343] focus:border-[#9F2343] transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
-                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#8C5A66] hover:text-[#2D1B22] transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#79665C] hover:text-[#3B2028] transition-colors cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -110,24 +110,24 @@ export const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess, onBackTo
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3.5 px-4 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] active:scale-[0.99] text-[#FFF0F3] rounded-xl text-sm font-semibold tracking-wide shadow-md shadow-[#99223A]/25 transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
+              className="w-full py-3.5 px-4 bg-[#9F2343] hover:bg-[#72172F] active:scale-[0.99] text-white rounded-xl text-sm font-semibold tracking-wide shadow-md shadow-[#72172F]/20 transition-all flex items-center justify-center gap-2 disabled:opacity-60 cursor-pointer"
             >
               {isLoading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-[#FFF0F3] border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   <span>Verifying Credentials...</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-[#FF85A1]" />
+                  <Sparkles className="w-4 h-4 text-white" />
                   <span>Enter DILSY Studio</span>
                 </>
               )}
             </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-[#F2E4E8] text-center">
-            <p className="text-[11px] text-[#8C6B75]">
+          <div className="mt-6 pt-5 border-t border-[#F1C5D1] text-center">
+            <p className="text-[11px] text-[#79665C]">
               Protected with server-side salted cryptographic hashing and secure session tokens.
             </p>
           </div>

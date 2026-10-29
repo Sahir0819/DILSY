@@ -51,6 +51,7 @@ export interface ProductCustomisation {
   personalNote: string;
   polaroidCaption?: string;
   specialInstructions?: string;
+  selectedAddOns?: SelectedAddOn[];
 }
 
 export interface CartItem {

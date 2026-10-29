@@ -98,10 +98,10 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
   return (
     <div className="space-y-8 animate-in fade-in max-w-4xl">
       {/* Store Settings Form */}
-      <form onSubmit={handleSaveStoreSettings} className="bg-white rounded-3xl border border-[#E8D0D6] p-6 sm:p-8 shadow-xs space-y-6">
+      <form onSubmit={handleSaveStoreSettings} className="bg-[#FFF9F2] rounded-3xl border border-[#D8BFAF] p-6 sm:p-8 shadow-xs space-y-6">
         <div>
-          <h2 className="text-xl font-serif font-bold text-[#2D1B22]">DILSY Storefront Settings</h2>
-          <p className="text-xs text-[#7A4E5A]">
+          <h2 className="text-xl font-serif font-bold text-[#2D201D]">DILSY Storefront Settings</h2>
+          <p className="text-xs text-[#79665C]">
             Configure WhatsApp recipient phone, delivery coverage, policy text, and top announcement bar.
           </p>
         </div>
@@ -111,7 +111,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
             className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
               statusMessage.type === 'success'
                 ? 'bg-[#EBF7EE] text-[#1B4332] border border-[#B7E4C7]'
-                : 'bg-[#FFF0F3] text-[#801B30] border border-[#FFCCD5]'
+                : 'bg-[#F3E9DC] text-[#4A1423] border border-[#D8BFAF]'
             }`}
           >
             <CheckCircle className="w-4 h-4 shrink-0" />
@@ -122,7 +122,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
         {/* Contact info */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5 flex items-center gap-1.5">
+            <label className="block text-xs font-semibold text-[#2D201D] mb-1.5 flex items-center gap-1.5">
               <Phone className="w-3.5 h-3.5 text-[#2D6A4F]" />
               <span>WhatsApp Order Phone (10 digits) *</span>
             </label>
@@ -138,16 +138,16 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
                 })
               }
               placeholder="e.g. 8360958844"
-              className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs font-mono font-semibold text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs font-mono font-semibold text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
             />
-            <p className="text-[10px] text-[#8C6B75] mt-1">
+            <p className="text-[10px] text-[#79665C] mt-1">
               All checkout & inquiry buttons generate WhatsApp links to this exact number.
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5 flex items-center gap-1.5">
-              <Instagram className="w-3.5 h-3.5 text-[#99223A]" />
+            <label className="block text-xs font-semibold text-[#2D201D] mb-1.5 flex items-center gap-1.5">
+              <Instagram className="w-3.5 h-3.5 text-[#6D1F32]" />
               <span>Instagram Handle</span>
             </label>
             <input
@@ -155,19 +155,19 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
               value={formData.instagramHandle}
               onChange={(e) => setFormData({ ...formData, instagramHandle: e.target.value })}
               placeholder="@dilsygifts"
-              className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
             />
           </div>
         </div>
 
         {/* Announcement Bar */}
-        <div className="p-4 rounded-2xl bg-[#FAF7F2] border border-[#E8D0D6] space-y-3">
+        <div className="p-4 rounded-2xl bg-[#F3E9DC] border border-[#D8BFAF] space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-[#4D2D37] flex items-center gap-1.5">
-              <Megaphone className="w-3.5 h-3.5 text-[#99223A]" />
+            <span className="text-xs font-semibold text-[#2D201D] flex items-center gap-1.5">
+              <Megaphone className="w-3.5 h-3.5 text-[#6D1F32]" />
               <span>Top Website Announcement Banner</span>
             </span>
-            <label className="flex items-center gap-2 text-xs font-semibold text-[#4D2D37] cursor-pointer">
+            <label className="flex items-center gap-2 text-xs font-semibold text-[#2D201D] cursor-pointer">
               <input
                 type="checkbox"
                 checked={formData.announcement.enabled}
@@ -177,7 +177,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
                     announcement: { ...formData.announcement, enabled: e.target.checked },
                   })
                 }
-                className="rounded text-[#99223A] focus:ring-[#99223A]"
+                className="rounded text-[#6D1F32] focus:ring-[#6D1F32]"
               />
               <span>Banner Active</span>
             </label>
@@ -185,7 +185,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-[11px] font-semibold text-[#7A4E5A] mb-1">
+              <label className="block text-[11px] font-semibold text-[#79665C] mb-1">
                 Primary Message
               </label>
               <input
@@ -197,12 +197,12 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
                     announcement: { ...formData.announcement, text: e.target.value },
                   })
                 }
-                className="w-full px-3 py-2 bg-white border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                className="w-full px-3 py-2 bg-[#FFF9F2] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-semibold text-[#7A4E5A] mb-1">
+              <label className="block text-[11px] font-semibold text-[#79665C] mb-1">
                 Secondary Subtitle
               </label>
               <input
@@ -217,7 +217,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
                     },
                   })
                 }
-                className="w-full px-3 py-2 bg-white border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+                className="w-full px-3 py-2 bg-[#FFF9F2] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
               />
             </div>
           </div>
@@ -225,36 +225,36 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
         {/* Delivery Areas */}
         <div>
-          <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5 flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5 text-[#99223A]" />
+          <label className="block text-xs font-semibold text-[#2D201D] mb-1.5 flex items-center gap-1.5">
+            <MapPin className="w-3.5 h-3.5 text-[#6D1F32]" />
             <span>Delivery Service Areas (One per line)</span>
           </label>
           <textarea
             rows={5}
             value={deliveryAreasText}
             onChange={(e) => setDeliveryAreasText(e.target.value)}
-            className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none font-sans"
+            className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none font-sans"
           />
         </div>
 
         {/* Delivery Policy Text */}
         <div>
-          <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5 flex items-center gap-1.5">
-            <FileText className="w-3.5 h-3.5 text-[#99223A]" />
+          <label className="block text-xs font-semibold text-[#2D201D] mb-1.5 flex items-center gap-1.5">
+            <FileText className="w-3.5 h-3.5 text-[#6D1F32]" />
             <span>Store Delivery Policy Text</span>
           </label>
           <textarea
             rows={3}
             value={formData.deliveryPolicy}
             onChange={(e) => setFormData({ ...formData, deliveryPolicy: e.target.value })}
-            className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none font-sans"
+            className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none font-sans"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSaving}
-          className="px-6 py-2.5 bg-gradient-to-r from-[#99223A] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-white rounded-xl text-xs font-semibold shadow-xs transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60"
+          className="px-6 py-2.5 bg-[#6D1F32] hover:bg-[#4A1423] text-white rounded-xl text-xs font-semibold shadow-xs transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-60"
         >
           <Save className="w-4 h-4" />
           <span>{isSaving ? 'Saving Changes...' : 'Save Store Settings'}</span>
@@ -262,14 +262,14 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
       </form>
 
       {/* Security: Change Admin Password */}
-      <form onSubmit={handleChangePassword} className="bg-white rounded-3xl border border-[#E8D0D6] p-6 sm:p-8 shadow-xs space-y-5">
+      <form onSubmit={handleChangePassword} className="bg-[#FFF9F2] rounded-3xl border border-[#D8BFAF] p-6 sm:p-8 shadow-xs space-y-5">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl bg-[#FAF0F3] text-[#99223A] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-[#F3E9DC] text-[#6D1F32] flex items-center justify-center">
             <KeyRound className="w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-lg font-serif font-bold text-[#2D1B22]">Change Studio Master Password</h2>
-            <p className="text-xs text-[#7A4E5A]">
+            <h2 className="text-lg font-serif font-bold text-[#2D201D]">Change Studio Master Password</h2>
+            <p className="text-xs text-[#79665C]">
               Update the private password used to access this Admin Studio.
             </p>
           </div>
@@ -280,7 +280,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
             className={`p-3.5 rounded-xl text-xs font-semibold flex items-center gap-2 ${
               passwordStatus.type === 'success'
                 ? 'bg-[#EBF7EE] text-[#1B4332] border border-[#B7E4C7]'
-                : 'bg-[#FFF0F3] text-[#801B30] border border-[#FFCCD5]'
+                : 'bg-[#F3E9DC] text-[#4A1423] border border-[#D8BFAF]'
             }`}
           >
             <CheckCircle className="w-4 h-4 shrink-0" />
@@ -290,7 +290,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+            <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
               Current Password *
             </label>
             <input
@@ -299,12 +299,12 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
               value={currentPassword}
               onChange={(e) => setCurrentPassword(e.target.value)}
               placeholder="Current password"
-              className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+            <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
               New Password *
             </label>
             <input
@@ -314,12 +314,12 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               placeholder="Minimum 8 characters"
-              className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-[#4D2D37] mb-1.5">
+            <label className="block text-xs font-semibold text-[#2D201D] mb-1.5">
               Confirm New Password *
             </label>
             <input
@@ -328,7 +328,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Retype new password"
-              className="w-full px-3.5 py-2.5 bg-[#FAF7F2] border border-[#E2CBD2] rounded-xl text-xs text-[#2D1B22] focus:ring-2 focus:ring-[#99223A] focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#F3E9DC] border border-[#D8BFAF] rounded-xl text-xs text-[#2D201D] focus:ring-2 focus:ring-[#6D1F32] focus:outline-none"
             />
           </div>
         </div>
@@ -336,7 +336,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({
         <button
           type="submit"
           disabled={isChangingPassword}
-          className="px-5 py-2.5 bg-[#FAF0F3] hover:bg-[#F5E1E7] border border-[#E8C2CC] text-[#99223A] rounded-xl text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60"
+          className="px-5 py-2.5 bg-[#FFF9F2] hover:bg-[#F3E9DC] border border-[#D8BFAF] text-[#6D1F32] rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 cursor-pointer disabled:opacity-60"
         >
           <Lock className="w-3.5 h-3.5" />
           <span>{isChangingPassword ? 'Updating...' : 'Update Password'}</span>

@@ -1,4 +1,4 @@
-import { verifyAdminPassword } from '../../src/server/auth';
+import { verifyAdminPassword, authenticateUser } from '../../src/server/auth';
 
 interface HandlerEvent {
   httpMethod: string;
@@ -58,7 +58,7 @@ export const handler = async (event: HandlerEvent): Promise<HandlerResponse> => 
       };
     }
 
-    const { password } = payload;
+    const { username, identifier, password } = payload;
     if (!password) {
       return {
         statusCode: 400,
@@ -67,12 +67,21 @@ export const handler = async (event: HandlerEvent): Promise<HandlerResponse> => 
       };
     }
 
-    const verification = verifyAdminPassword(password);
+    const userInput = username || identifier;
+    let verification: { success: boolean; token?: string; error?: string; role?: string; redirectTo?: string };
+
+    if (userInput) {
+      const authRes = authenticateUser(userInput, password);
+      verification = authRes;
+    } else {
+      verification = verifyAdminPassword(password);
+    }
+
     if (!verification.success) {
       return {
         statusCode: 401,
         headers: COMMON_HEADERS,
-        body: JSON.stringify({ error: verification.error || 'Incorrect admin password' }),
+        body: JSON.stringify({ error: verification.error || 'Incorrect credentials' }),
       };
     }
 
@@ -82,7 +91,9 @@ export const handler = async (event: HandlerEvent): Promise<HandlerResponse> => 
       body: JSON.stringify({
         success: true,
         token: verification.token,
-        message: 'Welcome to DILSY Admin Studio',
+        role: verification.role || 'admin',
+        redirectTo: verification.redirectTo || '/admin',
+        message: 'Welcome to DILSY Studio',
       }),
     };
   } catch (err: any) {

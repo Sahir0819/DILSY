@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
-import { Gift, Check, Sparkles, MessageCircle, AlertCircle, Info, Calendar, Clock, MapPin, User, Heart, Plus, Minus, Trash2, Tag } from 'lucide-react';
+import { Gift, Check, Sparkles, MessageCircle, AlertCircle, Info, Calendar, Clock, MapPin, User, Heart, Plus, Minus, Trash2, Tag, ChevronDown, ChevronUp } from 'lucide-react';
 import { CustomHamperForm, AddOnItem, SelectedAddOn } from '../types';
 import { AddOnThumbnail } from './AddOnThumbnail';
 import { generateCustomHamperWhatsAppMessage, EXACT_DELIVERY_POLICY, getThemePackagingGuidance, getBaseHamperPrice } from '../utils/whatsapp';
 import { useStore } from '../context/StoreContext';
+import { Breadcrumbs } from './Breadcrumbs';
 
 interface CustomHamperBuilderProps {
   onOpenReviewModal: (title: string, message: string) => void;
   prefilledOccasion?: string;
+  onNavigate?: (path: string) => void;
+  isStandalonePage?: boolean;
 }
 
 export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   onOpenReviewModal,
   prefilledOccasion,
+  onNavigate,
+  isStandalonePage = true,
 }) => {
   const { addons, settings, calculateDiscount, recordOrderInquiry } = useStore();
 
@@ -34,6 +39,8 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   });
 
   const [activeAddOnTab, setActiveAddOnTab] = useState<'All' | 'Flowers' | 'Chocolates & Treats' | 'Cute Extras'>('All');
+  const [mobileSummaryOpen, setMobileSummaryOpen] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   // Sync if prefilledOccasion changes
   React.useEffect(() => {
@@ -41,8 +48,6 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
       setFormData((prev) => ({ ...prev, occasion: prefilledOccasion }));
     }
   }, [prefilledOccasion]);
-
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const recipientOptions = [
     'Girlfriend / Partner',
@@ -69,10 +74,10 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   ];
 
   const budgetOptions = [
-    'Small Box — ₹799',
-    'Medium Box — ₹969',
-    'Large Box — ₹1,199',
-    'Custom Budget',
+    { label: 'Small Box — ₹799', size: 'Small', desc: 'A budget-friendly sweet gesture' },
+    { label: 'Medium / Loved Box — ₹969', size: 'Medium', desc: 'Our signature balanced hamper' },
+    { label: 'Large Box — ₹1,199', size: 'Large', desc: 'Generous hamper with extra room' },
+    { label: 'Custom Budget', size: 'Custom', desc: 'Specify your target budget' },
   ];
 
   const handleToggleAddOn = (addon: AddOnItem) => {
@@ -206,12 +211,6 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   };
 
   const isCustomBudget = formData.budget === 'Custom Budget';
-  const displayBudgetSummary = isCustomBudget
-    ? formData.customBudgetAmount
-      ? `Custom target: ₹${formData.customBudgetAmount} (Price to be confirmed)`
-      : 'Price to be confirmed with DILSY owner'
-    : `${formData.budget} (Base target)`;
-
   const availableAddons = addons.filter((a) => a.isAvailable);
   const filteredAddOns = availableAddons.filter((item) => {
     if (activeAddOnTab === 'All') return true;
@@ -219,157 +218,185 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   });
 
   return (
-    <section id="custom-builder" className="py-16 md:py-24 bg-gradient-to-b from-[#FFF5F7] via-[#FDF9F7] to-[#FFF8FA] border-t border-b border-[#E8D0D6]">
+    <div className="min-h-screen bg-[#FCE7ED] text-[#3B2028] py-8 sm:py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Breadcrumbs */}
+        {onNavigate && (
+          <div className="mb-6">
+            <Breadcrumbs
+              items={[{ label: 'Custom Hamper' }]}
+              onNavigate={onNavigate}
+            />
+          </div>
+        )}
+
         {/* Section Header */}
-        <div className="max-w-3xl mb-12">
-          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#A32842] bg-[#FFEBF0] px-3 py-1 rounded-full border border-[#FFCCD5] mb-2 shadow-2xs">
-            <Heart className="w-3.5 h-3.5 fill-[#C73858] text-[#C73858]" />
+        <div className="max-w-3xl mb-10">
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#9F2343] bg-[#FFFAF8] px-3 py-1 rounded-full border border-[#F1C5D1] mb-2 shadow-2xs">
+            <Heart className="w-3.5 h-3.5 fill-[#9F2343] text-[#9F2343]" />
             <span>Personalised Hamper Studio</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#2D1B22] tracking-tight text-balance">
-            Create Your Custom DILSY Hamper
-          </h2>
-          <p className="mt-2 text-base text-[#52333D] font-light leading-relaxed">
-            Every connection is unique. Choose your recipient, occasion theme, add-ons, and budget. DILSY will prepare your hamper with theme-matched packaging, a personal handwritten card, and direct delivery across Chandigarh University & Mohali.
+          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-[#3B2028] tracking-tight">
+            Create Your Custom Hamper
+          </h1>
+          <p className="mt-2 text-sm sm:text-base text-[#79665C] font-light leading-relaxed">
+            Follow our 6 simple steps to tailor a personalised gift hamper. Packaging is styled to your chosen occasion, accompanied by your handwritten card and verified on WhatsApp before dispatch.
           </p>
         </div>
 
-        {/* 2-Column Layout: Form on Left, Live Order Blueprint Summary on Right */}
+        {/* Mobile Collapsible Live Summary Button */}
+        <div className="lg:hidden mb-6">
+          <button
+            type="button"
+            onClick={() => setMobileSummaryOpen(!mobileSummaryOpen)}
+            className="w-full p-4 bg-[#FFFAF8] border border-[#F1C5D1] rounded-2xl flex items-center justify-between text-xs font-semibold text-[#9F2343] shadow-xs cursor-pointer"
+          >
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#9F2343]" />
+              <span>Live Blueprint Summary</span>
+              {estimatedTotal !== null && (
+                <span className="font-serif font-bold text-sm text-[#3B2028]">
+                  · ₹{finalAmount.toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
+            {mobileSummaryOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+          </button>
+        </div>
+
+        {/* 2-Column Layout: 6 Steps on Left, Sticky Summary on Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Main Form Fields */}
-          <form onSubmit={handleSubmit} className="lg:col-span-8 space-y-8 bg-[#FFFCFD] p-6 sm:p-8 rounded-2xl border border-[#E8C2CC] shadow-xs">
-            {/* Step 1: Recipient & Occasion */}
+          {/* Main Form: 6 Steps */}
+          <form onSubmit={handleSubmit} className="lg:col-span-8 space-y-8 bg-[#FFFAF8] p-6 sm:p-8 rounded-3xl border border-[#F1C5D1] shadow-xs">
+            {/* STEP 1: Choose Occasion / Theme */}
             <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#E8D0D6]">
-                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#99223A] to-[#C73858] text-white text-xs font-serif flex items-center justify-center font-bold shadow-2xs">1</span>
-                <h3 className="font-serif font-bold text-lg text-[#2D1B22]">Recipient & Occasion</h3>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
+                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">1</span>
+                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose Occasion / Theme</h3>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Who is this for?
-                  </label>
-                  <select
-                    value={formData.recipientType}
-                    onChange={(e) => setFormData({ ...formData, recipientType: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] focus:ring-1 focus:ring-[#C73858] focus:border-[#C73858] outline-none"
-                  >
-                    {recipientOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    What are we celebrating?
-                  </label>
-                  <select
-                    value={formData.occasion}
-                    onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] focus:ring-1 focus:ring-[#C73858] focus:border-[#C73858] outline-none"
-                  >
-                    {occasionOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              <div>
+                <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-2">
+                  What is the occasion?
+                </label>
+                <select
+                  value={formData.occasion}
+                  onChange={(e) => setFormData({ ...formData, occasion: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] focus:ring-1 focus:ring-[#9F2343] focus:border-[#9F2343] outline-none"
+                >
+                  {occasionOptions.map((opt) => (
+                    <option key={opt} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+                <p className="mt-1.5 text-xs text-[#79665C]">
+                  Box packaging & styling automatically follows this occasion theme.
+                </p>
               </div>
             </div>
 
-            {/* Step 2: Target Hamper Size & Budget */}
+            {/* STEP 2: Choose Recipient */}
             <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#E8D0D6]">
-                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#99223A] to-[#C73858] text-white text-xs font-serif flex items-center justify-center font-bold shadow-2xs">2</span>
-                <div>
-                  <h3 className="font-serif font-bold text-lg text-[#2D1B22]">Select Hamper Size & Budget</h3>
-                  <p className="text-xs text-[#6B424E]">Choose one of our official box sizes or provide a custom budget target.</p>
-                </div>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
+                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">2</span>
+                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose the Recipient</h3>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                {recipientOptions.map((opt) => {
+                  const selected = formData.recipientType === opt;
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, recipientType: opt })}
+                      className={`p-3 rounded-xl border text-xs font-medium text-left transition-all cursor-pointer ${
+                        selected
+                          ? 'bg-[#9F2343] text-white border-[#72172F] shadow-xs'
+                          : 'bg-[#FFF1F4] text-[#3B2028] border-[#F1C5D1] hover:border-[#9F2343]'
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* STEP 3: Box Size & Budget */}
+            <div>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
+                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">3</span>
+                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose Box Size & Budget</h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                {budgetOptions.map((opt) => (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => setFormData({ ...formData, budget: opt })}
-                    className={`p-3.5 rounded-xl border text-left transition-all flex items-start justify-between cursor-pointer ${
-                      formData.budget === opt
-                        ? 'border-[#99223A] bg-[#FFF0F4] text-[#2D1B22] shadow-xs'
-                        : 'border-[#E8C2CC] bg-white hover:border-[#F29CAE] text-[#52333D]'
-                    }`}
-                  >
-                    <div>
-                      <span className="font-serif font-bold text-sm block text-[#2D1B22]">{opt}</span>
-                      <span className="text-[11px] text-[#6B424E] mt-0.5 block">
-                        {opt.includes('799')
-                          ? 'A sweet, budget-friendly box for thoughtful gestures.'
-                          : opt.includes('969')
-                          ? 'Recommended: balanced surprises and personal touches.'
-                          : opt.includes('1,199')
-                          ? 'Generous celebration hamper with extra room.'
-                          : 'Custom target budget to be discussed with DILSY.'}
-                      </span>
-                    </div>
-                    {formData.budget === opt && (
-                      <div className="w-5 h-5 rounded-full bg-[#99223A] text-white flex items-center justify-center shrink-0 ml-2">
-                        <Check className="w-3 h-3 stroke-[3]" />
+                {budgetOptions.map((b) => {
+                  const selected = formData.budget === b.label || (b.label === 'Custom Budget' && formData.budget === 'Custom Budget');
+                  return (
+                    <div
+                      key={b.label}
+                      onClick={() => setFormData({ ...formData, budget: b.label })}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                        selected
+                          ? 'bg-[#FFF1F4] border-[#9F2343] shadow-xs ring-1 ring-[#9F2343]'
+                          : 'bg-[#FFFAF8] border-[#F1C5D1] hover:border-[#9F2343]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-serif font-bold text-sm text-[#3B2028]">
+                          {b.label}
+                        </span>
+                        <div className={`w-4 h-4 rounded-full border flex items-center justify-center ${
+                          selected ? 'bg-[#9F2343] border-[#9F2343] text-white' : 'border-[#F1C5D1]'
+                        }`}>
+                          {selected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
+                        </div>
                       </div>
-                    )}
-                  </button>
-                ))}
+                      <p className="text-xs text-[#79665C]">{b.desc}</p>
+                    </div>
+                  );
+                })}
               </div>
 
-              {formData.budget === 'Custom Budget' && (
-                <div id="customBudgetAmount" className="p-3.5 bg-[#FFF0F4] rounded-xl border border-[#FFCCD5]">
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1">
-                    Your Target Budget Amount (in ₹) *
+              {isCustomBudget && (
+                <div className="p-4 bg-[#FFF1F4] rounded-xl border border-[#F1C5D1] space-y-2">
+                  <label className="block text-xs font-semibold text-[#3B2028]">
+                    Target Budget Amount (₹)
                   </label>
                   <input
                     type="number"
-                    min="500"
-                    step="50"
                     value={formData.customBudgetAmount}
                     onChange={(e) => setFormData({ ...formData, customBudgetAmount: e.target.value })}
-                    placeholder="e.g. 1500"
-                    className="w-full px-3.5 py-2 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] outline-none"
+                    placeholder="Enter amount (e.g. 1500)"
+                    className="w-full px-3.5 py-2.5 bg-[#FFFAF8] border border-[#F1C5D1] rounded-lg text-sm text-[#3B2028] outline-none"
                   />
-                  {errors.customBudgetAmount && (
-                    <p className="text-xs text-[#99223A] mt-1">{errors.customBudgetAmount}</p>
-                  )}
+                  <p className="text-[11px] text-[#79665C]">
+                    Custom budget requests are subject to confirmation on WhatsApp based on your chosen items.
+                  </p>
                 </div>
               )}
             </div>
 
-            {/* Step 3: Add-ons Catalogue */}
+            {/* STEP 4: Choose Add-ons */}
             <div>
-              <div className="flex items-center gap-2 mb-2 pb-2 border-b border-[#E8D0D6]">
-                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#99223A] to-[#C73858] text-white text-xs font-serif flex items-center justify-center font-bold shadow-2xs">3</span>
-                <div>
-                  <h3 className="font-serif font-bold text-lg text-[#2D1B22]">Add-ons</h3>
-                  <p className="text-xs text-[#6B424E]">
-                    Make your hamper extra special with a few little extras. Select any add-ons you'd like to include.
-                  </p>
-                </div>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
+                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">4</span>
+                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Choose Add-ons (Optional)</h3>
               </div>
 
-              {/* Add-on Categories Filter Pills */}
-              <div className="flex items-center gap-1.5 p-1 bg-[#FAF0F3] rounded-xl border border-[#E8C2CC] overflow-x-auto mb-4">
+              {/* Category Filter Pills */}
+              <div className="flex items-center gap-1.5 mb-4 overflow-x-auto pb-1">
                 {(['All', 'Flowers', 'Chocolates & Treats', 'Cute Extras'] as const).map((tab) => (
                   <button
                     key={tab}
                     type="button"
                     onClick={() => setActiveAddOnTab(tab)}
-                    className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap cursor-pointer transition-all ${
                       activeAddOnTab === tab
-                        ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs'
-                        : 'text-[#6B3241] hover:text-[#99223A]'
+                        ? 'bg-[#9F2343] text-white font-semibold'
+                        : 'bg-[#FFF1F4] text-[#79665C] hover:text-[#9F2343] border border-[#F1C5D1]'
                     }`}
                   >
                     {tab}
@@ -377,69 +404,52 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                 ))}
               </div>
 
-              {/* Add-ons Grid */}
+              {/* Add-on Items Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {filteredAddOns.map((item) => {
-                  const selected = formData.selectedAddOns.find((a) => a.id === item.id);
-                  const isSelected = !!selected;
-
+                {filteredAddOns.map((addon) => {
+                  const selected = formData.selectedAddOns.find((a) => a.id === addon.id);
                   return (
                     <div
-                      key={item.id}
-                      onClick={() => handleToggleAddOn(item)}
-                      className={`p-3.5 rounded-xl border text-left transition-all flex items-center justify-between gap-3 cursor-pointer ${
-                        isSelected
-                          ? 'border-[#99223A] bg-[#FFF0F4] shadow-xs'
-                          : 'border-[#E8C2CC] bg-white hover:border-[#F29CAE]'
+                      key={addon.id}
+                      onClick={() => handleToggleAddOn(addon)}
+                      className={`p-3 rounded-xl border flex items-center justify-between gap-3 cursor-pointer transition-all ${
+                        selected
+                          ? 'bg-[#FFF1F4] border-[#9F2343] shadow-xs'
+                          : 'bg-[#FFFAF8] border-[#F1C5D1] hover:border-[#9F2343]'
                       }`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg bg-[#FAF0F3] border border-[#FFCCD5] overflow-hidden flex items-center justify-center shrink-0">
-                          {item.customImage ? (
-                            <img src={item.customImage} alt={item.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <AddOnThumbnail type={item.illustrationType} className="w-8 h-8 object-contain" />
-                          )}
-                        </div>
-                        <div>
-                          <span className="font-semibold text-xs text-[#2D1B22] block leading-tight">
-                            {item.name}
-                          </span>
-                          <span className="text-xs font-bold text-[#99223A] mt-0.5 block tabular-nums">
-                            ₹{item.price}
-                          </span>
-                          {item.description && (
-                            <span className="text-[10px] text-[#6B424E] line-clamp-1">
-                              {item.description}
-                            </span>
-                          )}
+                      <div className="flex items-center gap-3 min-w-0">
+                        <AddOnThumbnail type={addon.illustrationType} className="w-12 h-12 shrink-0" />
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold text-[#3B2028] truncate">{addon.name}</p>
+                          <p className="text-xs font-bold text-[#9F2343] tabular-nums mt-0.5">₹{addon.price}</p>
                         </div>
                       </div>
 
-                      {isSelected ? (
-                        <div className="flex items-center gap-1.5 shrink-0" onClick={(e) => e.stopPropagation()}>
+                      {selected ? (
+                        <div className="flex items-center gap-1.5 bg-[#FFFAF8] p-1 rounded-lg border border-[#F1C5D1]" onClick={(e) => e.stopPropagation()}>
                           <button
                             type="button"
-                            onClick={(e) => handleUpdateAddOnQty(item.id, -1, e)}
-                            className="w-6 h-6 rounded-md bg-white border border-[#FFCCD5] text-[#99223A] hover:bg-[#FFE5EC] flex items-center justify-center text-xs font-bold"
+                            onClick={(e) => handleUpdateAddOnQty(addon.id, -1, e)}
+                            className="p-1 text-[#79665C] hover:text-[#9F2343] cursor-pointer"
                           >
-                            <Minus className="w-3 h-3" />
+                            <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="text-xs font-bold font-mono text-[#2D1B22] w-5 text-center">
+                          <span className="text-xs font-bold text-[#3B2028] px-1 tabular-nums">
                             {selected.quantity}
                           </span>
                           <button
                             type="button"
-                            onClick={(e) => handleUpdateAddOnQty(item.id, 1, e)}
-                            className="w-6 h-6 rounded-md bg-[#99223A] text-white hover:bg-[#801B30] flex items-center justify-center text-xs font-bold"
+                            onClick={(e) => handleUpdateAddOnQty(addon.id, 1, e)}
+                            className="p-1 text-[#79665C] hover:text-[#9F2343] cursor-pointer"
                           >
-                            <Plus className="w-3 h-3" />
+                            <Plus className="w-3.5 h-3.5" />
                           </button>
                         </div>
                       ) : (
                         <button
                           type="button"
-                          className="px-2.5 py-1 rounded-lg border border-[#FFCCD5] text-xs font-semibold text-[#99223A] bg-[#FFF5F8] hover:bg-[#FFEBF0] shrink-0"
+                          className="px-2.5 py-1 bg-[#FFF1F4] text-[#9F2343] rounded-lg text-xs font-semibold border border-[#F1C5D1] hover:bg-[#9F2343] hover:text-white transition-colors cursor-pointer"
                         >
                           + Add
                         </button>
@@ -450,305 +460,248 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
               </div>
             </div>
 
-            {/* Step 4: Personalisation & Special Instructions */}
+            {/* STEP 5: Recipient Name & Handwritten Card Message */}
             <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#E8D0D6]">
-                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#99223A] to-[#C73858] text-white text-xs font-serif flex items-center justify-center font-bold shadow-2xs">4</span>
-                <h3 className="font-serif font-bold text-lg text-[#2D1B22]">Personal Notes & Special Instructions</h3>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
+                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">5</span>
+                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Recipient Name & Card Message</h3>
               </div>
 
               <div className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Recipient's Name / Pet Name
+                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                    Recipient's Name (Optional)
                   </label>
                   <input
                     type="text"
                     value={formData.recipientName}
                     onChange={(e) => setFormData({ ...formData, recipientName: e.target.value })}
                     placeholder="e.g. Ananya, Kabir, etc."
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] focus:ring-1 focus:ring-[#C73858] focus:border-[#C73858] outline-none"
+                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Greeting-Card Message
+                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                    Handwritten Card Message (Optional)
                   </label>
                   <textarea
                     rows={3}
                     value={formData.personalNote}
                     onChange={(e) => setFormData({ ...formData, personalNote: e.target.value })}
-                    placeholder="Write the message you'd like us to handwrite on a card. Keep it as long or short as your feelings demand..."
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] focus:ring-1 focus:ring-[#C73858] focus:border-[#C73858] outline-none"
+                    placeholder="Write the message you would like us to handwrite on a personal card..."
+                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Special Instructions / Dietary / Colour Preferences
+                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                    Special Packaging or Delivery Instructions
                   </label>
                   <input
                     type="text"
                     value={formData.specialInstructions}
                     onChange={(e) => setFormData({ ...formData, specialInstructions: e.target.value })}
-                    placeholder="e.g. Vegetarian snacks only, preferred ribbon colour, midnight surprise, etc."
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] focus:ring-1 focus:ring-[#C73858] focus:border-[#C73858] outline-none"
+                    placeholder="e.g. Midnight delivery request, specific chocolate preference"
+                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Step 5: Delivery & Customer Contact */}
+            {/* STEP 6: Delivery Area & Contact Details */}
             <div>
-              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#E8D0D6]">
-                <span className="w-6 h-6 rounded-full bg-gradient-to-br from-[#99223A] to-[#C73858] text-white text-xs font-serif flex items-center justify-center font-bold shadow-2xs">5</span>
-                <h3 className="font-serif font-bold text-lg text-[#2D1B22]">Delivery Details & Contact</h3>
+              <div className="flex items-center gap-2 mb-4 pb-2 border-b border-[#F1C5D1]">
+                <span className="w-6 h-6 rounded-full bg-[#9F2343] text-white text-xs font-serif flex items-center justify-center font-bold">6</span>
+                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Delivery Area & Contact Details</h3>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div id="customerName">
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Your Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.customerName}
-                    onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                    placeholder="Enter your name"
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] outline-none"
-                  />
-                  {errors.customerName && (
-                    <p className="text-xs text-[#99223A] mt-1">{errors.customerName}</p>
-                  )}
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                      Your Name *
+                    </label>
+                    <input
+                      id="customerName"
+                      type="text"
+                      value={formData.customerName}
+                      onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
+                      placeholder="Your full name"
+                      className={`w-full px-4 py-2.5 bg-[#FFF1F4] border rounded-xl text-sm text-[#3B2028] outline-none ${
+                        errors.customerName ? 'border-red-500 ring-1 ring-red-500' : 'border-[#F1C5D1]'
+                      }`}
+                    />
+                    {errors.customerName && (
+                      <p className="mt-1 text-xs text-red-600">{errors.customerName}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                      Your WhatsApp Phone Number *
+                    </label>
+                    <input
+                      id="customerPhone"
+                      type="tel"
+                      value={formData.customerPhone}
+                      onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
+                      placeholder="+91 98765 43210"
+                      className={`w-full px-4 py-2.5 bg-[#FFF1F4] border rounded-xl text-sm text-[#3B2028] outline-none ${
+                        errors.customerPhone ? 'border-red-500 ring-1 ring-red-500' : 'border-[#F1C5D1]'
+                      }`}
+                    />
+                    {errors.customerPhone && (
+                      <p className="mt-1 text-xs text-red-600">{errors.customerPhone}</p>
+                    )}
+                  </div>
                 </div>
 
-                <div id="customerPhone">
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Your Phone (WhatsApp) *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.customerPhone}
-                    onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                    placeholder="e.g. 9876543210"
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] outline-none"
-                  />
-                  {errors.customerPhone && (
-                    <p className="text-xs text-[#99223A] mt-1">{errors.customerPhone}</p>
-                  )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                      Delivery Area (CU & Mohali)
+                    </label>
+                    <select
+                      value={formData.deliveryArea}
+                      onChange={(e) => setFormData({ ...formData, deliveryArea: e.target.value })}
+                      className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
+                    >
+                      {settings.deliveryAreas.map((area) => (
+                        <option key={area} value={area}>
+                          {area}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                      Preferred Delivery Date *
+                    </label>
+                    <input
+                      id="deliveryDate"
+                      type="date"
+                      value={formData.deliveryDate}
+                      onChange={(e) => setFormData({ ...formData, deliveryDate: e.target.value })}
+                      className={`w-full px-4 py-2.5 bg-[#FFF1F4] border rounded-xl text-sm text-[#3B2028] outline-none ${
+                        errors.deliveryDate ? 'border-red-500 ring-1 ring-red-500' : 'border-[#F1C5D1]'
+                      }`}
+                    />
+                    {errors.deliveryDate && (
+                      <p className="mt-1 text-xs text-red-600">{errors.deliveryDate}</p>
+                    )}
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Service Area / Zone
-                  </label>
-                  <select
-                    value={formData.deliveryArea}
-                    onChange={(e) => setFormData({ ...formData, deliveryArea: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] outline-none"
-                  >
-                    {settings.deliveryAreas.map((area) => (
-                      <option key={area} value={area}>
-                        {area}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Hostel / PG / Landmark
+                  <label className="block text-xs font-semibold text-[#3B2028] uppercase tracking-wider mb-1.5">
+                    Specific Landmark / Hostel / PG Details
                   </label>
                   <input
                     type="text"
                     value={formData.specificLandmark}
                     onChange={(e) => setFormData({ ...formData, specificLandmark: e.target.value })}
-                    placeholder="e.g. NC4 Hostel, Gate 2, or Sunny Enclave Flat"
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] outline-none"
+                    placeholder="e.g. Block C Hostel Gate, Sunny Enclave PG 4"
+                    className="w-full px-4 py-2.5 bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl text-sm text-[#3B2028] outline-none"
                   />
-                </div>
-
-                <div id="deliveryDate">
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Preferred Delivery Date *
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={formData.deliveryDate}
-                    onChange={(e) => setFormData({ ...formData, deliveryDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] outline-none"
-                  />
-                  {errors.deliveryDate && (
-                    <p className="text-xs text-[#99223A] mt-1">{errors.deliveryDate}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-[#3D141C] uppercase tracking-wider mb-1.5">
-                    Preferred Time Window
-                  </label>
-                  <select
-                    value={formData.timeWindow}
-                    onChange={(e) => setFormData({ ...formData, timeWindow: e.target.value })}
-                    className="w-full px-3.5 py-2.5 bg-white border border-[#E8C2CC] rounded-lg text-sm text-[#2D1B22] outline-none"
-                  >
-                    {settings.timeWindows.map((win) => (
-                      <option key={win} value={win}>
-                        {win}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
             </div>
 
-            {/* Submit Action */}
-            <div className="pt-4 border-t border-[#E8D0D6]">
+            {/* Submit Button */}
+            <div className="pt-4 border-t border-[#F1C5D1]">
               <button
                 type="submit"
-                className="w-full py-4 px-6 bg-gradient-to-r from-[#99223A] via-[#A82841] to-[#801B30] hover:from-[#A82841] hover:to-[#8F1F36] text-[#FFF0F3] rounded-xl text-sm font-semibold tracking-wide shadow-md shadow-[#99223A]/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-4 px-6 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-sm font-semibold tracking-wide transition-all shadow-md shadow-[#9F2343]/20 flex items-center justify-center gap-2 cursor-pointer"
               >
-                <MessageCircle className="w-5 h-5 text-[#FFB3C6]" />
-                <span>Review & Submit Blueprint via WhatsApp</span>
+                <MessageCircle className="w-4 h-4 text-white" />
+                <span>Review & Order on WhatsApp</span>
               </button>
+              <p className="mt-2 text-center text-xs text-[#79665C]">
+                Final contents, pricing, delivery charges, and timing are confirmed with you on WhatsApp before acceptance.
+              </p>
             </div>
           </form>
 
-          {/* Right Column: Live Order Blueprint Summary */}
-          <div className="lg:col-span-4 sticky top-24 space-y-4">
-            <div className="bg-[#FFFCFD] p-6 rounded-2xl border border-[#E8C2CC] shadow-xs space-y-4">
-              <div className="flex items-center gap-2 pb-3 border-b border-[#E8D0D6]">
-                <Heart className="w-4 h-4 text-[#99223A] fill-[#FFB3C6]" />
-                <h3 className="font-serif font-bold text-base text-[#2D1B22]">Live Hamper Blueprint</h3>
+          {/* Sticky Live Blueprint Order Summary (Right Column) */}
+          <div className={`lg:col-span-4 ${mobileSummaryOpen ? 'block' : 'hidden lg:block'} sticky top-24 space-y-4`}>
+            <div className="bg-[#FFFAF8] p-6 rounded-3xl border border-[#F1C5D1] shadow-xs space-y-4">
+              <div className="flex items-center gap-2 pb-3 border-b border-[#F1C5D1]">
+                <Sparkles className="w-4 h-4 text-[#9F2343]" />
+                <h3 className="font-serif font-bold text-lg text-[#3B2028]">Order Blueprint</h3>
               </div>
 
-              <div className="space-y-3 text-xs">
-                <div>
-                  <span className="text-[#6B424E] block text-[11px]">Occasion & Theme</span>
-                  <p className="font-semibold text-sm text-[#2D1B22]">{formData.occasion}</p>
+              <div className="space-y-3 text-xs text-[#79665C]">
+                <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
+                  <span>Occasion:</span>
+                  <span className="font-semibold text-[#3B2028] text-right">{formData.occasion}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
+                  <span>Recipient:</span>
+                  <span className="font-semibold text-[#3B2028]">{formData.recipientType}</span>
+                </div>
+                <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
+                  <span>Box Target:</span>
+                  <span className="font-semibold text-[#3B2028]">{formData.budget}</span>
                 </div>
 
-                {/* Automatic Theme-Matched Packaging Direction */}
-                <div className="p-3 bg-gradient-to-r from-[#FFF5F8] to-[#FFF0F4] rounded-xl border border-[#FFCCD5]">
-                  <span className="text-[10px] uppercase font-bold text-[#99223A] tracking-wider block">
-                    Automatic Theme Packaging
-                  </span>
-                  <p className="font-serif font-semibold text-xs text-[#2D1B22] mt-0.5">
-                    {getThemePackagingGuidance(formData.occasion, formData.recipientType)}
-                  </p>
-                </div>
-
-                {/* Add-ons list in live summary */}
-                <div>
-                  <span className="text-[#6B424E] block text-[11px]">
-                    Selected Add-ons ({formData.selectedAddOns.length})
-                  </span>
-                  {formData.selectedAddOns.length > 0 ? (
-                    <div className="space-y-1.5 mt-1 bg-[#FAF7F2] p-2.5 rounded-lg border border-[#E8D0D6]">
-                      {formData.selectedAddOns.map((item) => (
-                        <div key={item.id} className="flex items-center justify-between text-[11px] text-[#2D1B22]">
-                          <span>
-                            {item.name} <strong className="text-[#99223A]">x{item.quantity}</strong>
-                          </span>
-                          <span className="tabular-nums font-semibold">
-                            ₹{(item.price * item.quantity).toLocaleString('en-IN')}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-[11px] text-[#8C6B75] italic mt-0.5">
-                      No optional add-ons selected yet.
-                    </p>
-                  )}
-                </div>
-
-                {/* Functional Pricing Breakdown */}
-                <div className="p-3 bg-gradient-to-r from-[#FFF0F4] to-[#FFEBF0] rounded-xl border border-[#FFCCD5] space-y-1.5">
-                  <div className="flex items-center justify-between text-[11px] text-[#52333D]">
-                    <span>Base Box Price:</span>
-                    <span className="tabular-nums font-medium">
-                      {basePrice !== null ? `₹${basePrice.toLocaleString('en-IN')}` : displayBudgetSummary}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#52333D]">
-                    <span>Add-ons Subtotal:</span>
-                    <span className="tabular-nums font-semibold text-[#99223A]">
-                      + ₹{addOnsSubtotal.toLocaleString('en-IN')}
-                    </span>
-                  </div>
-
-                  {discountAmount > 0 && appliedOffer && (
-                    <div className="flex items-center justify-between text-[11px] text-[#2D6A4F] font-semibold">
-                      <span className="flex items-center gap-1">
-                        <Tag className="w-3 h-3" />
-                        <span>Promo ({appliedOffer.code})</span>
-                      </span>
-                      <span className="tabular-nums">-₹{discountAmount.toLocaleString('en-IN')}</span>
-                    </div>
-                  )}
-
-                  <div className="pt-1.5 border-t border-[#FFCCD5] flex items-center justify-between">
-                    <span className="font-serif font-bold text-xs text-[#2D1B22]">Combined Total:</span>
-                    <span className="font-serif font-bold text-base text-[#99223A] tabular-nums">
-                      {estimatedTotal !== null ? `₹${finalAmount.toLocaleString('en-IN')}*` : 'Custom target'}
-                    </span>
-                  </div>
-                  <p className="text-[10px] text-[#6B424E] italic pt-1 leading-tight">
-                    *Estimated total. Stock availability and delivery charges confirmed on WhatsApp.
-                  </p>
-                </div>
-
-                <div>
-                  <span className="text-[#6B424E] block text-[11px]">For Recipient</span>
-                  <p className="font-semibold text-[#99223A]">{formData.recipientName || '(Name not provided yet)'}</p>
-                </div>
-
-                {formData.personalNote && (
-                  <div>
-                    <span className="text-[#6B424E] block text-[11px]">Personal Note Preview</span>
-                    <p className="italic text-[#52333D] bg-[#FFF0F4] p-2 rounded border border-[#FFCCD5] mt-0.5 line-clamp-3">
-                      "{formData.personalNote}"
-                    </p>
+                {formData.selectedAddOns.length > 0 && (
+                  <div className="py-1 border-b border-[#F1C5D1]/50 space-y-1">
+                    <span className="font-semibold text-[#3B2028] block">Add-ons ({formData.selectedAddOns.length}):</span>
+                    {formData.selectedAddOns.map((addon) => (
+                      <div key={addon.id} className="flex justify-between pl-2 text-[11px]">
+                        <span>{addon.quantity}x {addon.name}</span>
+                        <span className="tabular-nums font-semibold text-[#9F2343]">₹{addon.price * addon.quantity}</span>
+                      </div>
+                    ))}
                   </div>
                 )}
 
-                <div>
-                  <span className="text-[#6B424E] block text-[11px]">Delivery Location</span>
-                  <p className="font-semibold">{formData.deliveryArea}</p>
-                  {formData.specificLandmark && (
-                    <p className="text-[11px] text-[#52333D]">{formData.specificLandmark}</p>
+                {formData.recipientName && (
+                  <div className="flex justify-between py-1 border-b border-[#F1C5D1]/50">
+                    <span>Card Name:</span>
+                    <span className="font-semibold text-[#3B2028]">{formData.recipientName}</span>
+                  </div>
+                )}
+
+                <div className="pt-2 space-y-1.5 text-sm">
+                  <div className="flex justify-between font-semibold text-[#3B2028]">
+                    <span>Estimated Total:</span>
+                    <span className="font-serif font-bold text-xl text-[#9F2343] tabular-nums">
+                      {estimatedTotal !== null ? `₹${finalAmount.toLocaleString('en-IN')}` : 'To be confirmed'}
+                    </span>
+                  </div>
+                  {appliedOffer && (
+                    <p className="text-[11px] text-emerald-800">
+                      Applied Promo: {appliedOffer.code} (-₹{discountAmount})
+                    </p>
                   )}
                 </div>
               </div>
 
-              {/* Delivery Policy Note */}
-              <div className="pt-3 border-t border-[#E8D0D6]">
-                <div className="p-3 bg-[#FFF5F8] rounded-xl text-[11px] text-[#52333D] leading-normal flex items-start gap-2 border border-[#FFCCD5]">
-                  <Info className="w-3.5 h-3.5 text-[#C73858] shrink-0 mt-0.5" />
-                  <span>
-                    "{EXACT_DELIVERY_POLICY}"
-                  </span>
-                </div>
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="w-full py-3 bg-[#9F2343] hover:bg-[#72172F] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Send Order via WhatsApp</span>
+                </button>
               </div>
             </div>
 
-            <div className="p-4 bg-[#FFF8FA] rounded-xl border border-[#FFCCD5] text-center shadow-2xs">
-              <p className="text-xs font-medium text-[#2D1B22] flex items-center justify-center gap-1">
-                <Heart className="w-3 h-3 text-[#C73858] fill-[#FFB3C6]" />
-                <span>Need a rapid surprise consultation?</span>
-              </p>
-              <p className="text-[11px] text-[#6B424E] mt-0.5">
-                WhatsApp us anytime at <span className="font-mono font-semibold text-[#99223A]">+91 {settings.whatsappPhone}</span>
+            {/* Disclaimer & Policy Pill */}
+            <div className="p-4 bg-[#FFFAF8] rounded-2xl border border-[#F1C5D1] text-[11px] text-[#79665C] space-y-1">
+              <p className="font-semibold text-[#3B2028]">Notice:</p>
+              <p>
+                Stock and exact items are verified directly on WhatsApp before payment. We deliver directly to Chandigarh University and Mohali PGs.
               </p>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };

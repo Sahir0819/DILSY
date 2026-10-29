@@ -232,31 +232,31 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#2D1B22] font-sans flex flex-col">
+    <div className="min-h-screen bg-[#FCE7ED] text-[#3B2028] font-sans flex flex-col">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#801B30] text-[#FFF0F3] px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 border border-[#FFCCD5]/40 animate-in fade-in slide-in-from-bottom-2">
-          <Heart className="w-4 h-4 fill-[#FF85A1] text-[#FF85A1]" />
+        <div className="fixed bottom-6 right-6 z-50 bg-[#9F2343] text-white px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 border border-[#72172F] animate-in fade-in slide-in-from-bottom-2">
+          <Heart className="w-4 h-4 fill-white text-white" />
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Top Admin Studio Header */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E8D0D6]">
+      <header className="sticky top-0 z-40 bg-[#FFFAF8]/95 backdrop-blur-md border-b border-[#F1C5D1]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between gap-4">
           {/* Brand & Studio Title */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#99223A] to-[#C73858] text-[#FFF0F3] flex items-center justify-center shadow-xs">
-              <Heart className="w-5 h-5 fill-[#FFF0F3] text-[#FFF0F3]" />
+            <div className="w-10 h-10 rounded-xl bg-[#9F2343] text-white flex items-center justify-center shadow-xs">
+              <Heart className="w-5 h-5 fill-white text-white" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-serif font-bold text-xl text-[#2D1B22]">DILSY</span>
-                <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#99223A] bg-[#FFEBF0] px-2 py-0.5 rounded-full border border-[#FFCCD5]">
+                <span className="font-serif font-bold text-xl text-[#3B2028]">DILSY</span>
+                <span className="text-[10px] font-sans font-bold uppercase tracking-wider text-[#9F2343] bg-[#FFF1F4] px-2 py-0.5 rounded-full border border-[#F1C5D1]">
                   Admin Studio
                 </span>
               </div>
-              <p className="text-[11px] text-[#7A4E5A] hidden sm:block">
+              <p className="text-[11px] text-[#79665C] hidden sm:block">
                 Authenticated Studio Session
               </p>
             </div>
@@ -267,7 +267,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             <button
               onClick={loadAllAdminData}
               disabled={isRefreshing}
-              className="p-2 text-[#6B3241] hover:text-[#99223A] hover:bg-[#FAF0F3] rounded-xl transition-colors cursor-pointer border border-[#E8C2CC] shadow-2xs"
+              className="p-2 text-[#9F2343] hover:text-[#72172F] hover:bg-[#FFF1F4] rounded-xl transition-colors cursor-pointer border border-[#F1C5D1] shadow-2xs"
               title="Refresh Data"
             >
               <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -275,7 +275,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
             <button
               onClick={onNavigateToStore}
-              className="px-3.5 py-2 text-xs font-semibold text-[#6B3241] hover:text-[#99223A] bg-[#FAF0F3] hover:bg-[#F5E1E7] border border-[#E8C2CC] rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              className="px-3.5 py-2 text-xs font-semibold text-[#9F2343] hover:text-[#72172F] bg-[#FFFAF8] hover:bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
             >
               <ExternalLink className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">View Customer Store</span>
@@ -283,7 +283,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
             <button
               onClick={handleLogout}
-              className="px-3.5 py-2 text-xs font-semibold text-[#801B30] hover:bg-[#FFF0F3] border border-[#FFCCD5] rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              className="px-3.5 py-2 text-xs font-semibold text-[#9F2343] hover:bg-[#FFF1F4] border border-[#F1C5D1] rounded-xl transition-colors flex items-center gap-1.5 shadow-2xs cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Logout</span>
@@ -292,7 +292,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
 
         {/* Studio Sub-Navigation Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-[#F2E4E8] overflow-x-auto">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-[#F1C5D1] overflow-x-auto">
           <nav className="flex items-center gap-1 sm:gap-2 py-2">
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -304,8 +304,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   onClick={() => setActiveTab(item.id)}
                   className={`px-3.5 py-2 rounded-xl text-xs font-semibold transition-all flex items-center gap-2 whitespace-nowrap cursor-pointer shrink-0 ${
                     isActive
-                      ? 'bg-gradient-to-r from-[#99223A] to-[#801B30] text-white shadow-xs'
-                      : 'text-[#6B3241] hover:text-[#99223A] hover:bg-[#FAF0F3]'
+                      ? 'bg-[#9F2343] text-white shadow-xs'
+                      : 'text-[#79665C] hover:text-[#9F2343] hover:bg-[#FFF1F4]'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -318,7 +318,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   {item.count !== undefined && !item.alert && (
                     <span
                       className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono tabular-nums ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-[#FAF0F3] text-[#7A4E5A]'
+                        isActive ? 'bg-white/20 text-white' : 'bg-[#FFF1F4] text-[#79665C]'
                       }`}
                     >
                       {item.count}
@@ -335,8 +335,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {isLoading ? (
           <div className="py-24 text-center">
-            <div className="w-8 h-8 border-3 border-[#99223A] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-            <p className="text-sm font-semibold text-[#4D2D37]">Loading DILSY Studio data...</p>
+            <div className="w-8 h-8 border-3 border-[#9F2343] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+            <p className="text-sm font-semibold text-[#3B2028]">Loading DILSY Studio data...</p>
           </div>
         ) : (
           <>
