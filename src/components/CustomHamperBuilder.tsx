@@ -217,6 +217,83 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
     return item.category === activeAddOnTab;
   });
 
+  const renderSummaryCard = (isMobileAccordion = false) => (
+    <div className={`bg-white border border-[#EADBDB] space-y-4 ${isMobileAccordion ? 'p-4 sm:p-5' : 'p-6 sm:p-7'}`}>
+      {!isMobileAccordion && (
+        <div className="pb-3 border-b border-[#EADBDB]">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#7A5A63]">
+            Atelier Receipt
+          </p>
+          <h3 className="font-serif text-xl font-normal text-[#2A0D15] mt-1">
+            Blueprint Summary
+          </h3>
+        </div>
+      )}
+
+      <div className="space-y-3 text-xs text-[#6E565D]">
+        <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+          <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Selected Box:</span>
+          <span className="font-medium text-[#2A0D15]">{formData.budget.split('—')[0]}</span>
+        </div>
+        <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+          <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Wax Seal Finish:</span>
+          <span className="font-medium text-[#3E101D]">{selectedRibbon}</span>
+        </div>
+        <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+          <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Occasion:</span>
+          <span className="font-medium text-[#2A0D15]">{formData.occasion}</span>
+        </div>
+
+        {formData.selectedAddOns.length > 0 && (
+          <div className="py-2 border-b border-[#EADBDB]/50 space-y-1">
+            <span className="text-[10px] uppercase tracking-wider text-[#7A5A63] block">
+              Artisan Add-ons ({formData.selectedAddOns.length}):
+            </span>
+            {formData.selectedAddOns.map((addon) => (
+              <div key={addon.id} className="flex justify-between pl-1 text-[11px]">
+                <span>{addon.quantity}x {addon.name}</span>
+                <span className="font-medium text-[#2A0D15] tabular-nums">
+                  ₹{addon.price * addon.quantity}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
+          <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Personal Note:</span>
+          <span className="font-medium text-[#2A0D15]">
+            {formData.personalNote ? 'Calligraphed Free' : 'Not Added'}
+          </span>
+        </div>
+
+        <div className="pt-2">
+          <div className="flex justify-between items-baseline">
+            <span className="text-xs uppercase tracking-wider text-[#7A5A63]">Estimated Total:</span>
+            <span className="text-2xl font-serif font-normal text-[#2A0D15] tabular-nums">
+              {estimatedTotal !== null ? `₹${finalAmount.toLocaleString('en-IN')}` : 'To be confirmed'}
+            </span>
+          </div>
+          {appliedOffer && (
+            <p className="text-[11px] text-emerald-800 mt-1">
+              Applied: {appliedOffer.code} (-₹{discountAmount})
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="pt-2">
+        <button
+          type="button"
+          onClick={handleSubmit}
+          className="w-full py-3.5 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-[11px] font-medium uppercase tracking-[0.2em] transition-all cursor-pointer shadow-xs select-none touch-manipulation"
+        >
+          Start Creating
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-[#FAF7F5] text-[#2A0D15] py-8 sm:py-14 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -243,24 +320,46 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
           </p>
         </div>
 
-        {/* Mobile Live Summary Pill */}
-        <div className="lg:hidden mb-6">
+        {/* Mobile Live Summary Accordion (Dropdown) */}
+        <div className="lg:hidden mb-6 border border-[#EADBDB] bg-white shadow-xs">
           <button
             type="button"
-            onClick={() => setMobileSummaryOpen(!mobileSummaryOpen)}
-            className="w-full p-4 bg-white border border-[#EADBDB] flex items-center justify-between text-xs font-sans tracking-wide uppercase text-[#3E101D] cursor-pointer"
+            id="mobile-blueprint-summary-trigger"
+            aria-expanded={mobileSummaryOpen}
+            aria-controls="mobile-blueprint-summary-content"
+            onClick={(e) => {
+              e.preventDefault();
+              setMobileSummaryOpen((prev) => !prev);
+            }}
+            className="w-full p-4 flex items-center justify-between text-xs font-sans tracking-wide uppercase text-[#3E101D] cursor-pointer select-none touch-manipulation hover:bg-[#FAF7F5] active:bg-[#F5ECE7] transition-colors"
           >
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#3E101D]" />
-              <span>Blueprint Summary</span>
+            <div className="flex items-center gap-2 pointer-events-none">
+              <Sparkles className="w-4 h-4 text-[#3E101D] shrink-0" />
+              <span className="font-medium">Blueprint Summary</span>
               {estimatedTotal !== null && (
                 <span className="font-semibold text-sm text-[#2A0D15]">
                   · ₹{finalAmount.toLocaleString('en-IN')}
                 </span>
               )}
             </div>
-            {mobileSummaryOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            <div className="p-1 flex items-center justify-center text-[#3E101D] pointer-events-none">
+              {mobileSummaryOpen ? (
+                <ChevronUp className="w-4 h-4 shrink-0 transition-transform duration-200" />
+              ) : (
+                <ChevronDown className="w-4 h-4 shrink-0 transition-transform duration-200" />
+              )}
+            </div>
           </button>
+
+          {/* Collapsible Dropdown Content Directly Underneath Header */}
+          {mobileSummaryOpen && (
+            <div
+              id="mobile-blueprint-summary-content"
+              className="border-t border-[#EADBDB] p-4 bg-[#FAF7F5] animate-in fade-in slide-in-from-top-1 duration-200"
+            >
+              {renderSummaryCard(true)}
+            </div>
+          )}
         </div>
 
         {/* 2-Column Layout (Matching Screenshot 4) */}
@@ -678,80 +777,9 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
             </div>
           </form>
 
-          {/* Sticky Summary Card on Right (Matching Screenshot 4) */}
-          <div className={`lg:col-span-4 ${mobileSummaryOpen ? 'block' : 'hidden lg:block'} sticky top-24 space-y-4`}>
-            <div className="bg-white p-6 sm:p-7 border border-[#EADBDB] space-y-4">
-              <div className="pb-3 border-b border-[#EADBDB]">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-[#7A5A63]">
-                  Atelier Receipt
-                </p>
-                <h3 className="font-serif text-xl font-normal text-[#2A0D15] mt-1">
-                  Blueprint Summary
-                </h3>
-              </div>
-
-              <div className="space-y-3 text-xs text-[#6E565D]">
-                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Selected Box:</span>
-                  <span className="font-medium text-[#2A0D15]">{formData.budget.split('—')[0]}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Wax Seal Finish:</span>
-                  <span className="font-medium text-[#3E101D]">{selectedRibbon}</span>
-                </div>
-                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Occasion:</span>
-                  <span className="font-medium text-[#2A0D15]">{formData.occasion}</span>
-                </div>
-
-                {formData.selectedAddOns.length > 0 && (
-                  <div className="py-2 border-b border-[#EADBDB]/50 space-y-1">
-                    <span className="text-[10px] uppercase tracking-wider text-[#7A5A63] block">
-                      Artisan Add-ons ({formData.selectedAddOns.length}):
-                    </span>
-                    {formData.selectedAddOns.map((addon) => (
-                      <div key={addon.id} className="flex justify-between pl-1 text-[11px]">
-                        <span>{addon.quantity}x {addon.name}</span>
-                        <span className="font-medium text-[#2A0D15] tabular-nums">
-                          ₹{addon.price * addon.quantity}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <div className="flex justify-between py-1 border-b border-[#EADBDB]/50">
-                  <span className="text-[10px] uppercase tracking-wider text-[#7A5A63]">Personal Note:</span>
-                  <span className="font-medium text-[#2A0D15]">
-                    {formData.personalNote ? 'Calligraphed Free' : 'Not Added'}
-                  </span>
-                </div>
-
-                <div className="pt-2">
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-xs uppercase tracking-wider text-[#7A5A63]">Estimated Total:</span>
-                    <span className="text-2xl font-serif font-normal text-[#2A0D15] tabular-nums">
-                      {estimatedTotal !== null ? `₹${finalAmount.toLocaleString('en-IN')}` : 'To be confirmed'}
-                    </span>
-                  </div>
-                  {appliedOffer && (
-                    <p className="text-[11px] text-emerald-800 mt-1">
-                      Applied: {appliedOffer.code} (-₹{discountAmount})
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  className="w-full py-3.5 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-[11px] font-medium uppercase tracking-[0.2em] transition-all cursor-pointer shadow-xs"
-                >
-                  Start Creating
-                </button>
-              </div>
-            </div>
+          {/* Sticky Summary Card on Right (Desktop) */}
+          <div className="hidden lg:block lg:col-span-4 sticky top-24 space-y-4">
+            {renderSummaryCard(false)}
 
             {/* Atelier Policy Notice */}
             <div className="p-4 bg-white border border-[#EADBDB] text-[11px] text-[#7A5A63] space-y-1">

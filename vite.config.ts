@@ -58,6 +58,9 @@ export default defineConfig(() => {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff,woff2}'],
           globIgnores: ['**/aistudio/**'],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+          skipWaiting: true,
+          clientsClaim: true,
+          cleanupOutdatedCaches: true,
           // Never intercept or cache dynamic server APIs, admin routes, or authentication flows
           navigateFallback: '/index.html',
           navigateFallbackDenylist: [/^\/api\/.*/, /^\/admin.*/, /^\/\.netlify\/.*/],
