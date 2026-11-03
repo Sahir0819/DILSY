@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4A1423" />
+      <stop offset="50%" stop-color="#3E101D" />
+      <stop offset="100%" stop-color="#2A0D15" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF5EE" />
+      <stop offset="50%" stop-color="#F5ECE7" />
+      <stop offset="100%" stop-color="#EADBDB" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="104" fill="url(#bgGrad)" />
+
+  <!-- Inner Delicate Border -->
+  <rect x="24" y="24" width="464" height="464" rx="84" fill="none" stroke="#EADBDB" stroke-width="2.5" stroke-opacity="0.4" />
+
+  <!-- Atelier Gift Box & Ribbon Motif -->
+  <g filter="url(#shadow)" transform="translate(256, 210)">
+    <!-- Box Body -->
+    <rect x="-96" y="-30" width="192" height="150" rx="12" fill="#FAF7F5" stroke="#EADBDB" stroke-width="3" />
+    <!-- Box Lid -->
+    <rect x="-106" y="-62" width="212" height="40" rx="8" fill="#FFF9F5" stroke="#EADBDB" stroke-width="3" />
+
+    <!-- Vertical Ribbon -->
+    <rect x="-14" y="-62" width="28" height="182" fill="#3E101D" />
+    <!-- Horizontal Ribbon -->
+    <rect x="-96" y="32" width="192" height="26" fill="#3E101D" />
+
+    <!-- Ribbon Knot / Bow Loops -->
+    <!-- Left Loop -->
+    <path d="M-6 -62 C -40 -110, -90 -85, -55 -62 C -35 -48, -12 -58, -6 -62 Z" fill="#4A1423" stroke="#F5ECE7" stroke-width="2" />
+    <!-- Right Loop -->
+    <path d="M6 -62 C 40 -110, 90 -85, 55 -62 C 35 -48, 12 -58, 6 -62 Z" fill="#4A1423" stroke="#F5ECE7" stroke-width="2" />
+    <!-- Ribbon Tails -->
+    <path d="M-10 -58 C -22 -40, -42 -26, -58 -22 C -46 -28, -26 -44, -14 -56 Z" fill="#3E101D" />
+    <path d="M10 -58 C 22 -40, 42 -26, 58 -22 C 46 -28, 26 -44, 14 -56 Z" fill="#3E101D" />
+
+    <!-- Heart Seal at Center of Bow -->
+    <path d="M0 -54 C -3 -60, -14 -60, -14 -51 C -14 -43, -2 -37, 0 -34 C 2 -37, 14 -43, 14 -51 C 14 -60, 3 -60, 0 -54 Z" fill="#FAF7F5" stroke="#3E101D" stroke-width="1.5" />
+  </g>
+
+  <!-- DILSY Wordmark -->
+  <text x="256" y="420" font-family="'Cormorant Garamond', Georgia, serif" font-size="52" font-weight="600" fill="url(#goldGrad)" letter-spacing="14" text-anchor="middle">
+    DILSY
+  </text>
+  <text x="256" y="454" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-size="13" font-weight="500" fill="#EADBDB" letter-spacing="6" text-anchor="middle" fill-opacity="0.85">
+    HAUTE ATELIER
+  </text>
+</svg>

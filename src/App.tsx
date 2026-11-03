@@ -28,6 +28,7 @@ import {
 import { AdminDashboard } from './admin/AdminDashboard';
 import { Heart } from 'lucide-react';
 import { getThemeBySlugOrId } from './data/themes';
+import { OfflineIndicator } from './components/OfflineIndicator';
 
 function StorefrontApp() {
   const { products, themes, settings, activeOffer, calculateDiscount, recordOrderInquiry } = useStore();
@@ -243,6 +244,9 @@ function StorefrontApp() {
           <span>{toastMessage}</span>
         </div>
       )}
+
+      {/* Offline Mode Indicator */}
+      <OfflineIndicator />
 
       {/* Top Navbar */}
       <Navbar

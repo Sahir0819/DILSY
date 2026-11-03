@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, Truck, ShieldCheck, ChevronDown, ChevronUp, MessageCircle, MapPin, Mail, ArrowRight } from 'lucide-react';
 import { EXACT_DELIVERY_POLICY, WHATSAPP_PHONE_INTERNATIONAL } from '../utils/whatsapp';
+import { PWAInstallButton } from './PWAInstallButton';
 
 /**
  * Editorial Manifesto Section (Screenshot 5)
@@ -346,6 +347,9 @@ export const Footer: React.FC<{ onNavigate: (path: string) => void }> = ({ onNav
                 >
                   Account Access
                 </button>
+              </li>
+              <li className="pt-1 border-t border-[#EADBDB]">
+                <PWAInstallButton variant="footer" />
               </li>
             </ul>
           </div>

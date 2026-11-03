@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingBag, Menu, X, Search, User } from 'lucide-react';
 import { getCustomerSession } from '../utils/api';
+import { PWAInstallButton } from './PWAInstallButton';
 
 interface NavbarProps {
   cartCount: number;
@@ -99,8 +100,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           })}
         </nav>
 
-        {/* Actions: Search, Sign In, Bag & Mobile menu toggle */}
-        <div className="flex items-center gap-4 sm:gap-6 shrink-0 text-xs font-sans tracking-[0.08em]">
+        {/* Actions: Search, Install PWA, Sign In, Bag & Mobile menu toggle */}
+        <div className="flex items-center gap-3 sm:gap-5 shrink-0 text-xs font-sans tracking-[0.08em]">
+          {/* PWA Install Button (Desktop) */}
+          <PWAInstallButton variant="nav" />
+
           {/* Search Toggle */}
           <button
             onClick={() => setSearchOpen(!searchOpen)}
@@ -193,6 +197,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             );
           })}
           <div className="pt-4 border-t border-[#EADBDB] space-y-3">
+            <PWAInstallButton variant="drawer" />
             <button
               onClick={() => handleLinkClick(accountPath)}
               className="w-full flex items-center justify-between py-2 text-sm text-[#2A0D15] font-medium tracking-[0.08em] cursor-pointer"
