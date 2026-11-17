@@ -228,7 +228,67 @@ export const ThemeArtwork: React.FC<ThemeArtworkProps> = ({ themeId, className =
     );
   }
 
-  // 9. Diwali Box
+  // 9. Exam Good Luck & Motivation
+  if (themeId === 'exam-good-luck') {
+    return (
+      <div className={`relative w-full aspect-[16/10] bg-gradient-to-br from-[#FFF1F4] via-[#FFF8EC] to-[#FCE7ED] rounded-xl overflow-hidden flex items-center justify-center p-4 border border-[#F1C5D1] shadow-inner ${className}`}>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-100/50 via-transparent to-transparent opacity-85" />
+        <div className="relative w-48 h-30 bg-[#FFFAF8] rounded-lg shadow-md border border-[#E88AA4] p-2.5 flex items-center justify-between">
+          {/* Warm Study Desk Mug & Gold Star */}
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-7 h-7 rounded-full bg-[#3E101D] border border-[#D9B66B] flex items-center justify-center shadow-xs">
+              <span className="text-[11px] text-[#D9B66B]">★</span>
+            </div>
+            <div className="w-8 h-9 bg-gradient-to-b from-[#689F77] to-[#4A7C59] rounded-b-md shadow-xs border border-[#4A7C59]/40 flex items-center justify-center">
+              <span className="text-[8px] text-white">☕</span>
+            </div>
+          </div>
+          {/* Encouraging Note Card */}
+          <div className="flex flex-col items-end gap-1.5">
+            <div className="w-24 h-11 bg-[#FFFDF9] rounded border border-[#F1C5D1] p-1.5 flex flex-col justify-between shadow-xs">
+              <span className="text-[7px] font-serif font-bold uppercase tracking-wider text-[#3E101D]">You Got This!</span>
+              <div className="w-full h-0.5 bg-[#E88AA4]/50" />
+              <span className="text-[6px] italic text-[#795A63]">Focus, calm & shine</span>
+            </div>
+            <div className="w-18 h-4 bg-[#3E101D] rounded flex items-center justify-center shadow-xs">
+              <span className="text-[6px] text-[#FFFAF8] font-serif uppercase tracking-widest font-semibold">Good Luck</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 10. Graduation / Farewell
+  if (themeId === 'graduation-farewell') {
+    return (
+      <div className={`relative w-full aspect-[16/10] bg-gradient-to-br from-[#FFF1F4] via-[#FCE7ED] to-[#F1C5D1]/60 rounded-xl overflow-hidden flex items-center justify-center p-4 border border-[#F1C5D1] shadow-inner ${className}`}>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white/75 via-transparent to-transparent opacity-85" />
+        <div className="relative w-48 h-30 bg-[#2A0D15] rounded-lg shadow-md border border-[#D9B66B]/40 p-2.5 flex items-center justify-between">
+          {/* Rolled Scroll & Wax Seal */}
+          <div className="flex flex-col items-center gap-1">
+            <div className="w-10 h-14 bg-[#FFFAF8] rounded border border-[#E8C3B5] p-1 flex flex-col justify-between shadow-xs -rotate-3">
+              <div className="w-full h-1 bg-[#3E101D]/20" />
+              <div className="w-4 h-4 rounded-full bg-[#9F2343] mx-auto flex items-center justify-center text-[6px] text-white font-serif font-bold">D</div>
+              <div className="w-full h-1 bg-[#3E101D]/20" />
+            </div>
+          </div>
+          {/* Keepsake Card */}
+          <div className="flex flex-col items-end gap-1.5">
+            <div className="w-24 h-11 bg-[#FFFAF8] rounded p-1.5 flex flex-col justify-between text-[#2A0D15] shadow-xs">
+              <span className="text-[7px] font-serif font-bold uppercase tracking-wider text-[#3E101D]">New Chapter</span>
+              <span className="text-[6px] italic text-[#795A63]">Memories & proud milestones</span>
+            </div>
+            <div className="w-20 h-4 bg-gradient-to-r from-[#D9B66B] to-[#B68D3E] rounded flex items-center justify-center shadow-xs">
+              <span className="text-[6px] text-[#2A0D15] font-serif uppercase tracking-wider font-bold">Farewell & Joy</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // 11. Diwali Box
   return (
     <div className={`relative w-full aspect-[16/10] bg-gradient-to-br from-[#FFF1F4] via-[#FFF8EC] to-[#FCE7ED] rounded-xl overflow-hidden flex items-center justify-center p-4 border border-[#F1C5D1] shadow-inner ${className}`}>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-amber-200/40 via-transparent to-transparent opacity-80" />

@@ -283,6 +283,8 @@ function StorefrontApp() {
         ) : cleanPath === '/hampers' ? (
           <AllHampersPage
             products={products}
+            themes={themes}
+            searchQuery={queryParams.get('q') || ''}
             onNavigate={navigate}
             onAddToCart={handleAddToCart}
             onOrderWhatsApp={handleOrderWhatsAppSingle}

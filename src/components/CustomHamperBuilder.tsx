@@ -55,6 +55,10 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
     { name: 'Blush Silk', hex: '#F7D8DF' },
     { name: 'Raw Linen', hex: '#EFE8DF' },
     { name: 'Nocturne Black', hex: '#1C1819' },
+    { name: 'Sage Green', hex: '#689F77' },
+    { name: 'Warm Yellow', hex: '#D9B66B' },
+    { name: 'Classic Red', hex: '#9E1B24' },
+    { name: 'Navy Blue', hex: '#1C2B45' },
   ];
 
   const recipientOptions = [
@@ -76,7 +80,6 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
     'Miss You Box (Long Distance)',
     'Valentine Box (Romance)',
     'Diwali Box (Festive Lights)',
-    'Hostel Room Care Package',
     'Exam Good Luck & Motivation',
     'Graduation / Farewell',
   ];
@@ -173,7 +176,10 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
       ? { code: appliedOffer.code, amount: discountAmount, total: finalAmount }
       : null;
 
-    const message = generateCustomHamperWhatsAppMessage(formData, discountInfo);
+    const message = generateCustomHamperWhatsAppMessage(
+      { ...formData, packagingStyle: selectedRibbon },
+      discountInfo
+    );
 
     // Save order inquiry into backend
     recordOrderInquiry({
@@ -430,6 +436,9 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
                     placeholder="e.g. 1500"
                     className="w-full px-3.5 py-2 bg-white border border-[#EADBDB] text-xs text-[#2A0D15] outline-none"
                   />
+                  <p className="text-[11px] text-[#7A5A63] font-light leading-relaxed pt-0.5">
+                    Your selected budget will be matched with the nearest available hamper price. Any remaining amount will be thoughtfully used to include additional surprise gifts in your hamper.
+                  </p>
                 </div>
               )}
             </div>

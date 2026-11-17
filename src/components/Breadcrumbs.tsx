@@ -21,7 +21,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, onNavigate, cla
         aria-label="Home"
       >
         <Home className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Atelier</span>
+        <span className="hidden sm:inline">Home</span>
       </button>
 
       {items.map((item, idx) => {

@@ -18,7 +18,7 @@ export const Hero: React.FC<HeroProps> = ({
           <div className="lg:col-span-5 flex flex-col justify-center">
             {/* Eyebrow */}
             <p className="text-[11px] font-sans uppercase tracking-[0.25em] text-[#7A5A63] mb-4">
-              Haute Atelier Gifting
+              Premium Gift Studio
             </p>
 
             {/* Main Editorial Headline */}

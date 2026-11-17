@@ -130,6 +130,18 @@ function createInitialDatabase(): DatabaseSchema {
   };
 }
 
+function syncMissingThemes(db: DatabaseSchema): void {
+  if (!Array.isArray(db.themes)) {
+    db.themes = [];
+  }
+  const existingIds = new Set(db.themes.map((t) => t.id));
+  for (const theme of THEME_CATEGORIES) {
+    if (!existingIds.has(theme.id)) {
+      db.themes.push({ ...theme, isComingSoon: !!theme.isComingSoon });
+    }
+  }
+}
+
 /**
  * Initializes and reads the persistent database
  */
@@ -142,6 +154,7 @@ export function getDb(): DatabaseSchema {
     try {
       const raw = fs.readFileSync(dbFile, 'utf-8');
       cachedDb = JSON.parse(raw);
+      syncMissingThemes(cachedDb!);
       return cachedDb!;
     } catch (err) {
       console.warn('[DILSY DB] Error reading DB file, recreating:', err);
@@ -154,6 +167,7 @@ export function getDb(): DatabaseSchema {
     try {
       const raw = fs.readFileSync(bundledDb, 'utf-8');
       cachedDb = JSON.parse(raw);
+      syncMissingThemes(cachedDb!);
       return cachedDb!;
     } catch {
       // Continue to seed

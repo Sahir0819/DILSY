@@ -182,6 +182,12 @@ export function getThemePackagingGuidance(occasion?: string, recipientType?: str
   if (occ.includes('diwali')) {
     return 'Festive packaging';
   }
+  if (occ.includes('exam') || occ.includes('motivation') || occ.includes('good luck')) {
+    return 'Warm, encouraging presentation with calming accents';
+  }
+  if (occ.includes('graduation') || occ.includes('farewell')) {
+    return 'Commemorative keepsake presentation with thoughtful details';
+  }
   if (occ.includes('for him') || rec.includes('boyfriend') || rec.includes('for him')) {
     return 'Packaging appropriate to the selected gift and theme';
   }
@@ -230,6 +236,9 @@ export function generateCustomHamperWhatsAppMessage(
     `*Hamper Blueprint:*`,
     `• Recipient: ${form.recipientType || 'Special someone'}`,
     `• Selected Gift Theme & Occasion: ${form.occasion || 'Celebration'}`,
+    ...(form.packagingStyle
+      ? [`• Selected Ribbon & Colour Palette: ${form.packagingStyle}`]
+      : []),
     `• Target Box Size & Base Budget: ${displayBudget}`,
     `• Automatic Theme-Matched Packaging: ${packagingGuidance}`,
     `  _(DILSY studio styling guidance; actual packaging depends on confirmed availability)_`,

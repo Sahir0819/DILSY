@@ -18,7 +18,8 @@
         "i-love-you-for-her",
         "i-love-you-for-him",
         "anniversary",
-        "miss-you-box"
+        "miss-you-box",
+        "exam-good-luck"
       ],
       "idealFor": "Birthdays, hostel room surprises, anniversary tokens, or a sweet everyday gesture.",
       "packaging": "Neatly styled gift box with ribbon and personal details.",
@@ -47,7 +48,9 @@
         "i-love-you-for-her",
         "anniversary",
         "birthday",
-        "valentine-box"
+        "valentine-box",
+        "exam-good-luck",
+        "graduation-farewell"
       ],
       "idealFor": "Girlfriend or boyfriend surprises, romantic milestones, anniversaries, birthdays, and saying \"I Love You\".",
       "allowRecipientChoice": true,
@@ -75,7 +78,8 @@
         "i-love-you-for-her",
         "anniversary",
         "birthday",
-        "valentine-box"
+        "valentine-box",
+        "graduation-farewell"
       ],
       "idealFor": "Milestone celebrations, birthdays, reunions, and festive occasions.",
       "packaging": "Generously sized gift presentation box styled for the occasion.",
@@ -326,6 +330,62 @@
       "relatedThemeIds": [
         "birthday",
         "anniversary",
+        "miss-you-box"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "exam-good-luck",
+      "slug": "exam-good-luck",
+      "name": "Exam Good Luck & Motivation",
+      "description": "Thoughtful comfort treats, calming keepsakes, and encouraging words to power them through exams.",
+      "visualDirection": "Warm encouraging stationery, comforting treats, calming accents, and a handwritten motivational card.",
+      "heroHeadline": "Warm encouragement and thoughtful fuel for exam season",
+      "heroStory": "Exams can feel overwhelming, especially away from home in hostels and PGs. Our Exam Good Luck & Motivation hamper brings comforting treats, study-desk keepsakes, and heartfelt handwritten encouragement.",
+      "giftingTips": [
+        "Include comforting chocolates or snacks for late-night revision sessions",
+        "Write an uplifting personal note reminding them how capable they are",
+        "Schedule campus or PG gate delivery right before exam week begins"
+      ],
+      "accentBg": "from-[#FFF1F4] to-[#FCE7ED]",
+      "accentBorder": "border-[#F1C5D1]",
+      "accentText": "text-[#9F2343]",
+      "badge": "Study & Focus",
+      "linkedProductIds": [
+        "the-little-affair",
+        "loved-box"
+      ],
+      "relatedThemeIds": [
+        "graduation-farewell",
+        "miss-you-box",
+        "birthday"
+      ],
+      "isComingSoon": false
+    },
+    {
+      "id": "graduation-farewell",
+      "slug": "graduation-farewell",
+      "name": "Graduation / Farewell",
+      "description": "Celebrate proud milestones and heartfelt goodbyes with timeless keepsakes and cherished memories.",
+      "visualDirection": "Refined keepsake packaging, commemorative accents, and a heartfelt farewell note.",
+      "heroHeadline": "Honouring proud milestones, friendships, and new beginnings",
+      "heroStory": "Whether celebrating graduation day or bidding a fond farewell to a close friend moving to their next chapter, this hamper preserves cherished memories in a timeless keepsake box.",
+      "giftingTips": [
+        "Pair with a printed memory photograph from your time together",
+        "Write a heartfelt farewell tribute or inside joke on the card",
+        "Choose Medium or Large box sizes for milestone celebrations"
+      ],
+      "accentBg": "from-[#FFF1F4] to-[#FCE7ED]",
+      "accentBorder": "border-[#F1C5D1]",
+      "accentText": "text-[#9F2343]",
+      "badge": "New Chapter",
+      "linkedProductIds": [
+        "loved-box",
+        "the-everything-box"
+      ],
+      "relatedThemeIds": [
+        "exam-good-luck",
+        "birthday",
         "miss-you-box"
       ],
       "isComingSoon": false
