@@ -4,7 +4,7 @@ import { CartItem } from '../types';
 import { ProductArtwork } from '../components/ProductArtwork';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { useStore } from '../context/StoreContext';
-import { generateCartWhatsAppMessage, EXACT_DELIVERY_POLICY } from '../utils/whatsapp';
+import { generateCartWhatsAppMessage, formatProductDisplayTitle } from '../utils/whatsapp';
 
 interface CartPageProps {
   items: CartItem[];
@@ -25,12 +25,18 @@ export const CartPage: React.FC<CartPageProps> = ({
 }) => {
   const { products, calculateDiscount, recordOrderInquiry, settings } = useStore();
 
-  // Validate items against authoritative product database to avoid client-tampered prices
+  // Validate prices against authoritative product database while preserving signature hamper title/photo
   const validatedItems = items.map((item) => {
-    const verifiedProduct = products.find((p) => p.id === item.product.id) || item.product;
+    const verifiedProduct = products.find((p) => p.id === item.product.id);
+    if (!verifiedProduct) return item;
     return {
       ...item,
-      product: verifiedProduct,
+      product: {
+        ...verifiedProduct,
+        name: item.product.name || verifiedProduct.name,
+        size: item.product.size || verifiedProduct.size,
+        customImage: item.product.customImage || verifiedProduct.customImage,
+      },
     };
   });
 
@@ -73,7 +79,7 @@ export const CartPage: React.FC<CartPageProps> = ({
       deliveryDate: 'Standard Delivery',
       timeWindow: 'Afternoon (12:00 PM – 4:00 PM)',
       items: validatedItems.map((item) => ({
-        title: `${item.product.name} (${item.product.size})`,
+        title: formatProductDisplayTitle(item.product.name, item.product.size),
         quantity: item.quantity,
         price: item.product.price,
         customisation: item.customisation as any,

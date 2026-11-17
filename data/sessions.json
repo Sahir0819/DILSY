@@ -134,5 +134,12 @@
     "userId": "Leaderrrr",
     "createdAt": "2026-11-17T15:34:21.276Z",
     "expiresAt": "2026-11-24T15:34:21.276Z"
+  },
+  {
+    "token": "eyJyb2xlIjoiYWRtaW4iLCJ1c2VybmFtZSI6IkxlYWRlcnJyciIsImlhdCI6MTc5NDkzODMwMDA1NCwiZXhwIjoxNzk1NTQzMTAwMDU0LCJub25jZSI6IjA1MWY5ZTZhZGQyYjAyZmY3YTU3NzA4MjAxMzM0NWQzIn0.H51VDYXa933Z26rfz58cJfHtqpX8sU2MLZQkVYTYmKA",
+    "role": "admin",
+    "userId": "Leaderrrr",
+    "createdAt": "2026-11-17T17:58:20.054Z",
+    "expiresAt": "2026-11-24T17:58:20.054Z"
   }
 ]

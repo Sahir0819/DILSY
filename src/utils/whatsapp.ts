@@ -8,6 +8,19 @@ export const EXACT_DELIVERY_POLICY =
   'Same-day and next-morning delivery requests depend on item availability, order cut-off times, preparation time, and delivery location. Orders are confirmed only after DILSY verifies availability, final pricing, delivery charges, and timing with the customer.';
 
 /**
+ * Formats product display title without duplicating box size (e.g. avoids "Small Box — Small")
+ */
+export function formatProductDisplayTitle(name: string, size?: string): string {
+  if (!size) return name;
+  const lowerName = name.toLowerCase();
+  const lowerSize = size.toLowerCase();
+  if (lowerName.includes(lowerSize)) {
+    return name;
+  }
+  return `${name} (${size})`;
+}
+
+/**
  * Builds the URL-encoded WhatsApp link, with optional custom phone number configured by admin
  */
 export function buildWhatsAppLink(message: string, customPhone?: string): string {
@@ -25,56 +38,76 @@ export function generateSingleProductWhatsAppMessage(
   delivery?: Partial<DeliveryDetails>,
   appliedDiscount?: { code: string; amount: number; finalPrice: number } | null
 ): string {
-  const displayTitle = `${product.name} — ${product.size} — ₹${product.price.toLocaleString('en-IN')}`;
+  const formattedName = formatProductDisplayTitle(product.name, product.size);
+  const selectedAddOns = customisation?.selectedAddOns || [];
+  const addOnsSubtotal = selectedAddOns.reduce((acc, a) => acc + a.price * a.quantity, 0);
+  const combinedSubtotal = product.price + addOnsSubtotal;
+  const displayTitle = `${formattedName} — ₹${product.price.toLocaleString('en-IN')}`;
 
   const lines: string[] = [
     `✨ *NEW DILSY ORDER INQUIRY*`,
     `_A Little Box Full of Feelings_`,
     ``,
     `*Selected Hamper:* ${displayTitle}`,
-    `*Size:* ${product.size}`,
-    `*Base Selling Price:* ₹${product.price.toLocaleString('en-IN')}`,
+    `*Fixed Size:* ${product.size}`,
+    `*Base Price:* ₹${product.price.toLocaleString('en-IN')}`,
   ];
+
+  if (selectedAddOns.length > 0) {
+    lines.push(`*Selected Add-ons:*`);
+    selectedAddOns.forEach((addon) => {
+      lines.push(
+        ` • ${addon.name} (Qty: ${addon.quantity}) — ₹${(addon.price * addon.quantity).toLocaleString('en-IN')}`
+      );
+    });
+    lines.push(`*Subtotal (with Add-ons):* ₹${combinedSubtotal.toLocaleString('en-IN')}`);
+  }
 
   if (appliedDiscount && appliedDiscount.amount > 0) {
     lines.push(`*Promo Code Applied:* ${appliedDiscount.code} (-₹${appliedDiscount.amount})`);
-    lines.push(`*Discounted Hamper Price:* ₹${appliedDiscount.finalPrice.toLocaleString('en-IN')}`);
+    lines.push(`*Estimated Hamper Total:* ₹${appliedDiscount.finalPrice.toLocaleString('en-IN')}`);
   }
 
   lines.push(`*Note:* Exact hamper contents and personal touches will be confirmed together on WhatsApp.`);
   lines.push(``);
 
-  if (customisation) {
+  if (
+    customisation &&
+    (customisation.recipientName ||
+      customisation.personalNote ||
+      customisation.polaroidCaption ||
+      customisation.specialInstructions)
+  ) {
     lines.push(`*Personalisation Details:*`);
-    if (customisation.recipientChoice) {
-      lines.push(` • Recipient Selection: ${customisation.recipientChoice}`);
-    }
     if (customisation.recipientName) {
-      lines.push(` • For: ${customisation.recipientName}`);
+      lines.push(` • Recipient Name: ${customisation.recipientName}`);
     }
     if (customisation.personalNote) {
-      lines.push(` • Greeting Card / Love Note: "${customisation.personalNote}"`);
+      lines.push(` • Personal Message / Handwritten Note: "${customisation.personalNote}"`);
     }
     if (customisation.polaroidCaption) {
       lines.push(` • Polaroid Caption / Photo Note: ${customisation.polaroidCaption}`);
     }
     if (customisation.specialInstructions) {
-      lines.push(` • Special Request: ${customisation.specialInstructions}`);
+      lines.push(` • Additional Instructions: ${customisation.specialInstructions}`);
     }
     lines.push(``);
   }
 
-  if (delivery && (delivery.customerName || delivery.deliveryArea)) {
-    lines.push(`*Customer & Delivery Preferences:*`);
+  if (delivery && (delivery.customerName || delivery.deliveryArea || delivery.specificLandmark)) {
+    lines.push(`*Customer & Delivery Details:*`);
     if (delivery.customerName) lines.push(` • Customer Name: ${delivery.customerName}`);
-    if (delivery.customerPhone) lines.push(` • Contact Phone: ${delivery.customerPhone}`);
-    if (delivery.deliveryArea) lines.push(` • Service Area / Landmark: ${delivery.deliveryArea} ${delivery.specificLandmark ? `(${delivery.specificLandmark})` : ''}`);
-    if (delivery.deliveryDate) lines.push(` • Preferred Date: ${delivery.deliveryDate}`);
-    if (delivery.timeWindow) lines.push(` • Preferred Time: ${delivery.timeWindow}`);
+    if (delivery.customerPhone) lines.push(` • WhatsApp / Contact Number: ${delivery.customerPhone}`);
+    if (delivery.deliveryArea) lines.push(` • Service Area: ${delivery.deliveryArea}`);
+    if (delivery.specificLandmark) {
+      lines.push(` • Delivery Address / PG / Hostel / Location: ${delivery.specificLandmark}`);
+    }
+    if (delivery.deliveryDate) lines.push(` • Preferred Delivery Date: ${delivery.deliveryDate}`);
+    if (delivery.timeWindow) lines.push(` • Preferred Delivery Time: ${delivery.timeWindow}`);
     lines.push(``);
   }
 
-  lines.push(`*Store Policy Note:*`);
+  lines.push(`*Confirmation & Delivery Policy:*`);
   lines.push(EXACT_DELIVERY_POLICY);
   lines.push(``);
   lines.push(`Hi DILSY team! I would love to verify availability, final customization, and proceed with this hamper. Please let me know the next steps!`);
@@ -100,13 +133,11 @@ export function generateCartWhatsAppMessage(
 
   items.forEach((item, idx) => {
     const itemTotal = item.product.price * item.quantity;
-    const itemTitle = `${item.product.name} — ${item.product.size} — ₹${item.product.price.toLocaleString('en-IN')}`;
+    const formattedName = formatProductDisplayTitle(item.product.name, item.product.size);
+    const itemTitle = `${formattedName} — ₹${item.product.price.toLocaleString('en-IN')}`;
     lines.push(
       `${idx + 1}. *${itemTitle}* (Qty: ${item.quantity}) — ₹${itemTotal.toLocaleString('en-IN')}`
     );
-    if (item.customisation.recipientChoice) {
-      lines.push(`   • Recipient Selection: ${item.customisation.recipientChoice}`);
-    }
     if (item.customisation.recipientName) {
       lines.push(`   • For: ${item.customisation.recipientName}`);
     }

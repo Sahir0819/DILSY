@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/StoryAndFaq';
 import { CartDrawer } from './components/CartDrawer';
 import { WhatsAppReviewModal } from './components/WhatsAppReviewModal';
+import { SignatureOrderModal } from './components/SignatureOrderModal';
 import { HomePage } from './pages/HomePage';
 import { ThemesPage } from './pages/ThemesPage';
 import { AllHampersPage } from './pages/AllHampersPage';
@@ -16,7 +17,6 @@ import { CollectionPage } from './components/CollectionPage';
 import { CustomHamperBuilder } from './components/CustomHamperBuilder';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { CartItem, Product, ProductCustomisation } from './types';
-import { generateSingleProductWhatsAppMessage } from './utils/whatsapp';
 import {
   adminVerifySessionApi,
   adminLogoutApi,
@@ -31,7 +31,7 @@ import { getThemeBySlugOrId } from './data/themes';
 import { OfflineIndicator } from './components/OfflineIndicator';
 
 function StorefrontApp() {
-  const { products, themes, settings, activeOffer, calculateDiscount, recordOrderInquiry } = useStore();
+  const { products, themes, settings, activeOffer } = useStore();
 
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
@@ -52,7 +52,7 @@ function StorefrontApp() {
 
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // WhatsApp review modal state
+  // WhatsApp review modal state (used by Cart & Custom Hamper Builder)
   const [reviewModal, setReviewModal] = useState<{
     isOpen: boolean;
     title: string;
@@ -61,6 +61,16 @@ function StorefrontApp() {
     isOpen: false,
     title: '',
     message: '',
+  });
+
+  // Signature / Product WhatsApp Order Details Modal state
+  const [signatureOrderModal, setSignatureOrderModal] = useState<{
+    isOpen: boolean;
+    product: Product | null;
+    customisation?: ProductCustomisation;
+  }>({
+    isOpen: false,
+    product: null,
   });
 
   // Listen for browser Back / Forward history events
@@ -144,49 +154,10 @@ function StorefrontApp() {
   };
 
   const handleOrderWhatsAppSingle = (product: Product, customisation: ProductCustomisation) => {
-    const { discountAmount, finalAmount, appliedOffer } = calculateDiscount(product.price);
-    const discountInfo = appliedOffer
-      ? { code: appliedOffer.code, amount: discountAmount, finalPrice: finalAmount }
-      : null;
-
-    const message = generateSingleProductWhatsAppMessage(
+    setSignatureOrderModal({
+      isOpen: true,
       product,
       customisation,
-      undefined,
-      discountInfo
-    );
-
-    // Save order request to backend
-    recordOrderInquiry({
-      source: 'single_product',
-      customerName: customisation.recipientName || 'Gifting Customer',
-      customerPhone: '',
-      deliveryArea: 'Chandigarh University / Mohali Area',
-      specificLandmark: '',
-      deliveryDate: 'Standard Delivery',
-      timeWindow: 'Afternoon',
-      items: [
-        {
-          title: `${product.name} (${product.size})`,
-          quantity: 1,
-          price: product.price,
-          customisation: customisation as any,
-        },
-      ],
-      subtotal: product.price,
-      discountAmount,
-      total: finalAmount,
-      appliedOffer: appliedOffer
-        ? { code: appliedOffer.code, title: appliedOffer.title, discountAmount }
-        : null,
-      specialInstructions: customisation.specialInstructions,
-      rawWhatsappMessage: message,
-    });
-
-    setReviewModal({
-      isOpen: true,
-      title: `Order "${product.name}" via WhatsApp`,
-      message,
     });
   };
 
@@ -371,6 +342,14 @@ function StorefrontApp() {
         title={reviewModal.title}
         messageText={reviewModal.message}
         whatsappPhone={settings.whatsappPhone}
+      />
+
+      {/* Signature / Product WhatsApp Order Details Modal */}
+      <SignatureOrderModal
+        isOpen={signatureOrderModal.isOpen}
+        product={signatureOrderModal.product}
+        initialCustomisation={signatureOrderModal.customisation}
+        onClose={() => setSignatureOrderModal({ isOpen: false, product: null })}
       />
     </div>
   );

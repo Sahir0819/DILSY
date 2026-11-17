@@ -88,7 +88,7 @@ export const ProductArtwork: React.FC<ProductArtworkProps> = ({ type, className 
 
         {/* Bottom Official Box Price Badge */}
         <div className="absolute bottom-3 left-4 text-xs font-serif italic text-[#3B2028] font-semibold flex items-center gap-1.5 bg-[#FFFAF8]/95 px-2.5 py-1 rounded-full border border-[#F1C5D1] shadow-2xs">
-          <span className="font-bold">Loved Box — Medium</span>
+          <span className="font-bold">Medium Box</span>
           <span>·</span>
           <span className="tabular-nums font-bold text-[#9F2343]">₹969</span>
         </div>

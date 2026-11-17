@@ -23,7 +23,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 }) => {
   const { addons, calculateDiscount } = useStore();
 
-  const [recipientChoice, setRecipientChoice] = useState<'For Him' | 'For Her'>('For Her');
   const [recipientName, setRecipientName] = useState('');
   const [personalNote, setPersonalNote] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
@@ -52,7 +51,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
 
   const getCustomisation = (): ProductCustomisation => ({
     recipientName: recipientName.trim(),
-    recipientChoice: product.allowRecipientChoice ? recipientChoice : undefined,
     personalNote: personalNote.trim(),
     specialInstructions: specialInstructions.trim(),
     selectedAddOns: selectedAddOns.length > 0 ? selectedAddOns : undefined,
@@ -196,39 +194,6 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({
                   </p>
                 )}
               </div>
-
-              {/* Recipient Option (if supported) */}
-              {product.allowRecipientChoice && isPurchasable && (
-                <div className="border-t border-[#EADBDB] pt-4">
-                  <label className="block text-[11px] font-semibold text-[#2A0D15] mb-2 uppercase tracking-widest">
-                    Who is this curation for?
-                  </label>
-                  <div className="grid grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setRecipientChoice('For Her')}
-                      className={`py-2.5 px-3 text-xs uppercase tracking-wider font-medium border transition-all cursor-pointer ${
-                        recipientChoice === 'For Her'
-                          ? 'bg-[#3E101D] text-white border-[#3E101D]'
-                          : 'bg-white text-[#2A0D15] border-[#EADBDB] hover:border-[#3E101D]'
-                      }`}
-                    >
-                      For Her
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setRecipientChoice('For Him')}
-                      className={`py-2.5 px-3 text-xs uppercase tracking-wider font-medium border transition-all cursor-pointer ${
-                        recipientChoice === 'For Him'
-                          ? 'bg-[#3E101D] text-white border-[#3E101D]'
-                          : 'bg-white text-[#2A0D15] border-[#EADBDB] hover:border-[#3E101D]'
-                      }`}
-                    >
-                      For Him
-                    </button>
-                  </div>
-                </div>
-              )}
 
               {/* Available Add-Ons Selector */}
               {isPurchasable && availableAddons.length > 0 && (

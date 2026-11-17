@@ -29,7 +29,7 @@ export const OFFICIAL_BOX_SIZES: OfficialBoxSizeInfo[] = [
   },
   {
     id: 'medium-box',
-    name: 'Loved Box (Medium)',
+    name: 'Medium Box',
     size: 'Medium',
     price: 969,
     description: 'A little box full of love, thoughtful surprises, and personal touches. Make it theirs with a personalised message.',
@@ -69,7 +69,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'loved-box',
-    name: 'Loved Box',
+    name: 'Medium Box',
     size: 'Medium',
     price: 969,
     tagline: 'A little box full of love, thoughtful surprises, and personal touches.',
@@ -79,7 +79,6 @@ export const PRODUCTS: Product[] = [
     categories: ['all', 'for-him', 'for-her', 'besties'],
     themeIds: ['i-love-you-for-him', 'i-love-you-for-her', 'anniversary', 'birthday', 'valentine-box', 'exam-good-luck', 'graduation-farewell'],
     idealFor: 'Girlfriend or boyfriend surprises, romantic milestones, anniversaries, birthdays, and saying "I Love You".',
-    allowRecipientChoice: true,
     packaging: 'Thoughtfully styled romantic gift presentation with burgundy ribbon and personal touches.',
     accentColor: '#9F2343',
     illustrationType: 'loved-box',

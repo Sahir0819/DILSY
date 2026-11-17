@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { X, Trash2, Plus, Minus, ShoppingBag, ArrowRight, MessageCircle, AlertCircle, MapPin, Phone, User, Calendar, Clock, Tag } from 'lucide-react';
 import { CartItem, DeliveryDetails } from '../types';
-import { EXACT_DELIVERY_POLICY, generateCartWhatsAppMessage } from '../utils/whatsapp';
+import { formatProductDisplayTitle, generateCartWhatsAppMessage } from '../utils/whatsapp';
 import { useStore } from '../context/StoreContext';
 
 interface CartDrawerProps {
@@ -79,7 +79,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
       deliveryDate: delivery.deliveryDate,
       timeWindow: delivery.timeWindow,
       items: items.map((i) => ({
-        title: `${i.product.name} (${i.product.size})`,
+        title: formatProductDisplayTitle(i.product.name, i.product.size),
         quantity: i.quantity,
         price: i.product.price,
         customisation: i.customisation as any,

@@ -158,7 +158,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     heroHeadline: 'Sweet feelings and thoughtful romance, wrapped just for them',
     heroStory: 'A classic, romantic gesture for someone special. Curated with sweet treats, romantic touches, and a heartfelt handwritten card to celebrate your feelings.',
     giftingTips: [
-      'Pair with our Loved Box (Medium — ₹969) for a complete romantic gesture',
+      'Pair with our Medium Box (₹969) for a complete romantic gesture',
       'Add a sweet love note to be handwritten on the card',
       'Reserve your delivery date in advance for Valentine season',
     ],

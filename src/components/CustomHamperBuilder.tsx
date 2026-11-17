@@ -24,7 +24,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
   const [formData, setFormData] = useState<CustomHamperForm>({
     recipientType: 'Girlfriend / Partner',
     occasion: prefilledOccasion || 'Birthday Box',
-    budget: 'Medium / Loved Box — ₹969',
+    budget: 'Medium Box — ₹969',
     customBudgetAmount: '',
     selectedAddOns: [],
     recipientName: '',
@@ -86,7 +86,7 @@ export const CustomHamperBuilder: React.FC<CustomHamperBuilderProps> = ({
 
   const budgetOptions = [
     { label: 'Small Box — ₹799', size: 'Small', dim: '18 × 14 × 6 cm', price: 799, desc: 'Compact sweet gesture' },
-    { label: 'Medium / Loved Box — ₹969', size: 'Medium', dim: '24 × 20 × 9 cm', price: 969, desc: 'Our signature balanced curation' },
+    { label: 'Medium Box — ₹969', size: 'Medium', dim: '24 × 20 × 9 cm', price: 969, desc: 'Our signature balanced curation' },
     { label: 'Large Box — ₹1,199', size: 'Large', dim: '32 × 26 × 12 cm', price: 1199, desc: 'Generous keepsake curation' },
     { label: 'Custom Budget', size: 'Custom', dim: 'Custom dimension', price: null, desc: 'Specify custom budget' },
   ];

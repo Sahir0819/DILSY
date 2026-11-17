@@ -10,6 +10,7 @@ interface ProductCardProps {
   onViewDetails?: (product: Product) => void;
   activePromoText?: string;
   badgeLabel?: string;
+  isSignatureEdition?: boolean;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({
@@ -19,9 +20,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onViewDetails,
   activePromoText,
   badgeLabel,
+  isSignatureEdition = false,
 }) => {
   const [isCustomising, setIsCustomising] = useState(false);
-  const [recipientChoice, setRecipientChoice] = useState<'For Him' | 'For Her'>('For Her');
   const [recipientName, setRecipientName] = useState('');
   const [personalNote, setPersonalNote] = useState('');
   const [specialInstructions, setSpecialInstructions] = useState('');
@@ -33,7 +34,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const getCustomisation = (): ProductCustomisation => ({
     recipientName: recipientName.trim(),
-    recipientChoice: product.allowRecipientChoice ? recipientChoice : undefined,
     personalNote: personalNote.trim(),
     specialInstructions: specialInstructions.trim(),
   });
@@ -131,51 +131,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 }`}
               >
                 {product.name}
-                {product.size && (
-                  <span className="text-sm font-sans font-light text-[#7A6368] ml-1.5">
-                    / {product.size}
-                  </span>
-                )}
               </h3>
+              {(isSignatureEdition ||
+                (product.size &&
+                  !product.name.toLowerCase().includes(product.size.toLowerCase()))) && (
+                <p className="text-[10px] font-sans uppercase tracking-[0.16em] text-[#7A5A63] mt-0.5">
+                  {isSignatureEdition ? `Fixed Size: ${product.size}` : `Size: ${product.size}`}
+                </p>
+              )}
             </div>
           </div>
 
           <p className="text-xs text-[#7A6368] font-sans font-light line-clamp-2 leading-relaxed mb-4">
             {product.description}
           </p>
-
-          {/* Recipient Choice for Loved Box */}
-          {product.allowRecipientChoice && isPurchasable && (
-            <div className="mb-4 p-3 bg-[#FAF7F5] border border-[#EADBDB]">
-              <label className="block text-[11px] font-sans uppercase tracking-[0.1em] text-[#2A0D15] mb-1.5">
-                Who is this box for?
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setRecipientChoice('For Her')}
-                  className={`py-1.5 px-3 text-xs font-sans tracking-wide border transition-all cursor-pointer ${
-                    recipientChoice === 'For Her'
-                      ? 'bg-[#3E101D] text-white border-[#3E101D]'
-                      : 'bg-white text-[#2A0D15] border-[#EADBDB] hover:border-[#3E101D]'
-                  }`}
-                >
-                  For Her
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRecipientChoice('For Him')}
-                  className={`py-1.5 px-3 text-xs font-sans tracking-wide border transition-all cursor-pointer ${
-                    recipientChoice === 'For Him'
-                      ? 'bg-[#3E101D] text-white border-[#3E101D]'
-                      : 'bg-white text-[#2A0D15] border-[#EADBDB] hover:border-[#3E101D]'
-                  }`}
-                >
-                  For Him
-                </button>
-              </div>
-            </div>
-          )}
 
           {/* Personalisation Accordion */}
           {isPurchasable && (

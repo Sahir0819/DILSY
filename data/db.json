@@ -30,7 +30,7 @@
     },
     {
       "id": "loved-box",
-      "name": "Loved Box",
+      "name": "Medium Box",
       "size": "Medium",
       "price": 969,
       "tagline": "A little box full of love, thoughtful surprises, and personal touches.",
@@ -53,7 +53,7 @@
         "graduation-farewell"
       ],
       "idealFor": "Girlfriend or boyfriend surprises, romantic milestones, anniversaries, birthdays, and saying \"I Love You\".",
-      "allowRecipientChoice": true,
+      "allowRecipientChoice": false,
       "packaging": "Thoughtfully styled gift presentation with ribbon and personal touches.",
       "accentColor": "#C73858",
       "illustrationType": "loved-box",
@@ -290,7 +290,7 @@
       "heroHeadline": "Sweet feelings and thoughtful romance, wrapped just for them",
       "heroStory": "A classic, romantic gesture for someone special. Curated with sweet treats, romantic touches, and a heartfelt handwritten card to celebrate your feelings.",
       "giftingTips": [
-        "Pair with our Loved Box (Medium — ₹969) for a complete romantic gesture",
+        "Pair with our Medium Box (₹969) for a complete romantic gesture",
         "Add a sweet love note to be handwritten on the card",
         "Reserve your delivery date in advance for Valentine season"
       ],
@@ -499,7 +499,7 @@
       "id": "offer-love-10",
       "title": "Romantic Season 10% Off",
       "code": "DILSY10",
-      "description": "Enjoy 10% off on Loved Box and custom hampers.",
+      "description": "Enjoy 10% off on Medium Box and custom hampers.",
       "discountType": "percent",
       "discountValue": 10,
       "minOrderAmount": 969,

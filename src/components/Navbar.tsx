@@ -156,7 +156,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by occasion, box size (Small, Loved Box, Large)..."
+              placeholder="Search by occasion, box size (Small Box, Medium Box, Large Box)..."
               autoFocus
               className="w-full bg-transparent text-sm text-[#2A0D15] placeholder-[#7A5A63] focus:outline-none font-sans"
             />

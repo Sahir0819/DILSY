@@ -95,7 +95,7 @@ function createInitialDatabase(): DatabaseSchema {
       id: 'offer-love-10',
       title: 'Romantic Season 10% Off',
       code: 'DILSY10',
-      description: 'Enjoy 10% off on Loved Box and custom hampers.',
+      description: 'Enjoy 10% off on Medium Box and custom hampers.',
       discountType: 'percent',
       discountValue: 10,
       minOrderAmount: 969,
@@ -139,6 +139,34 @@ function syncMissingThemes(db: DatabaseSchema): void {
     if (!existingIds.has(theme.id)) {
       db.themes.push({ ...theme, isComingSoon: !!theme.isComingSoon });
     }
+  }
+
+  // Normalize legacy "Loved Box" references & remove recipient-choice toggle
+  if (Array.isArray(db.products)) {
+    db.products = db.products.map((p) => ({
+      ...p,
+      name: p.id === 'loved-box' && p.name === 'Loved Box' ? 'Medium Box' : p.name,
+      allowRecipientChoice: false,
+    }));
+  }
+  db.themes = db.themes.map((t) =>
+    t.id === 'valentine-box' && Array.isArray(t.giftingTips)
+      ? {
+          ...t,
+          giftingTips: t.giftingTips.map((tip) =>
+            tip.includes('Loved Box')
+              ? 'Pair with our Medium Box (₹969) for a complete romantic gesture'
+              : tip
+          ),
+        }
+      : t
+  );
+  if (Array.isArray(db.offers)) {
+    db.offers = db.offers.map((o) =>
+      o.description?.includes('Loved Box')
+        ? { ...o, description: o.description.replace(/Loved Box/g, 'Medium Box') }
+        : o
+    );
   }
 }
 
