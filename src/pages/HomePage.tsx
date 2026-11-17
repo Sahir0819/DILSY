@@ -19,13 +19,12 @@ export const HomePage: React.FC<HomePageProps> = ({
   onNavigate,
   onAddToCart,
   onOrderWhatsApp,
-  onViewProductDetails,
   activePromoText,
 }) => {
   // Only published products
   const publishedProducts = products.filter((p) => p.stockStatus !== 'unpublished');
 
-  // Official base box configurations
+  // Official base box configurations (fallback metadata)
   const smallBox =
     publishedProducts.find((p) => p.id === 'the-little-affair') || publishedProducts[0];
   const mediumBox =
@@ -33,10 +32,12 @@ export const HomePage: React.FC<HomePageProps> = ({
   const largeBox =
     publishedProducts.find((p) => p.id === 'the-everything-box') || publishedProducts[2] || mediumBox;
 
-  // Fixed Signature Collection for Timeless Sentiments
+  // Fixed Signature Collection for Timeless Sentiments with canonical collection identity
   const curatedEditions = [
     {
-      product: mediumBox,
+      baseProduct: mediumBox,
+      collectionId: 'i-love-you-for-her',
+      slug: 'i-love-you-for-her',
       title: 'I Love You — For Her',
       size: 'Medium' as const,
       badge: 'ROMANTIC',
@@ -46,7 +47,9 @@ export const HomePage: React.FC<HomePageProps> = ({
       price: 969,
     },
     {
-      product: largeBox,
+      baseProduct: largeBox,
+      collectionId: 'birthday',
+      slug: 'birthday',
       title: 'Birthday Box',
       size: 'Large' as const,
       badge: 'CELEBRATION',
@@ -56,7 +59,9 @@ export const HomePage: React.FC<HomePageProps> = ({
       price: 1199,
     },
     {
-      product: smallBox,
+      baseProduct: smallBox,
+      collectionId: 'apology-box',
+      slug: 'apology',
       title: 'Apology Box',
       size: 'Small' as const,
       badge: 'HEARTFELT GESTURE',
@@ -66,7 +71,9 @@ export const HomePage: React.FC<HomePageProps> = ({
       price: 799,
     },
     {
-      product: mediumBox,
+      baseProduct: mediumBox,
+      collectionId: 'anniversary',
+      slug: 'anniversary',
       title: 'Anniversary Box',
       size: 'Medium' as const,
       badge: 'BESPOKE KEEPSAKE',
@@ -108,27 +115,31 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         {/* 4-Column Fixed Signature Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {curatedEditions.map((edition, idx) => {
-            const product = edition.product;
+          {curatedEditions.map((edition) => {
+            const product = edition.baseProduct;
             if (!product) return null;
+
+            const signatureProduct: Product = {
+              ...product,
+              id: edition.collectionId,
+              collectionId: edition.collectionId,
+              name: edition.title,
+              size: edition.size,
+              description: edition.description,
+              customImage: edition.image,
+              price: edition.price,
+              allowRecipientChoice: false,
+            };
 
             return (
               <ProductCard
-                key={`${edition.title}-${idx}`}
-                product={{
-                  ...product,
-                  name: edition.title,
-                  size: edition.size,
-                  description: edition.description,
-                  customImage: edition.image,
-                  price: edition.price,
-                  allowRecipientChoice: false,
-                }}
+                key={edition.collectionId}
+                product={signatureProduct}
                 badgeLabel={edition.badge}
                 isSignatureEdition={true}
                 onAddToCart={onAddToCart}
                 onOrderWhatsApp={onOrderWhatsApp}
-                onViewDetails={onViewProductDetails}
+                onViewDetails={() => onNavigate(`/collections/${edition.slug}`)}
                 activePromoText={activePromoText}
               />
             );

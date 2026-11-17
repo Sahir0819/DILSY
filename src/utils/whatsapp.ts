@@ -122,22 +122,41 @@ export function generateCartWhatsAppMessage(
   items: CartItem[],
   subtotal: number,
   delivery: DeliveryDetails,
-  discountInfo?: { code?: string; amount: number; total: number } | null
+  discountInfo?: { code?: string; amount: number; total: number } | null,
+  orderPersonalNote?: string
 ): string {
+  const totalQty = items.reduce((acc, i) => acc + i.quantity, 0);
   const lines: string[] = [
     `🎁 *DILSY CART ORDER INQUIRY*`,
     `_A Little Box Full of Feelings_`,
     ``,
-    `*ORDER ITEMS (${items.reduce((acc, i) => acc + i.quantity, 0)} total):*`,
+    `*ORDER ITEMS (${totalQty} hamper${totalQty === 1 ? '' : 's'}):*`,
   ];
 
   items.forEach((item, idx) => {
-    const itemTotal = item.product.price * item.quantity;
-    const formattedName = formatProductDisplayTitle(item.product.name, item.product.size);
-    const itemTitle = `${formattedName} — ₹${item.product.price.toLocaleString('en-IN')}`;
-    lines.push(
-      `${idx + 1}. *${itemTitle}* (Qty: ${item.quantity}) — ₹${itemTotal.toLocaleString('en-IN')}`
+    const size = item.selectedSize || item.product.size;
+    const baseUnitPrice = Number(item.unitPrice ?? item.product.price);
+    const addOnsUnitCost = (item.customisation.selectedAddOns || []).reduce(
+      (sum, a) => sum + a.price * a.quantity,
+      0
     );
+    const effectiveUnitPrice = baseUnitPrice + addOnsUnitCost;
+    const itemSubtotal = effectiveUnitPrice * item.quantity;
+
+    lines.push(
+      `${idx + 1}. *${item.product.name}*`
+    );
+    lines.push(`   • Size: ${size}`);
+    lines.push(`   • Quantity: ${item.quantity}`);
+    lines.push(`   • Unit Price: ₹${effectiveUnitPrice.toLocaleString('en-IN')}`);
+    lines.push(`   • Item Subtotal: ₹${itemSubtotal.toLocaleString('en-IN')}`);
+
+    if (item.customisation.selectedAddOns && item.customisation.selectedAddOns.length > 0) {
+      const addOnText = item.customisation.selectedAddOns
+        .map((a) => `${a.quantity}x ${a.name} (₹${a.price * a.quantity})`)
+        .join(', ');
+      lines.push(`   • Add-ons: ${addOnText}`);
+    }
     if (item.customisation.recipientName) {
       lines.push(`   • For: ${item.customisation.recipientName}`);
     }
@@ -148,39 +167,50 @@ export function generateCartWhatsAppMessage(
       lines.push(`   • Polaroid / Photo Details: ${item.customisation.polaroidCaption}`);
     }
     if (item.customisation.specialInstructions) {
-      lines.push(`   • Note: ${item.customisation.specialInstructions}`);
+      lines.push(`   • Item Instructions: ${item.customisation.specialInstructions}`);
     }
   });
 
   lines.push(``);
-  lines.push(`*Subtotal:* ₹${subtotal.toLocaleString('en-IN')}`);
+  lines.push(`*Order Pricing Summary:*`);
+  lines.push(`• Total Hampers: ${totalQty}`);
+  lines.push(`• Subtotal: ₹${subtotal.toLocaleString('en-IN')}`);
 
   if (discountInfo && discountInfo.amount > 0) {
-    lines.push(`*Promotional Discount (${discountInfo.code || 'SPECIAL'}):* -₹${discountInfo.amount.toLocaleString('en-IN')}`);
-    lines.push(`*Discounted Order Total:* ₹${discountInfo.total.toLocaleString('en-IN')}`);
+    lines.push(`• Promo Code (${discountInfo.code || 'SPECIAL'}): -₹${discountInfo.amount.toLocaleString('en-IN')}`);
+    lines.push(`• Final Estimated Total: ₹${discountInfo.total.toLocaleString('en-IN')}`);
+  } else {
+    lines.push(`• Final Estimated Total: ₹${subtotal.toLocaleString('en-IN')}`);
   }
 
-  lines.push(`*(Delivery charges to be calculated based on specific PG/Campus point)*`);
+  lines.push(`• Delivery Fee: Confirmed on WhatsApp based on specific PG / Campus point`);
   lines.push(``);
 
-  lines.push(`*DELIVERY & CUSTOMER DETAILS:*`);
-  lines.push(`• Customer Name: ${delivery.customerName || 'Not specified'}`);
-  lines.push(`• Contact Phone: ${delivery.customerPhone || 'Not specified'}`);
+  lines.push(`*CUSTOMER, RECIPIENT & DELIVERY DETAILS:*`);
+  lines.push(`• Customer Full Name: ${delivery.customerName || 'Not specified'}`);
+  lines.push(`• WhatsApp / Contact Number: ${delivery.customerPhone || 'Not specified'}`);
+  if (delivery.recipientName) {
+    lines.push(`• Recipient Name: ${delivery.recipientName}`);
+  }
   lines.push(`• Service Area: ${delivery.deliveryArea || 'Chandigarh University / Mohali Area'}`);
   if (delivery.specificLandmark) {
-    lines.push(`• Specific PG / Hostel / Landmark: ${delivery.specificLandmark}`);
+    lines.push(`• Delivery Address / PG / Hostel / Location: ${delivery.specificLandmark}`);
   }
   lines.push(`• Preferred Delivery Date: ${delivery.deliveryDate || 'Earliest available'}`);
-  lines.push(`• Preferred Time Window: ${delivery.timeWindow || 'Flexible'}`);
-  if (delivery.additionalNotes) {
-    lines.push(`• Additional Instructions: ${delivery.additionalNotes}`);
+  lines.push(`• Preferred Delivery Time: ${delivery.timeWindow || 'Flexible'}`);
+
+  if (orderPersonalNote && orderPersonalNote.trim()) {
+    lines.push(`• Personal Message / Handwritten Note: "${orderPersonalNote.trim()}"`);
+  }
+  if (delivery.additionalNotes && delivery.additionalNotes.trim()) {
+    lines.push(`• Additional Instructions: ${delivery.additionalNotes.trim()}`);
   }
 
   lines.push(``);
   lines.push(`*DELIVERY POLICY ACKNOWLEDGMENT:*`);
   lines.push(`"${EXACT_DELIVERY_POLICY}"`);
   lines.push(``);
-  lines.push(`Hello DILSY! I am ready to confirm this order. Please review my cart items, let me know the final amount including delivery, and guide me on how to proceed.`);
+  lines.push(`Hello DILSY! I am ready to confirm this order. Please review my bag items, verify availability, final pricing, delivery charges, and timing, and guide me on the next steps.`);
 
   return lines.join('\n');
 }

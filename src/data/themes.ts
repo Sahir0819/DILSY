@@ -1,4 +1,29 @@
-import { ThemeCategory } from '../types';
+import { BoxSize, ThemeCategory } from '../types';
+
+export const COLLECTION_AVAILABLE_SIZES: Record<string, BoxSize[]> = {
+  'i-love-you-for-him': ['Small', 'Medium', 'Large'],
+  'i-love-you-for-her': ['Small', 'Medium', 'Large'],
+  anniversary: ['Small', 'Medium', 'Large'],
+  birthday: ['Small', 'Medium', 'Large'],
+  'periods-box': ['Small', 'Medium', 'Large'],
+  'apology-box': ['Small', 'Medium'],
+  'miss-you-box': ['Small'],
+  'valentine-box': ['Small', 'Medium', 'Large'],
+  'diwali-box': ['Small', 'Medium', 'Large'],
+  'exam-good-luck': ['Small'],
+  'graduation-farewell': ['Small', 'Medium', 'Large'],
+};
+
+export function getAvailableSizesForTheme(theme: ThemeCategory): BoxSize[] {
+  if (COLLECTION_AVAILABLE_SIZES[theme.id]) {
+    return COLLECTION_AVAILABLE_SIZES[theme.id];
+  }
+  if (theme.availableSizes && theme.availableSizes.length > 0) {
+    return theme.availableSizes;
+  }
+  // Future Festival Boxes and general collections default to Small, Medium, Large
+  return ['Small', 'Medium', 'Large'];
+}
 
 /**
  * DILSY FINAL BUSINESS-APPROVED THEME CATEGORIES
@@ -28,6 +53,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     comingSoonMessage: 'Something special for him is on its way. Stay tuned!',
     linkedProductIds: ['loved-box', 'the-little-affair'],
     relatedThemeIds: ['anniversary', 'valentine-box', 'miss-you-box'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
   {
     id: 'i-love-you-for-her',
@@ -48,6 +74,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'For Her',
     linkedProductIds: ['loved-box', 'the-little-affair', 'the-everything-box'],
     relatedThemeIds: ['anniversary', 'birthday', 'valentine-box'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
   {
     id: 'anniversary',
@@ -68,6 +95,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Milestone Love',
     linkedProductIds: ['loved-box', 'the-everything-box'],
     relatedThemeIds: ['i-love-you-for-her', 'i-love-you-for-him', 'valentine-box'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
   {
     id: 'birthday',
@@ -88,6 +116,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Celebration',
     linkedProductIds: ['loved-box', 'the-everything-box'],
     relatedThemeIds: ['anniversary', 'i-love-you-for-her', 'miss-you-box'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
   {
     id: 'periods-box',
@@ -108,6 +137,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Comfort & Care',
     linkedProductIds: [],
     relatedThemeIds: ['i-love-you-for-her', 'birthday', 'miss-you-box'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
   {
     id: 'apology-box',
@@ -128,6 +158,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Heartfelt Gesture',
     linkedProductIds: [],
     relatedThemeIds: ['miss-you-box', 'i-love-you-for-him', 'i-love-you-for-her'],
+    availableSizes: ['Small', 'Medium'],
   },
   {
     id: 'miss-you-box',
@@ -148,6 +179,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Long Distance',
     linkedProductIds: ['the-little-affair'],
     relatedThemeIds: ['anniversary', 'birthday', 'i-love-you-for-him'],
+    availableSizes: ['Small'],
   },
   {
     id: 'valentine-box',
@@ -168,6 +200,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Pure Romance',
     linkedProductIds: ['loved-box', 'the-everything-box'],
     relatedThemeIds: ['i-love-you-for-her', 'i-love-you-for-him', 'anniversary'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
   {
     id: 'diwali-box',
@@ -188,6 +221,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Festive Lights',
     linkedProductIds: [],
     relatedThemeIds: ['birthday', 'anniversary', 'miss-you-box'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
   {
     id: 'exam-good-luck',
@@ -208,6 +242,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'Study & Focus',
     linkedProductIds: ['the-little-affair', 'loved-box'],
     relatedThemeIds: ['graduation-farewell', 'miss-you-box', 'birthday'],
+    availableSizes: ['Small'],
   },
   {
     id: 'graduation-farewell',
@@ -228,6 +263,7 @@ export const THEME_CATEGORIES: ThemeCategory[] = [
     badge: 'New Chapter',
     linkedProductIds: ['loved-box', 'the-everything-box'],
     relatedThemeIds: ['exam-good-luck', 'birthday', 'miss-you-box'],
+    availableSizes: ['Small', 'Medium', 'Large'],
   },
 ];
 

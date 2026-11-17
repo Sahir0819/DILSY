@@ -18,6 +18,13 @@ import { CustomHamperBuilder } from './components/CustomHamperBuilder';
 import { StoreProvider, useStore } from './context/StoreContext';
 import { CartItem, Product, ProductCustomisation } from './types';
 import {
+  buildVariantId,
+  createCartItemFromSelection,
+  getCartCustomisationSignature,
+  migrateCartItems,
+  resolveCanonicalProductId,
+} from './utils/cart';
+import {
   adminVerifySessionApi,
   adminLogoutApi,
   getCustomerSession,
@@ -36,7 +43,7 @@ function StorefrontApp() {
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('dilsy_cart_v1');
-      return saved ? JSON.parse(saved) : [];
+      return saved ? migrateCartItems(JSON.parse(saved)) : [];
     } catch {
       return [];
     }
@@ -126,31 +133,33 @@ function StorefrontApp() {
   };
 
   const handleAddToCart = (product: Product, customisation: ProductCustomisation) => {
+    const selectedSize = product.size || 'Medium';
+    const canonicalProductId = resolveCanonicalProductId(product);
+    const incomingVariantId = buildVariantId(canonicalProductId, selectedSize);
+    const incomingCustomSig = getCartCustomisationSignature(customisation);
+
     setCart((prev) => {
-      const existingIdx = prev.findIndex(
-        (item) =>
-          item.product.id === product.id &&
-          item.customisation.recipientName === customisation.recipientName &&
-          item.customisation.recipientChoice === customisation.recipientChoice &&
-          item.customisation.personalNote === customisation.personalNote
-      );
+      const existingIdx = prev.findIndex((item) => {
+        const itemVariantId =
+          item.variantId ||
+          buildVariantId(resolveCanonicalProductId(item.product), item.selectedSize || item.product.size);
+        return (
+          itemVariantId === incomingVariantId &&
+          getCartCustomisationSignature(item.customisation) === incomingCustomSig
+        );
+      });
 
       if (existingIdx >= 0) {
-        const next = [...prev];
-        next[existingIdx].quantity += 1;
-        return next;
-      } else {
-        const newItem: CartItem = {
-          id: `${product.id}-${Date.now()}`,
-          product,
-          quantity: 1,
-          customisation,
-        };
-        return [...prev, newItem];
+        return prev.map((item, idx) =>
+          idx === existingIdx ? { ...item, quantity: item.quantity + 1 } : item
+        );
       }
+
+      const newItem = createCartItemFromSelection(product, customisation, 1);
+      return [...prev, newItem];
     });
 
-    showToast(`Added ${product.name} to your bag!`);
+    showToast(`Added ${product.name} (${selectedSize}) to your bag!`);
   };
 
   const handleOrderWhatsAppSingle = (product: Product, customisation: ProductCustomisation) => {
@@ -192,8 +201,16 @@ function StorefrontApp() {
   // 1. Collection Detail Route: /collections/:slug
   let selectedCollection = null;
   if (cleanPath.startsWith('/collections/')) {
-    const slug = cleanPath.replace('/collections/', '');
-    selectedCollection = getThemeBySlugOrId(slug) || themes.find((t) => t.slug === slug || t.id === slug) || null;
+    const slug = cleanPath.replace('/collections/', '').toLowerCase();
+    selectedCollection =
+      themes.find(
+        (t) =>
+          t.slug === slug ||
+          t.id === slug ||
+          t.id.replace(/-box$/, '') === slug
+      ) ||
+      getThemeBySlugOrId(slug) ||
+      null;
   }
 
   // 2. Product Detail Route: /product/:id or /hampers/:id

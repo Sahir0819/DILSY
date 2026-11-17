@@ -149,18 +149,24 @@ function syncMissingThemes(db: DatabaseSchema): void {
       allowRecipientChoice: false,
     }));
   }
-  db.themes = db.themes.map((t) =>
-    t.id === 'valentine-box' && Array.isArray(t.giftingTips)
-      ? {
-          ...t,
-          giftingTips: t.giftingTips.map((tip) =>
+  const officialMap = new Map(THEME_CATEGORIES.map((t) => [t.id, t]));
+  db.themes = db.themes.map((t) => {
+    const official = officialMap.get(t.id);
+    const updatedTips =
+      t.id === 'valentine-box' && Array.isArray(t.giftingTips)
+        ? t.giftingTips.map((tip) =>
             tip.includes('Loved Box')
               ? 'Pair with our Medium Box (₹969) for a complete romantic gesture'
               : tip
-          ),
-        }
-      : t
-  );
+          )
+        : t.giftingTips;
+
+    return {
+      ...t,
+      giftingTips: updatedTips,
+      availableSizes: official?.availableSizes || t.availableSizes || ['Small', 'Medium', 'Large'],
+    };
+  });
   if (Array.isArray(db.offers)) {
     db.offers = db.offers.map((o) =>
       o.description?.includes('Loved Box')

@@ -20,7 +20,14 @@ interface StoreContextValue {
   offers: Offer[];
   settings: StoreSettings;
   activeOffer: Offer | null;
-  calculateDiscount: (amount: number) => { discountAmount: number; finalAmount: number; appliedOffer: Offer | null };
+  calculateDiscount: (
+    amount: number,
+    promoCode?: string
+  ) => { discountAmount: number; finalAmount: number; appliedOffer: Offer | null };
+  validatePromoCode: (
+    code: string,
+    amount: number
+  ) => { valid: boolean; offer: Offer | null; message: string };
   recordOrderInquiry: (orderData: Partial<OrderRequest>) => Promise<string | null>;
   refreshStoreData: () => Promise<void>;
   isLoading: boolean;
@@ -80,16 +87,24 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   const activeOffer = offers.find((o) => o.isActive) || null;
 
   const calculateDiscount = useCallback(
-    (amount: number) => {
-      if (!activeOffer || amount < activeOffer.minOrderAmount) {
+    (amount: number, promoCode?: string) => {
+      let targetOffer: Offer | null = activeOffer;
+      if (promoCode !== undefined) {
+        const clean = promoCode.trim().toUpperCase();
+        targetOffer = clean
+          ? offers.find((o) => o.isActive && o.code.toUpperCase() === clean) || null
+          : null;
+      }
+
+      if (!targetOffer || amount < targetOffer.minOrderAmount) {
         return { discountAmount: 0, finalAmount: amount, appliedOffer: null };
       }
 
       let discount = 0;
-      if (activeOffer.discountType === 'percent') {
-        discount = Math.round((amount * activeOffer.discountValue) / 100);
+      if (targetOffer.discountType === 'percent') {
+        discount = Math.round((amount * targetOffer.discountValue) / 100);
       } else {
-        discount = activeOffer.discountValue;
+        discount = targetOffer.discountValue;
       }
 
       // Safeguard: Ensure discount never exceeds total or creates negative price
@@ -99,10 +114,40 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       return {
         discountAmount: discount,
         finalAmount,
-        appliedOffer: activeOffer,
+        appliedOffer: targetOffer,
       };
     },
-    [activeOffer]
+    [activeOffer, offers]
+  );
+
+  const validatePromoCode = useCallback(
+    (code: string, amount: number) => {
+      const clean = code.trim().toUpperCase();
+      if (!clean) {
+        return { valid: false, offer: null, message: 'Please enter a promo code.' };
+      }
+      const matched = offers.find((o) => o.isActive && o.code.toUpperCase() === clean);
+      if (!matched) {
+        return {
+          valid: false,
+          offer: null,
+          message: 'This promo code is invalid or currently inactive.',
+        };
+      }
+      if (amount < matched.minOrderAmount) {
+        return {
+          valid: false,
+          offer: matched,
+          message: `Minimum order of ₹${matched.minOrderAmount.toLocaleString('en-IN')} required for ${matched.code}.`,
+        };
+      }
+      return {
+        valid: true,
+        offer: matched,
+        message: `${matched.code} applied!`,
+      };
+    },
+    [offers]
   );
 
   const recordOrderInquiry = useCallback(async (orderData: Partial<OrderRequest>): Promise<string | null> => {
@@ -124,6 +169,7 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         settings,
         activeOffer,
         calculateDiscount,
+        validatePromoCode,
         recordOrderInquiry,
         refreshStoreData: loadData,
         isLoading,

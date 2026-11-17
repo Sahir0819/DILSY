@@ -16,6 +16,7 @@ export interface ThemeCategory {
   isComingSoon?: boolean;
   comingSoonMessage?: string;
   coverImage?: string;
+  availableSizes?: BoxSize[];
 }
 
 export type BoxSize = 'Small' | 'Medium' | 'Large';
@@ -43,6 +44,8 @@ export interface Product {
   allowRecipientChoice?: boolean;
   stockStatus?: StockStatus;
   isFeatured?: boolean;
+  collectionId?: string;
+  availableSizes?: BoxSize[];
 }
 
 export interface ProductCustomisation {
@@ -56,6 +59,11 @@ export interface ProductCustomisation {
 
 export interface CartItem {
   id: string;
+  productId: string;
+  collectionId?: string;
+  variantId: string;
+  selectedSize: BoxSize;
+  unitPrice: number;
   product: Product;
   quantity: number;
   customisation: ProductCustomisation;
@@ -64,6 +72,7 @@ export interface CartItem {
 export interface DeliveryDetails {
   customerName: string;
   customerPhone: string;
+  recipientName?: string;
   deliveryArea: string;
   specificLandmark: string;
   deliveryDate: string;

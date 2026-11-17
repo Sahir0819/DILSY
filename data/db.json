@@ -117,7 +117,8 @@
         "anniversary",
         "valentine-box",
         "miss-you-box"
-      ]
+      ],
+      "availableSizes": ["Small", "Medium", "Large"]
     },
     {
       "id": "i-love-you-for-her",
@@ -146,7 +147,8 @@
         "birthday",
         "valentine-box"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium", "Large"]
     },
     {
       "id": "anniversary",
@@ -174,7 +176,8 @@
         "i-love-you-for-him",
         "valentine-box"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium", "Large"]
     },
     {
       "id": "birthday",
@@ -202,7 +205,8 @@
         "i-love-you-for-her",
         "miss-you-box"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium", "Large"]
     },
     {
       "id": "periods-box",
@@ -227,7 +231,8 @@
         "birthday",
         "miss-you-box"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium", "Large"]
     },
     {
       "id": "apology-box",
@@ -252,7 +257,8 @@
         "i-love-you-for-him",
         "i-love-you-for-her"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium"]
     },
     {
       "id": "miss-you-box",
@@ -279,7 +285,8 @@
         "birthday",
         "i-love-you-for-him"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small"]
     },
     {
       "id": "valentine-box",
@@ -307,7 +314,8 @@
         "i-love-you-for-him",
         "anniversary"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium", "Large"]
     },
     {
       "id": "diwali-box",
@@ -332,7 +340,8 @@
         "anniversary",
         "miss-you-box"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium", "Large"]
     },
     {
       "id": "exam-good-luck",
@@ -360,7 +369,8 @@
         "miss-you-box",
         "birthday"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small"]
     },
     {
       "id": "graduation-farewell",
@@ -388,7 +398,8 @@
         "birthday",
         "miss-you-box"
       ],
-      "isComingSoon": false
+      "isComingSoon": false,
+      "availableSizes": ["Small", "Medium", "Large"]
     }
   ],
   "addons": [

@@ -1,10 +1,35 @@
-import React from 'react';
-import { ArrowLeft, Sparkles, Heart, ArrowRight, ShieldCheck, Clock, ExternalLink } from 'lucide-react';
-import { ThemeCategory, Product, ProductCustomisation } from '../types';
-import { THEME_CATEGORIES } from '../data/themes';
+import React, { useEffect, useState } from 'react';
+import {
+  ArrowLeft,
+  Sparkles,
+  Heart,
+  ArrowRight,
+  Clock,
+  ShoppingBag,
+  MessageCircle,
+  Check,
+  Plus,
+} from 'lucide-react';
+import {
+  BoxSize,
+  ThemeCategory,
+  Product,
+  ProductCustomisation,
+  AddOnItem,
+  SelectedAddOn,
+} from '../types';
+import { THEME_CATEGORIES, getAvailableSizesForTheme } from '../data/themes';
 import { ThemeArtwork } from './ThemeArtwork';
 import { ProductCard } from './ProductCard';
 import { Breadcrumbs } from './Breadcrumbs';
+import { AddOnThumbnail } from './AddOnThumbnail';
+import { useStore } from '../context/StoreContext';
+import {
+  BOX_SIZE_DIMENSIONS,
+  GENERIC_BOX_PRODUCT_IDS,
+  getCollectionDefaultImage,
+  getOfficialBoxPrice,
+} from '../utils/cart';
 
 interface CollectionPageProps {
   collection: ThemeCategory;
@@ -23,11 +48,97 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
   onOrderWhatsApp,
   onViewProductDetails,
 }) => {
-  // Products assigned specifically to this collection
-  const assignedProducts = allProducts.filter(
+  const { addons, activeOffer } = useStore();
+  const availableSizes = getAvailableSizesForTheme(collection);
+
+  const [selectedSize, setSelectedSize] = useState<BoxSize>(availableSizes[0] || 'Small');
+  const [recipientName, setRecipientName] = useState('');
+  const [personalNote, setPersonalNote] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState('');
+  const [selectedAddOns, setSelectedAddOns] = useState<SelectedAddOn[]>([]);
+  const [showAddOns, setShowAddOns] = useState(false);
+  const [addedFeedback, setAddedFeedback] = useState(false);
+
+  // Reset selected size when switching collections so unavailable sizes are never stale
+  useEffect(() => {
+    const nextSizes = getAvailableSizesForTheme(collection);
+    setSelectedSize(nextSizes[0] || 'Small');
+    setAddedFeedback(false);
+  }, [collection]);
+
+  const effectiveSize: BoxSize = availableSizes.includes(selectedSize)
+    ? selectedSize
+    : availableSizes[0] || 'Small';
+
+  const basePrice = getOfficialBoxPrice(effectiveSize);
+  const addOnsTotal = selectedAddOns.reduce((acc, a) => acc + a.price * a.quantity, 0);
+  const estimatedSubtotal = basePrice + addOnsTotal;
+
+  const availableAddons = addons.filter((a) => a.isAvailable);
+
+  const handleToggleAddOn = (addon: AddOnItem) => {
+    if (!addon.isAvailable) return;
+    setSelectedAddOns((prev) => {
+      const exists = prev.find((a) => a.id === addon.id);
+      if (exists) {
+        return prev.filter((a) => a.id !== addon.id);
+      }
+      return [...prev, { id: addon.id, name: addon.name, price: addon.price, quantity: 1 }];
+    });
+  };
+
+  // Build unified hamper variant Product preserving collection identity and hamper name
+  const buildHamperVariantProduct = (): Product => ({
+    id: collection.id,
+    collectionId: collection.id,
+    name: collection.name,
+    size: effectiveSize,
+    availableSizes,
+    tagline: collection.heroHeadline || collection.description,
+    price: basePrice,
+    description: collection.description,
+    badge: collection.badge,
+    categories: ['all'],
+    themeIds: [collection.id],
+    idealFor: collection.visualDirection,
+    packaging: collection.visualDirection || 'Thoughtfully styled gift box with satin ribbon and personal handwritten card.',
+    accentColor: '#3E101D',
+    illustrationType:
+      effectiveSize === 'Small'
+        ? 'little-affair'
+        : effectiveSize === 'Large'
+        ? 'everything-box'
+        : 'loved-box',
+    customImage: collection.coverImage || getCollectionDefaultImage(collection.id),
+    stockStatus: 'available',
+    allowRecipientChoice: false,
+  });
+
+  const buildCustomisation = (): ProductCustomisation => ({
+    recipientName: recipientName.trim(),
+    personalNote: personalNote.trim(),
+    specialInstructions: specialInstructions.trim(),
+    selectedAddOns: selectedAddOns.length > 0 ? selectedAddOns : undefined,
+  });
+
+  const handleAddHamperToBag = () => {
+    if (collection.isComingSoon) return;
+    onAddToCart(buildHamperVariantProduct(), buildCustomisation());
+    setAddedFeedback(true);
+    setTimeout(() => setAddedFeedback(false), 2000);
+  };
+
+  const handleOrderHamperWhatsApp = () => {
+    if (collection.isComingSoon) return;
+    onOrderWhatsApp(buildHamperVariantProduct(), buildCustomisation());
+  };
+
+  // Custom non-generic admin products explicitly assigned to this collection (excluding generic Small/Medium/Large Box)
+  const customAssignedProducts = allProducts.filter(
     (product) =>
-      collection.linkedProductIds.includes(product.id) ||
-      (product.themeIds && product.themeIds.includes(collection.id))
+      !GENERIC_BOX_PRODUCT_IDS.has(product.id) &&
+      (collection.linkedProductIds.includes(product.id) ||
+        (product.themeIds && product.themeIds.includes(collection.id)))
   );
 
   // Related collections
@@ -49,11 +160,11 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
           />
 
           <button
-            onClick={() => onNavigate('/themes')}
+            onClick={() => onNavigate('/hampers')}
             className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-[#FAF7F5] text-[#3E101D] text-xs font-medium border border-[#EADBDB] transition-colors cursor-pointer tracking-wide"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            <span>Explore All Occasions</span>
+            <span>Explore All Hampers</span>
           </button>
         </div>
 
@@ -93,20 +204,25 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
                 </p>
               )}
 
-              {/* Actions */}
+              {/* Coming Soon notice for For Him, otherwise Customise link */}
               <div className="pt-2 flex flex-wrap items-center gap-3">
                 {collection.isComingSoon ? (
                   <div className="p-3.5 bg-[#FAF7F5] text-[#3E101D] border border-[#EADBDB] text-xs font-medium flex items-center gap-2">
                     <Clock className="w-4 h-4 text-[#3E101D]" />
-                    <span>{collection.comingSoonMessage || 'Something special for him is on its way. Stay tuned!'}</span>
+                    <span>
+                      {collection.comingSoonMessage ||
+                        'Something special for him is on its way. Stay tuned!'}
+                    </span>
                   </div>
                 ) : (
                   <button
-                    onClick={() => onNavigate(`/custom-hamper?occasion=${encodeURIComponent(collection.name)}`)}
-                    className="px-5 py-3 bg-[#3E101D] hover:bg-[#2A0D15] text-white text-xs uppercase tracking-widest font-semibold transition-all flex items-center gap-2 cursor-pointer"
+                    onClick={() =>
+                      onNavigate(`/custom-hamper?occasion=${encodeURIComponent(collection.name)}`)
+                    }
+                    className="px-5 py-3 bg-[#FAF7F5] hover:bg-[#F5ECE7] text-[#3E101D] border border-[#EADBDB] text-xs uppercase tracking-widest font-semibold transition-all flex items-center gap-2 cursor-pointer"
                   >
-                    <Heart className="w-3.5 h-3.5 fill-white" />
-                    <span>Customise an Edition for {collection.name}</span>
+                    <Heart className="w-3.5 h-3.5 fill-[#3E101D]" />
+                    <span>Open Bespoke Studio for {collection.name}</span>
                   </button>
                 )}
               </div>
@@ -129,38 +245,297 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
           </div>
         </div>
 
-        {/* Assigned Products in this Collection */}
+        {/* Collection Hamper Size Selector & Ordering Section */}
         <div className="mb-14">
-          <div className="mb-8">
-            <h2 className="text-2xl font-serif text-[#2A0D15]">
-              Available Editions for {collection.name}
-            </h2>
-            <p className="text-xs text-[#7A5A63] mt-1 font-light">
-              Curated gift boxes suited for this occasion. Exact keepsakes, handwritten cards, and personal details confirmed on WhatsApp.
-            </p>
-          </div>
-
           {collection.isComingSoon ? (
             <div className="p-8 sm:p-12 bg-white border border-[#EADBDB] text-center space-y-4 max-w-xl mx-auto">
               <div className="w-12 h-12 bg-[#FAF7F5] border border-[#EADBDB] text-[#3E101D] flex items-center justify-center mx-auto">
                 <Clock className="w-6 h-6" />
               </div>
-              <h3 className="text-xl font-serif text-[#2A0D15]">
-                Coming Soon
-              </h3>
+              <h2 className="text-xl font-serif text-[#2A0D15]">Coming Soon</h2>
               <p className="text-xs text-[#7A5A63] leading-relaxed font-light">
-                We are curating refined goodies and gifts specifically designed for him. Ordering for this collection will be enabled once inventory is ready!
+                We are curating refined goodies and gifts specifically designed for him. Ordering
+                for this collection will be enabled once inventory is ready!
               </p>
               <button
-                onClick={() => onNavigate('/themes')}
+                onClick={() => onNavigate('/hampers')}
                 className="px-5 py-2.5 bg-[#3E101D] hover:bg-[#2A0D15] text-white text-xs uppercase tracking-widest font-semibold transition-colors cursor-pointer"
               >
                 Browse Other Available Occasions
               </button>
             </div>
-          ) : assignedProducts.length > 0 ? (
+          ) : (
+            <div className="bg-white border border-[#EADBDB] p-6 sm:p-8 lg:p-10">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Left: Selected Hamper Visual & Gifting Tips */}
+                <div className="lg:col-span-5 space-y-5">
+                  <div className="overflow-hidden border border-[#EADBDB] bg-[#FAF7F5]">
+                    {collection.coverImage || getCollectionDefaultImage(collection.id) ? (
+                      <img
+                        src={collection.coverImage || getCollectionDefaultImage(collection.id)}
+                        alt={collection.name}
+                        className="w-full aspect-[4/3] object-cover"
+                      />
+                    ) : (
+                      <ThemeArtwork themeId={collection.id} />
+                    )}
+                  </div>
+
+                  {collection.giftingTips && collection.giftingTips.length > 0 && (
+                    <div className="p-4 bg-[#FAF7F5] border border-[#EADBDB] space-y-2">
+                      <p className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[#3E101D]">
+                        Curation Notes
+                      </p>
+                      <ul className="space-y-1.5 text-xs text-[#7A5A63] font-light">
+                        {collection.giftingTips.map((tip, idx) => (
+                          <li key={idx} className="flex items-start gap-2">
+                            <span className="text-[#3E101D] mt-0.5">•</span>
+                            <span>{tip}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+
+                {/* Right: Variant Size Selector, Personalisation & Cart/WhatsApp Actions */}
+                <div className="lg:col-span-7 space-y-6">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2 mb-2">
+                      <span className="text-[10px] uppercase tracking-[0.18em] font-semibold text-[#3E101D] bg-[#FAF7F5] px-2.5 py-1 border border-[#EADBDB]">
+                        {collection.badge}
+                      </span>
+                      {activeOffer && (
+                        <span className="text-[10px] uppercase tracking-wider font-medium text-[#3E101D] bg-[#FAF7F5] px-2.5 py-1 border border-[#EADBDB]">
+                          {activeOffer.badgeText || activeOffer.code}
+                        </span>
+                      )}
+                    </div>
+
+                    <h2 className="text-2xl sm:text-3xl font-serif text-[#2A0D15]">
+                      {collection.name}
+                    </h2>
+                    <p className="text-xs sm:text-sm text-[#7A5A63] font-light mt-1.5 leading-relaxed">
+                      {collection.description}
+                    </p>
+                  </div>
+
+                  {/* Select Available Box Size Variant */}
+                  <div className="pt-4 border-t border-[#EADBDB] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2A0D15]">
+                        Select Box Size
+                      </label>
+                      <span className="text-[11px] text-[#7A5A63]">
+                        {availableSizes.length === 1
+                          ? `${availableSizes[0]} edition only`
+                          : `${availableSizes.length} sizes available`}
+                      </span>
+                    </div>
+
+                    <div
+                      className={`grid gap-3 ${
+                        availableSizes.length === 1
+                          ? 'grid-cols-1 max-w-xs'
+                          : availableSizes.length === 2
+                          ? 'grid-cols-2'
+                          : 'grid-cols-1 sm:grid-cols-3'
+                      }`}
+                    >
+                      {availableSizes.map((size) => {
+                        const isSelected = effectiveSize === size;
+                        const sizePrice = getOfficialBoxPrice(size);
+                        return (
+                          <button
+                            key={size}
+                            type="button"
+                            onClick={() => setSelectedSize(size)}
+                            className={`p-4 border text-left transition-all cursor-pointer relative ${
+                              isSelected
+                                ? 'border-2 border-[#3E101D] bg-[#FAF7F5]'
+                                : 'border-[#EADBDB] bg-white hover:border-[#3E101D]/60'
+                            }`}
+                          >
+                            {isSelected && (
+                              <span className="absolute top-2 right-2 w-4 h-4 bg-[#3E101D] text-white flex items-center justify-center text-[10px]">
+                                ✓
+                              </span>
+                            )}
+                            <span className="block font-serif text-lg text-[#2A0D15]">
+                              {size}
+                            </span>
+                            <span className="block text-[10px] text-[#7A5A63] mt-0.5">
+                              {BOX_SIZE_DIMENSIONS[size]}
+                            </span>
+                            <span className="block text-sm font-semibold text-[#3E101D] mt-2 tabular-nums">
+                              ₹{sizePrice.toLocaleString('en-IN')}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Optional Keepsake Add-ons */}
+                  {availableAddons.length > 0 && (
+                    <div className="pt-4 border-t border-[#EADBDB] space-y-3">
+                      <button
+                        type="button"
+                        onClick={() => setShowAddOns((prev) => !prev)}
+                        className="w-full flex items-center justify-between text-xs font-semibold uppercase tracking-[0.15em] text-[#3E101D] cursor-pointer"
+                      >
+                        <span className="flex items-center gap-1.5">
+                          <Plus className="w-3.5 h-3.5" />
+                          <span>
+                            Optional Keepsake Add-ons{' '}
+                            {selectedAddOns.length > 0 ? `(${selectedAddOns.length} selected)` : ''}
+                          </span>
+                        </span>
+                        <span className="text-[11px] font-normal underline">
+                          {showAddOns ? 'Hide' : 'Select Add-ons'}
+                        </span>
+                      </button>
+
+                      {showAddOns && (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-56 overflow-y-auto pr-1">
+                          {availableAddons.slice(0, 6).map((addon) => {
+                            const isSelected = selectedAddOns.some((a) => a.id === addon.id);
+                            return (
+                              <div
+                                key={addon.id}
+                                onClick={() => handleToggleAddOn(addon)}
+                                className={`p-2.5 border flex items-center gap-2.5 cursor-pointer transition-all ${
+                                  isSelected
+                                    ? 'bg-[#FAF7F5] border-[#3E101D]'
+                                    : 'bg-white border-[#EADBDB] hover:border-[#3E101D]'
+                                }`}
+                              >
+                                <AddOnThumbnail
+                                  type={addon.illustrationType}
+                                  className="w-9 h-9 shrink-0"
+                                />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-xs font-medium text-[#2A0D15] truncate">
+                                    {addon.name}
+                                  </p>
+                                  <p className="text-[11px] text-[#3E101D] font-semibold tabular-nums">
+                                    +₹{addon.price}
+                                  </p>
+                                </div>
+                                <div
+                                  className={`w-4 h-4 border flex items-center justify-center shrink-0 ${
+                                    isSelected
+                                      ? 'bg-[#3E101D] border-[#3E101D] text-white'
+                                      : 'border-[#EADBDB]'
+                                  }`}
+                                >
+                                  {isSelected && <Check className="w-3 h-3 stroke-[3]" />}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Personalisation Note Fields */}
+                  <div className="pt-4 border-t border-[#EADBDB] space-y-3">
+                    <div className="flex items-center gap-1.5 text-[11px] font-semibold text-[#3E101D] uppercase tracking-[0.15em]">
+                      <Sparkles className="w-3.5 h-3.5" />
+                      <span>Personalise Handwritten Card (Optional)</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <input
+                        type="text"
+                        value={recipientName}
+                        onChange={(e) => setRecipientName(e.target.value)}
+                        placeholder="Recipient's Name (optional)"
+                        className="w-full px-3 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none focus:border-[#3E101D]"
+                      />
+                      <input
+                        type="text"
+                        value={specialInstructions}
+                        onChange={(e) => setSpecialInstructions(e.target.value)}
+                        placeholder="Special request or ribbon note (optional)"
+                        className="w-full px-3 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none focus:border-[#3E101D]"
+                      />
+                    </div>
+
+                    <textarea
+                      rows={2}
+                      value={personalNote}
+                      onChange={(e) => setPersonalNote(e.target.value)}
+                      placeholder="Write your heartfelt message to be handwritten on cotton cardstock..."
+                      className="w-full px-3 py-2 bg-[#FAF7F5] border border-[#EADBDB] text-xs text-[#2A0D15] focus:outline-none focus:border-[#3E101D]"
+                    />
+                  </div>
+
+                  {/* Price Summary & Action Buttons */}
+                  <div className="pt-4 border-t border-[#EADBDB] space-y-4">
+                    <div className="flex items-baseline justify-between">
+                      <div>
+                        <span className="text-xs uppercase tracking-[0.16em] text-[#7A5A63] block">
+                          {collection.name} · Size: {effectiveSize}
+                        </span>
+                        {addOnsTotal > 0 && (
+                          <span className="text-[11px] text-[#7A5A63]">
+                            Base ₹{basePrice.toLocaleString('en-IN')} + Add-ons ₹
+                            {addOnsTotal.toLocaleString('en-IN')}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-2xl sm:text-3xl font-serif font-medium text-[#3E101D] tabular-nums">
+                        ₹{estimatedSubtotal.toLocaleString('en-IN')}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={handleAddHamperToBag}
+                        className="py-3.5 px-4 bg-white hover:bg-[#FAF7F5] border border-[#3E101D] text-[#3E101D] text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                      >
+                        {addedFeedback ? (
+                          <>
+                            <Check className="w-4 h-4 text-[#3E101D]" />
+                            <span>Added to Bag</span>
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingBag className="w-4 h-4 text-[#3E101D]" />
+                            <span>Add to Bag</span>
+                          </>
+                        )}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handleOrderHamperWhatsApp}
+                        className="py-3.5 px-4 bg-[#3E101D] hover:bg-[#2A0B13] text-white text-xs uppercase tracking-widest font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                      >
+                        <MessageCircle className="w-4 h-4 text-white" />
+                        <span>Order on WhatsApp</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Custom Non-Generic Admin Products Linked to This Collection (if any) */}
+        {!collection.isComingSoon && customAssignedProducts.length > 0 && (
+          <div className="mb-14">
+            <div className="mb-6">
+              <h3 className="text-xl font-serif text-[#2A0D15]">
+                Special Editions for {collection.name}
+              </h3>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {assignedProducts.map((product) => (
+              {customAssignedProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
@@ -170,34 +545,13 @@ export const CollectionPage: React.FC<CollectionPageProps> = ({
                 />
               ))}
             </div>
-          ) : (
-            <div className="p-8 sm:p-12 bg-white border border-[#EADBDB] text-center space-y-4 max-w-xl mx-auto">
-              <div className="w-12 h-12 bg-[#FAF7F5] border border-[#EADBDB] text-[#3E101D] flex items-center justify-center mx-auto">
-                <Heart className="w-6 h-6 fill-[#3E101D]" />
-              </div>
-              <h3 className="text-xl font-serif text-[#2A0D15]">
-                Handcrafted Studio Hamper
-              </h3>
-              <p className="text-xs text-[#7A5A63] leading-relaxed font-light">
-                For this occasion, we handcraft custom hampers based on your budget and personal preferences. Use our Hamper Studio to select your box size and treats.
-              </p>
-              <button
-                onClick={() => onNavigate(`/custom-hamper?occasion=${encodeURIComponent(collection.name)}`)}
-                className="px-6 py-3 bg-[#3E101D] hover:bg-[#2A0D15] text-white text-xs uppercase tracking-widest font-semibold transition-colors cursor-pointer inline-flex items-center gap-2"
-              >
-                <span>Build Custom {collection.name}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Related Collections Section */}
         {relatedCollections.length > 0 && (
           <div className="pt-8 border-t border-[#EADBDB]">
-            <h3 className="text-xl font-serif text-[#2A0D15] mb-6">
-              You Might Also Like
-            </h3>
+            <h3 className="text-xl font-serif text-[#2A0D15] mb-6">You Might Also Like</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               {relatedCollections.map((rel) => (
                 <button
